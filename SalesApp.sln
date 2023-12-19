@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.8.34316.72
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SalesApp.DomainLayer", "SalesApp.Core\SalesApp.DomainLayer.csproj", "{77DB5B8A-C200-4442-ADA8-E155A819C74D}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SalesApp.DomainLayer", "SalesApp.DomainLayer\SalesApp.DomainLayer.csproj", "{77DB5B8A-C200-4442-ADA8-E155A819C74D}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SalesApp.UI", "SalesApp.UI\SalesApp.UI.csproj", "{2982207B-59DC-4E4D-8A35-08B650127CD2}"
 EndProject
