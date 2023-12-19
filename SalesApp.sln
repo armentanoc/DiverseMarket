@@ -3,7 +3,11 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.8.34316.72
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SalesApp.Core", "SalesApp.Core\SalesApp.Core.csproj", "{77DB5B8A-C200-4442-ADA8-E155A819C74D}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SalesApp.DomainLayer", "SalesApp.Core\SalesApp.DomainLayer.csproj", "{77DB5B8A-C200-4442-ADA8-E155A819C74D}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SalesApp.UI", "SalesApp.UI\SalesApp.UI.csproj", "{8A1E4C0A-45E6-4C0F-B630-C97EC419A487}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SalesApp.InfrastructureLayer", "SalesApp.InfrastructureLayer\SalesApp.InfrastructureLayer.csproj", "{D3E25440-DD65-4ED2-921E-304CA8E27983}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -15,6 +19,14 @@ Global
 		{77DB5B8A-C200-4442-ADA8-E155A819C74D}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{77DB5B8A-C200-4442-ADA8-E155A819C74D}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{77DB5B8A-C200-4442-ADA8-E155A819C74D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8A1E4C0A-45E6-4C0F-B630-C97EC419A487}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8A1E4C0A-45E6-4C0F-B630-C97EC419A487}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8A1E4C0A-45E6-4C0F-B630-C97EC419A487}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8A1E4C0A-45E6-4C0F-B630-C97EC419A487}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D3E25440-DD65-4ED2-921E-304CA8E27983}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D3E25440-DD65-4ED2-921E-304CA8E27983}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D3E25440-DD65-4ED2-921E-304CA8E27983}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D3E25440-DD65-4ED2-921E-304CA8E27983}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
