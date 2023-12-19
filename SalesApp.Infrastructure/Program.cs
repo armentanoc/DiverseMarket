@@ -1,4 +1,4 @@
-﻿namespace SalesApp.DomainLayer
+﻿namespace SalesApp.Infrastructure
 {
     internal class Program
     {
