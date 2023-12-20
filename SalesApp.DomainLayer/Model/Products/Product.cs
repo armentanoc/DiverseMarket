@@ -28,7 +28,7 @@ namespace SalesApp.DomainLayer.Model.Products
 
         private int SetId()
         {
-            return Math.Abs(Guid.NewGuid().GetHashCode()).ToString();
+            return Math.Abs(Guid.NewGuid().GetHashCode());
         }
 
         internal void AddReview(decimal review)
@@ -49,14 +49,15 @@ namespace SalesApp.DomainLayer.Model.Products
 
         internal bool ChangePrice(decimal newPrice)
         {
-            if(!this.Price.HasValue || newPrice <= 0) return false;
+            if(this.Price == 0 || newPrice <= 0) return false;
 
             this.Price = newPrice; return true;
         }
 
         internal bool ChangeDescription(string newDescription)
         {
-            this.Description = this.Description.Replace(newDescription);
+            if(this.Description == newDescription || newDescription.Equals("")) return false;
+            this.Description = newDescription;
         }
     }
 }
