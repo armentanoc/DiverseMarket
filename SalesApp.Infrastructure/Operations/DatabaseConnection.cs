@@ -16,12 +16,10 @@ namespace SalesApp.Infrastructure.Operations
             if (!File.Exists(@"bancotemporario.db"))
             {
                 CreateDB();
-                Console.WriteLine("criou");
                 return true;
             }
             else 
             {
-                Console.WriteLine("pulou");
                 try
                 {
                     _connection = new SQLiteConnection(_connectionString);
