@@ -37,7 +37,7 @@ namespace SalesApp.DomainLayer.Model.Products
         {
             if (this.Quantity < quantity) return false;
 
-            this.Quantity -= quantity;
+            this.Quantity -= quantity; return true;
         }
 
         internal void AddMore(int quantity)

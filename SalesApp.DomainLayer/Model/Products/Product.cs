@@ -1,4 +1,6 @@
-namespace SalesApp.DomainLayer.Model.Products
+namespace SalesApp.DomainLayer.Model.Products {
+
+    using SalesApp.DomainLayer.Model.Users;
 
     internal class Product
     {
@@ -9,14 +11,11 @@ namespace SalesApp.DomainLayer.Model.Products
         public decimal NumberOfReviews { get; private set; }
         //implementar imagem?
 
-        internal Product(string name, string description, decimal price, Seller firstSeller)
+        internal Product(string name, string description)
         {
             this.Id = SetId();
             this.Name = name;
             this.Description = description;
-            this.Price = price;
-            Sellers = new List<Seller>();
-            if (firstSeller != null ) { this.Sellers.Add(firstSeller); }
 
         }
 
