@@ -6,9 +6,11 @@ namespace SalesApp.DomainLayer.Model.Transactions.Reviews
     {
 
         public Seller Seller { get; private set; }
-        public SellerReview(ReviewEnum reviewEnum, Seller seller, string? comment = null) : base(reviewEnum, comment)
+        public Client Client { get; private set; }
+        public SellerReview(ReviewEnum reviewEnum, Seller seller, Client client, string? comment = null) : base(reviewEnum, comment)
         {
             Seller = seller;
+            Client = client;
         }
     }
 }
