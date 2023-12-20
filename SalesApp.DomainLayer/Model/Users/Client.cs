@@ -1,12 +1,104 @@
-﻿namespace SalesApp.DomainLayer.Model.Users
+﻿using SalesApp.DomainLayer.Model.Enum;
+using SalesApp.DomainLayer.Model.Products;
+using SalesApp.DomainLayer.Model.Transactions;
+
+namespace SalesApp.DomainLayer.Model.Users
 {
-    internal class Client
+    public class Client
     {
+        private User _user;
+        private ClientWallet _wallet;
+        private List<ProductSeller> _productCart;
+        private List<ProductSeller> _alreadyBought; //TODO maybe link with a database
 
-        //- Entra com login e senha
-        //- Podem comprar e avaliar produtos
-        //- Pedir reembolso e solicitar ajuda do moderador
-        //- Possui uma carteira com saldo de debito e credito
+        public List<ProductSeller> Cart { get { return _productCart; } }
+        public List<ProductSeller> AlreadyBought { get { return _alreadyBought; } }
+        public String? Username { get { return _user.Username; } }
+        public String? Name { get { return _user.Name; } }
+        public String? Email { get { return _user.Email; } }
+        public int Phone { get { return _user.Phone; } }
+        public String? Password { get { return _user.Password; } }
 
+        public Client(String username, String name, String email, String password, int phone, decimal startingBalance)
+        {
+            _user = new User(username, name, email, password, phone);
+            _wallet = new ClientWallet(startingBalance);
+            _productCart = new List<ProductSeller>();
+            _alreadyBought = new List<ProductSeller>();
+        }
+
+        internal void Deposit(decimal amount)
+        {
+            _wallet.Pay(amount, PaymentType.Credit);
+        }
+
+        public void Buy(ProductSeller product, PaymentType paymentType)
+        {
+            _productCart.Add(product);
+            Buy(paymentType);
+        }
+
+        public void Buy(PaymentType paymentType)
+        {
+            if(_productCart.Count == 0)
+            {
+                throw new Exception("Empty cart");
+            }
+
+            decimal totalAmount = _productCart.Sum(product => product.Price);
+            if(totalAmount > _wallet.Balance && paymentType == PaymentType.Debit)
+            {
+                throw new Exception("Insufficient funds.");
+            }
+
+            foreach(var product in _productCart)
+            {
+                Pay(paymentType, product) ;
+            }
+        }
+
+        private void Pay(PaymentType paymentType, ProductSeller product)
+        {
+            _wallet.Pay(product.Price, paymentType);
+            product.Seller.CompleteSale(product, product.Price);
+            _alreadyBought.Add(product);
+            ClearCart();
+        }
+
+        public void ClearCart()
+        {
+            foreach (var item in Cart)
+            {
+                _productCart.Remove(item);
+            }
+        }
+
+        public decimal CheckBalance()
+        {
+            return _wallet.Balance;
+        }
+
+        public void RateProduct(ProductSeller product)
+        {
+            //choose product from already bought list
+            //call ProductReview()
+        }
+
+        public void RateSeller(Seller seller)
+        {
+            //choose seller based on product from already bought list
+            //call SellerReviews()
+        }
+
+        public void RequestRefund(ProductSeller product, String? message)
+        {
+            new Refund(product, this, message).RequestRefund();
+        }
+
+        public void RequestHelp()
+        {
+            //contact moderator
+            //send help message
+        }
     }
 }
