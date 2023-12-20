@@ -1,6 +1,5 @@
 ﻿
 using SalesApp.DomainLayer.Model.Enum;
-using SalesApp.DomainLayer.Model.Products;
 
 namespace SalesApp.DomainLayer.Model.Users
 {

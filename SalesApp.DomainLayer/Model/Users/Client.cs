@@ -1,5 +1,6 @@
 ﻿using SalesApp.DomainLayer.Model.Enum;
 using SalesApp.DomainLayer.Model.Products;
+using SalesApp.DomainLayer.Model.Transactions;
 
 namespace SalesApp.DomainLayer.Model.Users
 {
@@ -24,6 +25,11 @@ namespace SalesApp.DomainLayer.Model.Users
             _wallet = new ClientWallet(startingBalance);
             _productCart = new List<ProductSeller>();
             _alreadyBought = new List<ProductSeller>();
+        }
+
+        internal void Deposit(decimal amount)
+        {
+            _wallet.Pay(amount, PaymentType.Credit);
         }
 
         public void Buy(ProductSeller product, PaymentType paymentType)
@@ -55,7 +61,7 @@ namespace SalesApp.DomainLayer.Model.Users
         {
             _wallet.Pay(product.Price, paymentType);
             product.Seller.CompleteSale(product, product.Price);
-            AlreadyBought.Add(product);
+            _alreadyBought.Add(product);
             ClearCart();
         }
 
@@ -84,10 +90,9 @@ namespace SalesApp.DomainLayer.Model.Users
             //call SellerReviews()
         }
 
-        public void RequestRefund(ProductSeller product)
+        public void RequestRefund(ProductSeller product, String? message)
         {
-            //choose product
-            //call Refund()
+            new Refund(product, this, message).RequestRefund();
         }
 
         public void RequestHelp()

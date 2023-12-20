@@ -14,5 +14,10 @@ namespace SalesApp.DomainLayer.Model.Users
         {
             throw new NotImplementedException();
         }
+
+        internal void Withdrawal(decimal amount)
+        {
+            throw new NotImplementedException();
+        }
     }
 }
