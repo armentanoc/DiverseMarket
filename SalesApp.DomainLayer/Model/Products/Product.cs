@@ -6,7 +6,7 @@ namespace SalesApp.DomainLayer.Model.Products
 
     internal class Product
     {
-        public string Id { get; private set; }
+        public int Id { get; private set; }
         public string Name { get; private set; }
         public string Description { get; private set; }
         public decimal Price { get; private set; }
@@ -57,7 +57,7 @@ namespace SalesApp.DomainLayer.Model.Products
         internal bool ChangeDescription(string newDescription)
         {
             if(this.Description == newDescription || newDescription.Equals("")) return false;
-            this.Description = newDescription;
+            this.Description = newDescription; return true;
         }
     }
 }
