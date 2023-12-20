@@ -1,6 +1,6 @@
 ﻿namespace SalesApp.DomainLayer.Model.Users
 {
-    internal class Seller
+    public class Seller
     {
 
         //- Precisa estar vinculado a uma empresa com cnpj valido
