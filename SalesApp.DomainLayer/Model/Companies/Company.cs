@@ -1,4 +1,6 @@
-﻿namespace SalesApp.DomainLayer.Model.Companies
+﻿using SalesApp.DomainLayer.Model.Addresses;
+
+namespace SalesApp.DomainLayer.Model.Companies
 {
     internal class Company
     {
@@ -32,7 +34,6 @@
         public int? Telephone { get; private set; }
         public Address Address { get; private set; }
 
-        //public List<Seller> Sellers (?)
         public Company(string cnpj, string corporateName, string tradeName, Address address, int? legalEntityTypeCode = null, int? telephone = null)
         {
             ID = GenerateID();
@@ -94,8 +95,6 @@
             return cnpj.EndsWith(digito);
         }
 
-        //Métodos (?)
-        //public void AddSeller(){}
 
         public void ChangeCorporateName(string corporateName)
         {
