@@ -1,6 +1,6 @@
 ﻿namespace SalesApp.DomainLayer.Model.Users
 {
-    internal class Client
+    public class Client
     {
 
         //- Entra com login e senha
