@@ -1,23 +1,49 @@
 ﻿
+using SalesApp.DomainLayer.Model.Enum;
+using SalesApp.DomainLayer.Model.Products;
+
 namespace SalesApp.DomainLayer.Model.Users
 {
     public class ClientWallet
     {
-        public decimal Total { get; internal set; }
+        internal decimal Balance { get; set; }
 
-        internal void CheckBalance()
+        internal ClientWallet(decimal startingBalance)
         {
-            throw new NotImplementedException();
+           Balance = startingBalance;
         }
 
-        internal void Deposit(decimal ammount)
+        internal void Pay(decimal amount, PaymentType paymentType)
         {
-            throw new NotImplementedException();
+            if (amount < 0)
+            {
+                throw new Exception("Invalid amount. Amount must be greater than 0.");
+            }
+
+            if (paymentType == PaymentType.Credit)
+            {
+                Credit(amount);
+            }
+
+            if(paymentType == PaymentType.Debit)
+            {
+                Debit(amount);
+            }
         }
 
-        internal void Withdrawal(decimal total)
+        private void Credit(decimal amount)
         {
-            throw new NotImplementedException();
+            Balance += amount;
+        }
+
+        private void Debit(decimal amount)
+        {
+            if(amount > Balance)
+            {
+                throw new Exception("Insufficient funds.");
+            }
+
+            Balance -= amount;
         }
     }
 }

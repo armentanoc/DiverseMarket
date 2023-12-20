@@ -1,4 +1,5 @@
-﻿using SalesApp.DomainLayer.Model.Products;
+﻿using SalesApp.DomainLayer.Model.Enum;
+using SalesApp.DomainLayer.Model.Products;
 
 namespace SalesApp.DomainLayer.Model.Users
 {
@@ -6,95 +7,74 @@ namespace SalesApp.DomainLayer.Model.Users
     {
         private User _user;
         private ClientWallet _wallet;
-        private String? _username;
-        private String? _name;
-        private String? _email;
-        private String? _password;
-        private int _phone;
         private List<ProductSeller> _productCart;
-        private List<dynamic> _alreadyBought; //TODO maybe link with a database
+        private List<ProductSeller> _alreadyBought; //TODO maybe link with a database
 
         public List<ProductSeller> Cart { get { return _productCart; } }
-        public ClientWallet Wallet { get { return _wallet; } }
+        public List<ProductSeller> AlreadyBought { get { return _alreadyBought; } }
+        public String? Username { get { return _user.Username; } }
+        public String? Name { get { return _user.Name; } }
+        public String? Email { get { return _user.Email; } }
+        public int Phone { get { return _user.Phone; } }
+        public String? Password { get { return _user.Password; } }
 
-        public Client(String username, String name, String email, String password, int phone)
+        public Client(String username, String name, String email, String password, int phone, decimal startingBalance)
         {
             _user = new User(username, name, email, password, phone);
-            _wallet = new ClientWallet();
-            _username = _user.Username;
-            _name = _user.Name;
-            _email = _user.Email;
-            _password = _user.Password;
-            _phone = _user.Phone;
+            _wallet = new ClientWallet(startingBalance);
             _productCart = new List<ProductSeller>();
-            _alreadyBought = new List<dynamic>();
+            _alreadyBought = new List<ProductSeller>();
         }
 
-        public void AddToCart(ProductSeller product)
+        public void Buy(ProductSeller product, PaymentType paymentType)
         {
             _productCart.Add(product);
+            Buy(paymentType);
         }
 
-        public void RemoveFromCart(ProductSeller product)
+        public void Buy(PaymentType paymentType)
         {
-            _productCart.Remove(product);
+            if(_productCart.Count == 0)
+            {
+                throw new Exception("Empty cart");
+            }
+
+            decimal totalAmount = _productCart.Sum(product => product.Price);
+            if(totalAmount > _wallet.Balance && paymentType == PaymentType.Debit)
+            {
+                throw new Exception("Insufficient funds.");
+            }
+
+            foreach(var product in _productCart)
+            {
+                Pay(paymentType, product) ;
+            }
+        }
+
+        private void Pay(PaymentType paymentType, ProductSeller product)
+        {
+            _wallet.Pay(product.Price, paymentType);
+            product.Seller.CompleteSale(product, product.Price);
+
+            foreach (var item in _productCart)
+            {
+                AlreadyBought.Add(item);
+            }
+
+            ClearCart();
         }
 
         public void ClearCart()
         {
             foreach (var item in Cart)
             {
-                RemoveFromCart(item);
+                _productCart.Remove(item);
             }
         }
 
-        public void Buy(ProductSeller product)
+        public decimal CheckBalance()
         {
-            AddToCart(product);
-            Buy();
-        }
-
-        public void Buy()
-        {
-            if(Cart.Count == 0)
-            {
-                throw new Exception("Carrinho vazio");
-            }
-
-            decimal totalPrice = Cart.Sum(product => product.Price);
-
-            //ask for type of payment
-
-            Pay(totalPrice);
-        }
-
-        private void Pay(decimal total)
-        {
-            if(Wallet.Total < total)
-            {
-                throw new Exception("Saldo insuficiente");
-                //ask for deposit
-            }
-
-            //complete sale with seller (product, payment)
-
-            Wallet.Withdrawal(total);
-
-            ClearCart();
-        }
-
-        public void Deposit(decimal amount)
-        {
-            if(amount < 0)
-            {
-                throw new Exception("Valor invalido.");
-            }
-            Wallet.Deposit(amount);
-        }
-
-        public void CheckBalance()
-        {
-            Wallet.CheckBalance();
+            return _wallet.Balance;
         }
 
         public void RateProduct(ProductSeller product)
