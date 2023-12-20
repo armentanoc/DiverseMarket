@@ -55,12 +55,7 @@ namespace SalesApp.DomainLayer.Model.Users
         {
             _wallet.Pay(product.Price, paymentType);
             product.Seller.CompleteSale(product, product.Price);
-
-            foreach (var item in _productCart)
-            {
-                AlreadyBought.Add(item);
-            }
-
+            AlreadyBought.Add(product);
             ClearCart();
         }
 
