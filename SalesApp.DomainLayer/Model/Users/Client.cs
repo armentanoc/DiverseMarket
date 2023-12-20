@@ -11,8 +11,11 @@ namespace SalesApp.DomainLayer.Model.Users
         private String? _email;
         private String? _password;
         private int _phone;
-        private List<dynamic> _productCart;
+        private List<ProductSeller> _productCart;
         private List<dynamic> _alreadyBought; //TODO maybe link with a database
+
+        public List<ProductSeller> Cart { get { return _productCart; } }
+        public ClientWallet Wallet { get { return _wallet; } }
 
         public Client(String username, String name, String email, String password, int phone)
         {
@@ -23,35 +26,75 @@ namespace SalesApp.DomainLayer.Model.Users
             _email = _user.Email;
             _password = _user.Password;
             _phone = _user.Phone;
-            _productCart = new List<dynamic>();
+            _productCart = new List<ProductSeller>();
             _alreadyBought = new List<dynamic>();
+        }
+
+        public void AddToCart(ProductSeller product)
+        {
+            _productCart.Add(product);
+        }
+
+        public void RemoveFromCart(ProductSeller product)
+        {
+            _productCart.Remove(product);
+        }
+
+        public void ClearCart()
+        {
+            foreach (var item in Cart)
+            {
+                RemoveFromCart(item);
+            }
         }
 
         public void Buy(ProductSeller product)
         {
-            //add all the products to a cart
-            //calculate the total
+            AddToCart(product);
+            Buy();
+        }
+
+        public void Buy()
+        {
+            if(Cart.Count == 0)
+            {
+                throw new Exception("Carrinho vazio");
+            }
+
+            decimal totalPrice = Cart.Sum(product => product.Price);
+
             //ask for type of payment
-            //call pay()
+
+            Pay(totalPrice);
         }
 
-        private void Pay(ProductSeller product)
+        private void Pay(decimal total)
         {
-            //check value in wallet
-            //if low, ask for deposit
+            if(Wallet.Total < total)
+            {
+                throw new Exception("Saldo insuficiente");
+                //ask for deposit
+            }
+
             //complete sale with seller (product, payment)
-            //reduce ammount from wallet
-            //clear cart
+
+            Wallet.Withdrawal(total);
+
+            ClearCart();
         }
 
-        public void Deposit(decimal ammount)
+        public void Deposit(decimal amount)
         {
-            //add value to wallet total
+            if(amount < 0)
+            {
+                throw new Exception("Valor invalido.");
+            }
+            Wallet.Deposit(amount);
         }
 
         public void CheckBalance()
         {
-            //check total value from wallet
+            Wallet.CheckBalance();
         }
 
         public void RateProduct(ProductSeller product)

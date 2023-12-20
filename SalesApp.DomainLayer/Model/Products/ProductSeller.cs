@@ -2,5 +2,6 @@
 {
     public class ProductSeller
     {
+        public decimal Price { get; internal set; }
     }
 }
