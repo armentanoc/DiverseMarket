@@ -9,16 +9,16 @@ namespace SalesApp.DomainLayer.Model.Companies
     internal class Address
     {
 
-        public int ID {  get; set; }
-        public string ZipCode { get; set; }
-        public string Street { get; set; }
-        public string? Complement { get; set; }
-        public string Neighborhood { get; set; }
-        public string City { get; set; }
-        public string State { get; set; }
-        public Address(string zipCode, string street, string? complement, string neighborhood, string city, string state)
+        public int ID {  get; }
+        public string ZipCode { get; private set; }
+        public string Street { get; private set; }
+        public string? Complement { get; private set; }
+        public string Neighborhood { get; private set; }
+        public string City { get; private set; }
+        public string State { get; private set; }
+        public Address(string zipCode, string street, string neighborhood, string city, string state, string? complement = null)
         {
-            ID = GerarID();
+            ID = GenerateID();
             ZipCode = zipCode;
             Street = street;
             Complement = complement;
@@ -27,12 +27,13 @@ namespace SalesApp.DomainLayer.Model.Companies
             State = state;
         }
 
-        public int GerarID()
+        private int GenerateID()
         {
             return Math.Abs(DateTime.Now.GetHashCode());
         }
 
-
-        
+        // Metódos (?)
+        //private void SetZipCode(string zipCode){}
+        //private void SetComplement(string complement){}
     }
 }
