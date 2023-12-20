@@ -1,4 +1,7 @@
-﻿namespace SalesApp.Infrastructure
+﻿using SalesApp.Infrastructure.Operations;
+using System.Runtime.CompilerServices;
+
+namespace SalesApp.Infrastructure
 {
     internal class Program
     {
