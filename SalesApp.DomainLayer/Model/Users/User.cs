@@ -3,7 +3,7 @@ using System.Security.Cryptography;
 
 namespace SalesApp.DomainLayer.Model.Users
 {
-    public abstract class User
+    public class User
     {
         private int _id;
         private String? _username;
@@ -11,6 +11,7 @@ namespace SalesApp.DomainLayer.Model.Users
         private String? _email;
         private String? _password;
         private int _phone;
+        private RolesEnum _role;
 
         private int Id { get; }
         public String? Username { get { return _username; } }
@@ -18,15 +19,17 @@ namespace SalesApp.DomainLayer.Model.Users
         public String? Email { get { return _email; } }
         public int Phone { get { return _phone; } }
         protected String? Password { get { return _password; } }
+        public RolesEnum Role { get { return _role; } }
 
 
-        public User(String username, String name, String email, String password, int phone)
+        public User(String username, String name, String email, String password, int phone, RolesEnum role)
         {
             _id = GenerateID();
             _username = username;
             _name = name;
             _email = email;
             _phone = phone;
+            _role = role;
             SetHashPassword(password);
         }
 
