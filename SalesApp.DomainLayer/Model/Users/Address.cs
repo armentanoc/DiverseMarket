@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace SalesApp.DomainLayer.Model.Users
 {
-    internal class Address
+    public class Address
     {
         public int Id { get; }
         public string ZipCode { get; private set; }
