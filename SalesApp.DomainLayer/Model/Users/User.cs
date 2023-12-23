@@ -1,5 +1,5 @@
-﻿using System.Text;
-using System.Security.Cryptography;
+﻿using System.Security.Cryptography;
+using System.Text;
 
 namespace SalesApp.DomainLayer.Model.Users
 {
@@ -12,6 +12,7 @@ namespace SalesApp.DomainLayer.Model.Users
         private String? _password;
         private int _phone;
         private RolesEnum _role;
+        private Address _address;
 
         private int Id { get; }
         public String? Username { get { return _username; } }
@@ -20,9 +21,10 @@ namespace SalesApp.DomainLayer.Model.Users
         public int Phone { get { return _phone; } }
         protected String? Password { get { return _password; } }
         public RolesEnum Role { get { return _role; } }
+        private Address Address { get { return _address; } }
 
 
-        public User(String username, String name, String email, String password, int phone, RolesEnum role)
+        public User(String username, String name, String email, String password, int phone, RolesEnum role, Address address)
         {
             _id = GenerateID();
             _username = username;
@@ -30,6 +32,7 @@ namespace SalesApp.DomainLayer.Model.Users
             _email = email;
             _phone = phone;
             _role = role;
+            _address = address;
             SetHashPassword(password);
         }
 
@@ -87,7 +90,7 @@ namespace SalesApp.DomainLayer.Model.Users
                 byte[] hashedBytes = sha256.ComputeHash(Encoding.UTF8.GetBytes(input));
 
                 StringBuilder builder = new StringBuilder();
-                foreach(byte b in hashedBytes)
+                foreach (byte b in hashedBytes)
                 {
                     builder.Append(b.ToString("x2"));
                 }
