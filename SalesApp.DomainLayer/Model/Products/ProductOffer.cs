@@ -1,7 +1,7 @@
 namespace SalesApp.DomainLayer.Model.Products
 {
 
-    internal class ProductOffer
+    public class ProductOffer
     {
         public int Id { get; private set; }
         public int ProductId { get; private set; }
