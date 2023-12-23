@@ -6,10 +6,11 @@ namespace SalesApp.DomainLayer.Model.Users
     public class Customer : User
     {
         private CustomerWallet _wallet;
-        public List<ProductOffer> Cart { get; internal set; }
-        public List<ProductOffer> AlreadyBoughtItems { get; internal set; } //TODO maybe link with a database
+        public int Id { get; private set; }
+        public List<ProductOffer> Cart { get; }
+        public List<ProductOffer> AlreadyBoughtItems { get; } //TODO maybe link with a database
 
-        public Customer(string username, string name, string email, string password, int phone) : base(username, name, email, password, phone)
+        public Customer(string username, string name, string email, string password, int phone, RolesEnum role, Address address) : base(username, name, email, password, phone, role, address)
         {
             _wallet = new CustomerWallet();
             Cart = new List<ProductOffer>();
@@ -44,7 +45,8 @@ namespace SalesApp.DomainLayer.Model.Users
         private void Pay(PaymentType paymentType, ProductOffer product)
         {
             _wallet.Pay(product.Price, paymentType);
-            product.Seller.CompleteSale(product, product.Price);
+            //product.Seller.CompleteSale(product, product.Price);
+            //call CompleteSale() on the product seller
             AlreadyBoughtItems.Add(product);
             ClearCart();
         }
