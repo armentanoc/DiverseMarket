@@ -6,17 +6,17 @@ namespace SalesApp.DomainLayer.Model.Users
     public class Customer : User
     {
         private CustomerWallet _wallet;
-        public List<ProductSeller> Cart { get; internal set; }
-        public List<ProductSeller> AlreadyBoughtItems { get; internal set; } //TODO maybe link with a database
+        public List<ProductOffer> Cart { get; internal set; }
+        public List<ProductOffer> AlreadyBoughtItems { get; internal set; } //TODO maybe link with a database
 
         public Customer(string username, string name, string email, string password, int phone) : base(username, name, email, password, phone)
         {
             _wallet = new CustomerWallet();
-            Cart = new List<ProductSeller>();
-            AlreadyBoughtItems = new List<ProductSeller>();
+            Cart = new List<ProductOffer>();
+            AlreadyBoughtItems = new List<ProductOffer>();
         }
 
-        public void Buy(ProductSeller product, PaymentType paymentType)
+        public void Buy(ProductOffer product, PaymentType paymentType)
         {
             Cart.Add(product);
             Buy(paymentType);
@@ -41,7 +41,7 @@ namespace SalesApp.DomainLayer.Model.Users
             }
         }
 
-        private void Pay(PaymentType paymentType, ProductSeller product)
+        private void Pay(PaymentType paymentType, ProductOffer product)
         {
             _wallet.Pay(product.Price, paymentType);
             product.Seller.CompleteSale(product, product.Price);
@@ -62,7 +62,7 @@ namespace SalesApp.DomainLayer.Model.Users
             return _wallet.Balance;
         }
 
-        public void RateProduct(ProductSeller product)
+        public void RateProduct(ProductOffer product)
         {
             //choose product from already bought list
             //call ProductReview()
@@ -76,7 +76,7 @@ namespace SalesApp.DomainLayer.Model.Users
             throw new NotImplementedException();
         }
 
-        public void RequestRefund(ProductSeller product)
+        public void RequestRefund(ProductOffer product)
         {
             //choose product
             //call Refund()

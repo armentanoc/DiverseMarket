@@ -10,7 +10,7 @@ namespace SalesApp.DomainLayer.Model.Users
         //- Tem uma quantidade de vendas alcançadas, quantos clientes atendeu e quantos produtos possui
         //- Entra com login e senha
         //- Podem alterar suas senhas, mas nao o login
-        internal void CompleteSale(ProductSeller product, decimal price)
+        internal void CompleteSale(ProductOffer product, decimal price)
         {
             throw new NotImplementedException();
         }
