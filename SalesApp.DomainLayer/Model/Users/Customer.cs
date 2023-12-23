@@ -3,49 +3,39 @@ using SalesApp.DomainLayer.Model.Products;
 
 namespace SalesApp.DomainLayer.Model.Users
 {
-    public class Client
+    public class Customer : User
     {
-        private User _user;
-        private ClientWallet _wallet;
-        private List<ProductSeller> _productCart;
-        private List<ProductSeller> _alreadyBought; //TODO maybe link with a database
+        private CustomerWallet _wallet;
+        public List<ProductSeller> Cart { get; internal set; }
+        public List<ProductSeller> AlreadyBoughtItems { get; internal set; } //TODO maybe link with a database
 
-        public List<ProductSeller> Cart { get { return _productCart; } }
-        public List<ProductSeller> AlreadyBought { get { return _alreadyBought; } }
-        public String? Username { get { return _user.Username; } }
-        public String? Name { get { return _user.Name; } }
-        public String? Email { get { return _user.Email; } }
-        public int Phone { get { return _user.Phone; } }
-        public String? Password { get { return _user.Password; } }
-
-        public Client(String username, String name, String email, String password, int phone, decimal startingBalance)
+        public Customer(string username, string name, string email, string password, int phone) : base(username, name, email, password, phone)
         {
-            _user = new User(username, name, email, password, phone);
-            _wallet = new ClientWallet(startingBalance);
-            _productCart = new List<ProductSeller>();
-            _alreadyBought = new List<ProductSeller>();
+            _wallet = new CustomerWallet();
+            Cart = new List<ProductSeller>();
+            AlreadyBoughtItems = new List<ProductSeller>();
         }
 
         public void Buy(ProductSeller product, PaymentType paymentType)
         {
-            _productCart.Add(product);
+            Cart.Add(product);
             Buy(paymentType);
         }
 
         public void Buy(PaymentType paymentType)
         {
-            if(_productCart.Count == 0)
+            if(Cart.Count == 0)
             {
                 throw new Exception("Empty cart");
             }
 
-            decimal totalAmount = _productCart.Sum(product => product.Price);
+            decimal totalAmount = Cart.Sum(product => product.Price);
             if(totalAmount > _wallet.Balance && paymentType == PaymentType.Debit)
             {
                 throw new Exception("Insufficient funds.");
             }
 
-            foreach(var product in _productCart)
+            foreach(var product in Cart)
             {
                 Pay(paymentType, product) ;
             }
@@ -55,7 +45,7 @@ namespace SalesApp.DomainLayer.Model.Users
         {
             _wallet.Pay(product.Price, paymentType);
             product.Seller.CompleteSale(product, product.Price);
-            AlreadyBought.Add(product);
+            AlreadyBoughtItems.Add(product);
             ClearCart();
         }
 
@@ -63,7 +53,7 @@ namespace SalesApp.DomainLayer.Model.Users
         {
             foreach (var item in Cart)
             {
-                _productCart.Remove(item);
+                Cart.Remove(item);
             }
         }
 
@@ -76,24 +66,28 @@ namespace SalesApp.DomainLayer.Model.Users
         {
             //choose product from already bought list
             //call ProductReview()
+            throw new NotImplementedException();
         }
 
         public void RateSeller(Seller seller)
         {
             //choose seller based on product from already bought list
             //call SellerReviews()
+            throw new NotImplementedException();
         }
 
         public void RequestRefund(ProductSeller product)
         {
             //choose product
             //call Refund()
+            throw new NotImplementedException();
         }
 
         public void RequestHelp()
         {
             //contact moderator
             //send help message
+            throw new NotImplementedException();
         }
     }
 }

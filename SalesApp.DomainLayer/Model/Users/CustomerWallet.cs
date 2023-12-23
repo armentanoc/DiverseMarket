@@ -4,14 +4,9 @@ using SalesApp.DomainLayer.Model.Products;
 
 namespace SalesApp.DomainLayer.Model.Users
 {
-    public class ClientWallet
+    public class CustomerWallet
     {
         internal decimal Balance { get; set; }
-
-        internal ClientWallet(decimal startingBalance)
-        {
-           Balance = startingBalance;
-        }
 
         internal void Pay(decimal amount, PaymentType paymentType)
         {

@@ -5,18 +5,18 @@ namespace SalesApp.DomainLayer.Model.Users
 {
     public class User
     {
-        private String? _username;
+        private String _username;
         private String? _name;
         private String? _email;
-        private String? _password;
+        private String _password;
         private int _phone;
 
 
-        public String? Username { get { return _username; } }
+        public String Username { get { return _username; } }
         public String? Name { get { return _name; } }
         public String? Email { get { return _email; } }
         public int Phone { get { return _phone; } }
-        public String? Password { get { return _password; } }
+        public String Password { get { return _password; } }
 
 
         public User(String username, String name, String email, String password, int phone)
