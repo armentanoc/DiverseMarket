@@ -20,11 +20,16 @@ namespace SalesApp.Infrastructure
 
                     // Display table schemas
                     DatabaseConnection.DisplayTableSchema("Address");
-                    DatabaseConnection.DisplayTableSchema("User");
                     DatabaseConnection.DisplayTableSchema("Company");
+                    DatabaseConnection.DisplayTableSchema("Customer");
                     DatabaseConnection.DisplayTableSchema("Product");
-                    DatabaseConnection.DisplayTableSchema("SellingItem");
+                    DatabaseConnection.DisplayTableSchema("ProductOffer");
                     DatabaseConnection.DisplayTableSchema("ProductReview");
+                    DatabaseConnection.DisplayTableSchema("ReviewCompany");
+                    DatabaseConnection.DisplayTableSchema("ReviewSellingItem");
+                    DatabaseConnection.DisplayTableSchema("Selling");
+                    DatabaseConnection.DisplayTableSchema("User");
+                    DatabaseConnection.DisplayTableSchema("WalletTransactions");
 
                     // Close the connection
                     DatabaseConnection.Close();
