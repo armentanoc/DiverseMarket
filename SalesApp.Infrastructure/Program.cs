@@ -1,4 +1,4 @@
-﻿using SalesApp.Infrastructure.Operations;
+using SalesApp.Infrastructure.Operations;
 using System.Runtime.CompilerServices;
 
 namespace SalesApp.Infrastructure
