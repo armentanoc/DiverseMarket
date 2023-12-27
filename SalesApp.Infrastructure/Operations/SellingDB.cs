@@ -44,7 +44,7 @@ namespace SalesApp.Infrastructure.Operations
                         _command.CommandText = "INSERT INTO SellingItem (Selling_id, Product_id, quantity, price, Company_id) " +
                                               "VALUES (@Selling_id, @Product_id, @quantity, @price, @Company_id);";
                         _command.Parameters.AddWithValue("@Selling_id", selling.Id);
-                        _command.Parameters.AddWithValue("@Product_id", sellingItem.Product.Id);
+                       // _command.Parameters.AddWithValue("@Product_id", sellingItem.Product.Id);
                         _command.Parameters.AddWithValue("@quantity", sellingItem.Quantity);
                         _command.Parameters.AddWithValue("@price", sellingItem.Price);
                        // _command.Parameters.AddWithValue("@Company_id", sellingItem.Company.Id);
@@ -89,10 +89,56 @@ namespace SalesApp.Infrastructure.Operations
             {
                 while (reader.Read())
                 {
-                    sellingItems.Add(MapSellingItemFromReader(reader));
+                  //  sellingItems.Add(MapSellingItemFromReader(reader));
                 }
             }
             return sellingItems;
+        }
+
+        public void UpdateSelling(Selling selling)
+        {
+            using (var transaction = _connection.BeginTransaction())
+            {
+                try
+                {
+                    // Update Selling
+                    _command.CommandText = "UPDATE Selling SET date_sale = @date_sale, amount = @amount, " +
+                                            "Client_id = @Client_id, date_EndSale = @date_EndSale WHERE id = @id;";
+                    _command.Parameters.AddWithValue("@date_sale", selling.SaleStartDate);
+                    _command.Parameters.AddWithValue("@amount", selling.TotalValue);
+                    _command.Parameters.AddWithValue("@Client_id", selling.Customer.Id);
+                    _command.Parameters.AddWithValue("@date_EndSale", selling.SaleEndDate);
+                    _command.Parameters.AddWithValue("@id", selling.Id);
+
+                    _command.ExecuteNonQuery();
+
+                    // Delete existing SellingItems
+                    _command.CommandText = "DELETE FROM SellingItem WHERE Selling_id = @Selling_id;";
+                    _command.Parameters.AddWithValue("@Selling_id", selling.Id);
+                    _command.ExecuteNonQuery();
+
+                    // Insert updated SellingItems
+                    foreach (var sellingItem in selling.SellingItems)
+                    {
+                        _command.CommandText = "INSERT INTO SellingItem (Selling_id, Product_id, quantity, price, Company_id) " +
+                                              "VALUES (@Selling_id, @Product_id, @quantity, @price, @Company_id);";
+                        _command.Parameters.AddWithValue("@Selling_id", selling.Id);
+                       // _command.Parameters.AddWithValue("@Product_id", sellingItem.Product.Id);
+                        _command.Parameters.AddWithValue("@quantity", sellingItem.Quantity);
+                        _command.Parameters.AddWithValue("@price", sellingItem.Price);
+                      //  _command.Parameters.AddWithValue("@Company_id", sellingItem.Company.Id);
+
+                        _command.ExecuteNonQuery();
+                    }
+
+                    transaction.Commit();
+                }
+                catch (Exception)
+                {
+                    transaction.Rollback();
+                    throw;
+                }
+            }
         }
 
         private Selling MapSellingFromReader(IDataReader reader)
@@ -103,21 +149,23 @@ namespace SalesApp.Infrastructure.Operations
                 SaleStartDate = Convert.ToDateTime(reader["date_sale"]),
                 SaleEndDate = reader["date_EndSale"] == DBNull.Value ? null : (DateTime?)reader["date_EndSale"],
                 TotalValue = Convert.ToDecimal(reader["amount"]),
-                Customer= new Customer { Id = Convert.ToInt32(reader["Client_id"]) },
+               // Customer= new Customer { Id = Convert.ToInt32(reader["Client_id"]) },
             };
         }
 
-        private SellingItem MapSellingItemFromReader(IDataReader reader)
+       /* private SellingItem MapSellingItemFromReader(IDataReader reader)
         {
             int quantity = Convert.ToInt32(reader["quantity"]);
             decimal price = Convert.ToDecimal(reader["price"]);
             Product product = new Product(Convert.ToInt32(reader["Product_id"]));
             Company company = new Company();
-            SellingItem sellingItem = new SellingItem();
-            return sellingItem;
+            SellingItem sellingItem = new SellingItem(product, company, quantity, price);
+           return sellingItem;
          
-        }
+        }*/
     }
+
+
 
 }
 
