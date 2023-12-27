@@ -6,15 +6,17 @@ using System.Threading.Tasks;
 
 namespace SalesApp.Infrastructure.Repositories
 {
-    internal class ProductDB
+    internal class ReviewCompanyDB
     {
         internal static string InitializeTable()
         {
             return @"
-            CREATE TABLE IF NOT EXISTS Product (
+            CREATE TABLE IF NOT EXISTS ReviewCompany (
                 id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
-                name VARCHAR(45) NOT NULL,
-                description VARCHAR(45) NOT NULL
+                Client_id INTEGER,
+                Company_id INTEGER,
+                review TEXT NOT NULL CHECK(review IN ('Pessimo', 'Ruim', 'Regular', 'Otimo', 'Excelente')),
+                comment VARCHAR(45)
             );";
 
         }

@@ -6,15 +6,17 @@ using System.Threading.Tasks;
 
 namespace SalesApp.Infrastructure.Repositories
 {
-    internal class ProductDB
+    internal class ProductOfferDB
     {
         internal static string InitializeTable()
         {
             return @"
-            CREATE TABLE IF NOT EXISTS Product (
+            CREATE TABLE IF NOT EXISTS ProductOffer (
                 id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
-                name VARCHAR(45) NOT NULL,
-                description VARCHAR(45) NOT NULL
+                Company_id INTEGER,
+                Product_id INTEGER,
+                price DECIMAL(10,2),
+                quantity UNSIGNED INTEGER
             );";
 
         }

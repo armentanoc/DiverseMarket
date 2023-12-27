@@ -6,15 +6,16 @@ using System.Threading.Tasks;
 
 namespace SalesApp.Infrastructure.Repositories
 {
-    internal class ProductDB
+    internal class WalletTransactionsDB
     {
         internal static string InitializeTable()
         {
             return @"
-            CREATE TABLE IF NOT EXISTS Product (
+            CREATE TABLE IF NOT EXISTS WalletTransactions (
                 id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
-                name VARCHAR(45) NOT NULL,
-                description VARCHAR(45) NOT NULL
+                amount DECIMAL(10,2),
+                date_transaction DATETIME,
+                type TEXT NOT NULL CHECK(type IN ('Debit', 'Credit'))
             );";
 
         }

@@ -13,7 +13,7 @@ namespace SalesApp.Infrastructure.Repositories
             return @"
             CREATE TABLE IF NOT EXISTS ProductReview (
                 id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
-                review_enum TEXT NOT NULL CHECK(review_enum IN ('Pessimo', 'Ruim', 'Regular', 'Otimo', 'Excelente')),
+                review TEXT NOT NULL CHECK(review IN ('Pessimo', 'Ruim', 'Regular', 'Otimo', 'Excelente')),
                 comment VARCHAR(45),
                 SellingItem_Selling_id INTEGER NOT NULL,
                 SellingItem_Product_id INTEGER NOT NULL,
