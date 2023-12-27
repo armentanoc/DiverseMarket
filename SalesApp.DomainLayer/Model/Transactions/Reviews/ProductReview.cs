@@ -1,4 +1,4 @@
-﻿using SalesApp.DomainLayer.Model.Products;
+using SalesApp.DomainLayer.Model.Products;
 
 namespace SalesApp.DomainLayer.Model.Transactions.Reviews
 {
