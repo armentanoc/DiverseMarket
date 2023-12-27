@@ -10,20 +10,22 @@ namespace SalesApp.DomainLayer.Model.Transactions
         public DateTime SaleStartDate { get; private set; }
         public DateTime? SaleEndDate { get; private set; }
         public decimal TotalValue { get; private set; }
-        public List<ProductOffer> Products { get; private set; }
+       // public List<Refund> Refunds { get; private set; }
+       // public bool hasRefund { get; private set; }
+        public List<SellingItem> SellingItems {  get; private set; } 
         public SellingStatus Status { get; private set; }
 
         public Selling()
         {
-            Products = new List<ProductOffer>();
+             SellingItems = new List<SellingItem>();
         }
 
         public Selling(Client client)
         {
             Client = client;
             SaleStartDate = DateTime.Now;
-            TotalValue = CalculateTotalValue(); // Pode ser ajustado conforme necessário
-            Products = new List<ProductOffer>();
+            TotalValue = CalculateTotalValue();
+            SellingItems = new List<SellingItem>();
             Status = SellingStatus.Pending;
         }
 
@@ -36,26 +38,26 @@ namespace SalesApp.DomainLayer.Model.Transactions
         {
             decimal total = 0.0m;
 
-            if (Products != null)
+            if (SellingItems != null)
             {
-                foreach (ProductOffer productOffer in Products)
+                foreach (SellingItem sellingItem in SellingItems)
                 {
-                    total += productOffer.Quantity * productOffer.Price;
+                    total += sellingItem.Quantity * sellingItem.Price;
                 }
             }
             return total;
         }
 
 
-        public void AddProduct(ProductOffer product)
+        public void AddProduct(SellingItem item)
         {
-            Products.Add(product);
+            SellingItems.Add(item);
             UpdateTotalValue();
         }
 
-        public void RemoveProduct(ProductOffer product)
+        public void RemoveProduct(SellingItem item)
         {
-            Products.Remove(product);
+            SellingItems.Remove(item);
             UpdateTotalValue();
         }
         public void CompleteSale()
@@ -75,14 +77,6 @@ namespace SalesApp.DomainLayer.Model.Transactions
             }
         }
 
-        public void RefundSale()
-        {
-            if (Status == SellingStatus.Pending || Status == SellingStatus.InProgress)
-            {
-                Status = SellingStatus.Refunded;
-                SaleEndDate = DateTime.Now;
-            }
-        }
 
 
     }
