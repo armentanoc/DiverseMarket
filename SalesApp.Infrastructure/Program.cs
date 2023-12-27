@@ -12,12 +12,18 @@ namespace SalesApp.Infrastructure
             {
                 if (DatabaseConnection.Open())
                 {
-                    // Perform other operations or queries here
+                    // Creates tables
+                    DatabaseConnection.CreateTables();
+
+                    Console.WriteLine($"\nLocalização do banco: {Directory.GetCurrentDirectory()}");
+                    //sqlite3 current directory to check tables
 
                     // Display table schemas
                     DatabaseConnection.DisplayTableSchema("Address");
                     DatabaseConnection.DisplayTableSchema("User");
+                    DatabaseConnection.DisplayTableSchema("Company");
                     DatabaseConnection.DisplayTableSchema("Product");
+                    DatabaseConnection.DisplayTableSchema("SellingItem");
                     DatabaseConnection.DisplayTableSchema("ProductReview");
 
                     // Close the connection

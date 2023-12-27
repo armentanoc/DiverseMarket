@@ -1,16 +1,17 @@
-﻿
+﻿using System;
 using System.Data.SQLite;
+using System.IO;
+using SalesApp.Infrastructure.Repositories;
 
 namespace SalesApp.Infrastructure.Operations
 {
     internal abstract class DatabaseConnection
     {
         private static string _connectionString = "Data Source=bancotemporario.db;Version=3;";
-
         protected static SQLiteConnection _connection;
-
         protected static SQLiteCommand _command;
-        public static bool Open()
+
+        internal static bool Open()
         {
             try
             {
@@ -18,12 +19,12 @@ namespace SalesApp.Infrastructure.Operations
 
                 if (!File.Exists("bancotemporario.db"))
                 {
+                    Console.WriteLine("Creating a new database file.");
                     CreateDB();
                 }
                 else
                 {
                     _connection.Open();
-                    _command = _connection.CreateCommand();
                 }
 
                 return true;
@@ -31,63 +32,73 @@ namespace SalesApp.Infrastructure.Operations
             catch (Exception ex)
             {
                 Console.WriteLine($"Error opening the database: {ex.Message}");
+                Console.ReadKey();
                 return false;
             }
         }
-        private static void CreateDB()
+
+        internal static void CreateTables()
+        {
+            _command = _connection.CreateCommand();
+            using (var transaction = _connection.BeginTransaction())
+            {
+                CreateAndLogTable("Address", AddressDB.InitializeTable);
+                CreateAndLogTable("User", UserDB.InitializeTable);
+                CreateAndLogTable("Company", CompanyDB.InitializeTable);
+                CreateAndLogTable("Product", ProductDB.InitializeTable);
+                CreateAndLogTable("ReviewSellingItem", ReviewSellingItemDB.InitializeTable);
+                CreateAndLogTable("ProductReview", ProductReviewDB.InitializeTable);
+
+                transaction.Commit();
+            }
+        }
+        internal static void CreateDB()
         {
             try
             {
                 SQLiteConnection.CreateFile("bancotemporario.db");
-                _connection.Open();
-
-                using (var transaction = _connection.BeginTransaction())
-                {
-                    _command = _connection.CreateCommand();
-
-                    _command.CommandText = "CREATE TABLE IF NOT EXISTS `Address` (\r\n    `id` INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,\r\n    `street` VARCHAR(45) NOT NULL,\r\n    " +
-                "`complement` VARCHAR(45),\r\n    `zipcode` VARCHAR(45) NOT NULL,\r\n    `neighborhood` VARCHAR(45) NOT NULL,\r\n    `city` VARCHAR(45) NOT NULL,\r\n    `state` VARCHAR(45) NOT NULL\r\n);";
-                    _command.ExecuteNonQuery();
-                    Console.WriteLine("Address table created.");
-
-                    _command.CommandText = "CREATE TABLE IF NOT EXISTS `User` (\r\n    `id` INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,\r\n    " +
-                "`name` VARCHAR(45) NOT NULL,\r\n    `username` VARCHAR(45) NOT NULL UNIQUE,\r\n    `password` VARCHAR(45) NOT NULL,\r\n    `email` VARCHAR(45) NOT NULL,\r\n   " +
-                " `telephone` INT,\r\n    `role` TEXT NOT NULL CHECK(role IN ('Seller', 'Client', 'Moderator')),\r\n    `Address_id` INTEGER NOT NULL,\r\n    FOREIGN KEY (`Address_id`) REFERENCES `Address` (`id`)\r\n      " +
-                " ON DELETE NO ACTION ON UPDATE NO ACTION\r\n);";
-                    _command.ExecuteNonQuery();
-                    Console.WriteLine("User table created.");
-
-                    _command.CommandText = ProductDB.CreateTable();
-                    _command.ExecuteNonQuery();
-                    Console.WriteLine("Product table created.");
-
-                    _command.CommandText = SellingItemDB.CreateTable();
-                    _command.ExecuteNonQuery();
-                    Console.WriteLine("SellingItem table created.");
-
-
-                    _command.CommandText = ProductReviewDB.CreateTable();
-                    _command.ExecuteNonQuery();
-                    Console.WriteLine("ProductReview table created.");
-
-                    // Create other tables as needed
-
-                    transaction.Commit();
-                }
             }
             catch (Exception ex)
             {
                 Console.WriteLine($"Error creating the database: {ex.Message}");
+                Console.ReadKey();
             }
         }
 
-        private static void InsertInitialData()
+        internal static void CreateAndLogTable(string tableName, Func<string> createTableMethod)
         {
-            _command.CommandText = "";
-            _command.ExecuteNonQuery();
+            using (var command = _connection.CreateCommand())
+            {
+                try
+                {
+                    if (!TableExists(tableName, command))
+                    {
+                        string createTableSql = createTableMethod();
+                        command.CommandText = createTableSql;
+                        command.ExecuteNonQuery();
+
+                        Console.WriteLine($"{tableName} table created.");
+                    }
+                    else
+                    {
+                        Console.WriteLine($"{tableName} table already exists.");
+                    }
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine($"Error creating {tableName} table: {ex.Message}");
+                }
+            }
         }
 
-        public static bool Close()
+        private static bool TableExists(string tableName, SQLiteCommand command)
+        {
+            command.CommandText = $"SELECT name FROM sqlite_master WHERE type='table' AND name='{tableName}'";
+            object result = command.ExecuteScalar();
+            return result != null && result.ToString() == tableName;
+        }
+
+        internal static bool Close()
         {
             try
             {
@@ -97,11 +108,12 @@ namespace SalesApp.Infrastructure.Operations
             catch (SQLiteException e)
             {
                 Console.WriteLine($"Error closing the database connection: {e.Message}");
+                Console.ReadKey();
                 return false;
             }
         }
 
-        public static void DisplayTableSchema(string tableName)
+        internal static void DisplayTableSchema(string tableName)
         {
             try
             {
