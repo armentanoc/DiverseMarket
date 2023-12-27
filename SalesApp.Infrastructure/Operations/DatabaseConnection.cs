@@ -1,68 +1,113 @@
-﻿
+﻿using System;
 using System.Data.SQLite;
+using System.IO;
+using SalesApp.Infrastructure.Repositories;
 
 namespace SalesApp.Infrastructure.Operations
 {
     internal abstract class DatabaseConnection
     {
-        private static string _connectionString = "Data Source=bancotemporario.db;Version=3;";
-
+        private static string _databaseName = "bancotemporario";
+        private static string _connectionString = $"Data Source={_databaseName}.db;Version=3;";
         protected static SQLiteConnection _connection;
-
         protected static SQLiteCommand _command;
-        public static bool Open()
-        {
 
-            if (!File.Exists(@"bancotemporario.db"))
+        internal static bool Open()
+        {
+            try
             {
-                CreateDB();
+                _connection = new SQLiteConnection(_connectionString);
+
+                if (!File.Exists($"{_databaseName}.db"))
+                {
+                    Console.WriteLine("Criando um novo arquivo de banco.\n");
+                    CreateDB();
+                }
+                else
+                {
+                    Console.WriteLine("Arquivo de banco de dados já existe.\n");
+                }
+
+                _connection.Open();
+
                 return true;
             }
-            else 
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Erro ao abrir o banco de dados: {ex.Message}\n");
+                Console.ReadKey();
+                return false;
+            }
+        }
+
+        internal static void CreateTables()
+        {
+            _command = _connection.CreateCommand();
+            using (var transaction = _connection.BeginTransaction())
+            {
+                CreateAndLogTable("Address", AddressDB.InitializeTable);
+                CreateAndLogTable("User", UserDB.InitializeTable);
+                CreateAndLogTable("Company", CompanyDB.InitializeTable);
+                CreateAndLogTable("Customer", CustomerDB.InitializeTable);
+                CreateAndLogTable("ProductCategory", ProductCategoryDB.InitializeTable);
+                CreateAndLogTable("Product", ProductDB.InitializeTable);
+                CreateAndLogTable("ProductOffer", ProductOfferDB.InitializeTable);
+                CreateAndLogTable("ProductReview", ProductReviewDB.InitializeTable);
+                CreateAndLogTable("ReviewCompany", ReviewCompanyDB.InitializeTable);
+                CreateAndLogTable("ReviewSellingItem", ReviewSellingItemDB.InitializeTable);
+                CreateAndLogTable("Selling", SellingDB.InitializeTable);
+                CreateAndLogTable("WalletTransactions", WalletTransactionsDB.InitializeTable);
+
+                transaction.Commit();
+            }
+        }
+        internal static void CreateDB()
+        {
+            try
+            {
+                SQLiteConnection.CreateFile($"{_databaseName}.db");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Erro ao criar o banco de dados: {ex.Message}");
+                Console.ReadKey();
+            }
+        }
+
+        internal static void CreateAndLogTable(string tableName, Func<string> createTableMethod)
+        {
+            using (var command = _connection.CreateCommand())
             {
                 try
                 {
-                    _connection = new SQLiteConnection(_connectionString);
-                    _connection.Open();
-                    return true;
+                    if (!TableExists(tableName, command))
+                    {
+                        string createTableSql = createTableMethod();
+                        command.CommandText = createTableSql;
+                        command.ExecuteNonQuery();
+
+                        Console.WriteLine($"Tabela {tableName} criada.");
+                    }
+                    else
+                    {
+                        Console.WriteLine($"Tabela {tableName} já existe.");
+                    }
                 }
-                catch (SQLiteException e)
+                catch (Exception ex)
                 {
-                    Console.WriteLine("An error occured when an attempt to open a connection to this database was made: " + e.Message);
+                    Console.WriteLine($"Erro ao criar a tabela {tableName}: {ex.Message}");
                 }
             }
-                
-            return false;
         }
 
-
-        private static void CreateDB()
+        private static bool TableExists(string tableName, SQLiteCommand command)
         {
-            SQLiteConnection.CreateFile(@"bancotemporario.db");
-
-            _connection = new SQLiteConnection($"{_connectionString}New=True;");
-            _connection.Open();
-
-            _command = new SQLiteCommand(_connection);
-            _command.CommandText = "CREATE TABLE IF NOT EXISTS `Address` (\r\n    `id` INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,\r\n    `street` VARCHAR(45) NOT NULL,\r\n    " +
-                "`complement` VARCHAR(45),\r\n    `zipcode` VARCHAR(45) NOT NULL,\r\n    `neighborhood` VARCHAR(45) NOT NULL,\r\n    `city` VARCHAR(45) NOT NULL,\r\n    `state` VARCHAR(45) NOT NULL\r\n);";
-            _command.ExecuteNonQuery(); //address table
-
-            _command.CommandText = "CREATE TABLE IF NOT EXISTS `User` (\r\n    `id` INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,\r\n    " +
-                "`name` VARCHAR(45) NOT NULL,\r\n    `username` VARCHAR(45) NOT NULL UNIQUE,\r\n    `password` VARCHAR(45) NOT NULL,\r\n    `email` VARCHAR(45) NOT NULL,\r\n   " +
-                " `telephone` INT,\r\n    `role` TEXT NOT NULL CHECK(role IN ('Seller', 'Client', 'Moderator')),\r\n    `Address_id` INTEGER NOT NULL,\r\n    FOREIGN KEY (`Address_id`) REFERENCES `Address` (`id`)\r\n      " +
-                " ON DELETE NO ACTION ON UPDATE NO ACTION\r\n);";
-            _command.ExecuteNonQuery();
-            InsertInitialData();
+            command.CommandText = $"SELECT name FROM sqlite_master WHERE type='table' AND name='{tableName}'";
+            object result = command.ExecuteScalar();
+            return result != null && result.ToString() == tableName;
         }
 
-        private static void InsertInitialData()
-        {
-            _command.CommandText = "";
-            _command.ExecuteNonQuery();
-        }
-
-        protected static bool Close()
+        internal static bool Close()
         {
             try
             {
@@ -71,9 +116,45 @@ namespace SalesApp.Infrastructure.Operations
             }
             catch (SQLiteException e)
             {
-                Console.WriteLine("An error occured when an attempt to close a connection to this database was made: " + e.Message);
+                Console.WriteLine($"Erro ao fechar a conexão com o banco de dados: {e.Message}");
+                Console.ReadKey();
+                return false;
             }
-            return false;
+        }
+
+        internal static void DisplayTableSchema(string tableName)
+        {
+            try
+            {
+                if (_command != null)
+                {
+                    _command.CommandText = $"PRAGMA table_info({tableName})";
+                    using (var reader = _command.ExecuteReader())
+                    {
+                        Console.WriteLine($"\nEsquema da Tabela {tableName}:\n");
+                        Console.WriteLine("Nome da Coluna".PadRight(25) + "Tipo".PadRight(15) + "NotNull".PadRight(10) + "PrimaryKey");
+                        Console.WriteLine("------------------------------------------------------------");
+
+                        while (reader.Read())
+                        {
+                            string columnName = reader["name"].ToString();
+                            string columnType = reader["type"].ToString();
+                            bool notNull = Convert.ToBoolean(reader["notnull"]);
+                            bool isPrimaryKey = Convert.ToBoolean(reader["pk"]);
+
+                            Console.WriteLine($"{columnName.PadRight(25)}{columnType.PadRight(15)}{notNull.ToString().PadRight(10)}{isPrimaryKey}");
+                        }
+                    }
+                }
+                else
+                {
+                    Console.WriteLine("_command é nulo. Certifique-se de que está devidamente inicializado.");
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Erro ao exibir o esquema da tabela: {ex.Message}");
+            }
         }
     }
 }
