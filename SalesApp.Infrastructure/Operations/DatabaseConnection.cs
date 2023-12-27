@@ -49,6 +49,7 @@ namespace SalesApp.Infrastructure.Operations
                 CreateAndLogTable("User", UserDB.InitializeTable);
                 CreateAndLogTable("Company", CompanyDB.InitializeTable);
                 CreateAndLogTable("Customer", CustomerDB.InitializeTable);
+                CreateAndLogTable("ProductCategory", ProductCategoryDB.InitializeTable);
                 CreateAndLogTable("Product", ProductDB.InitializeTable);
                 CreateAndLogTable("ProductOffer", ProductOfferDB.InitializeTable);
                 CreateAndLogTable("ProductReview", ProductReviewDB.InitializeTable);

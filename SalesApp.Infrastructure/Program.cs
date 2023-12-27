@@ -22,6 +22,7 @@ namespace SalesApp.Infrastructure
                     DatabaseConnection.DisplayTableSchema("Address");
                     DatabaseConnection.DisplayTableSchema("Company");
                     DatabaseConnection.DisplayTableSchema("Customer");
+                    DatabaseConnection.DisplayTableSchema("ProductCategory");
                     DatabaseConnection.DisplayTableSchema("Product");
                     DatabaseConnection.DisplayTableSchema("ProductOffer");
                     DatabaseConnection.DisplayTableSchema("ProductReview");
