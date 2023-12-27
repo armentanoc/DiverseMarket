@@ -11,16 +11,16 @@ namespace SalesApp.DomainLayer.Model.Transactions
 {
     public class SellingItem
     {
-     //   public Product Product {  get;  set; }
-       // public  Company Company { get;  set; }
+        public int ProductId {  get; set; }
+        public  int CompanyId { get;  set; }
         public int Quantity { get; set; }
         public Decimal Price { get; set; }
 
 
-        public SellingItem(Product product, Company company, int quantity, Decimal price)
+        public SellingItem(int productId, int companyId, int quantity, Decimal price)
         {
-         //   Product = product;
-           // Company = company;
+            ProductId = productId;
+            CompanyId = companyId;
             Quantity = quantity;
             Price = price;
         }

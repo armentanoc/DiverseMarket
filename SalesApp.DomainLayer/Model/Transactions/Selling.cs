@@ -6,7 +6,7 @@ namespace SalesApp.DomainLayer.Model.Transactions
     public class Selling
     {
         public int? Id { get; set; }
-        public Customer Customer { get;  set; }
+        public int CustomerId { get;  set; }
         public DateTime SaleStartDate { get; set; }
         public DateTime? SaleEndDate { get; set; }
         public decimal TotalValue { get; set; }
@@ -20,9 +20,9 @@ namespace SalesApp.DomainLayer.Model.Transactions
              SellingItems = new List<SellingItem>();
         }
 
-        public Selling(Customer customer)
+        public Selling(int customerId)
         {
-            Customer = customer;
+            CustomerId = customerId;
             SaleStartDate = DateTime.Now;
             TotalValue = CalculateTotalValue();
             SellingItems = new List<SellingItem>();

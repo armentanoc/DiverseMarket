@@ -2,8 +2,6 @@
 
 namespace SalesApp.DomainLayer.Model.Companies
 {
-    internal class Company
-    {
         public class Company : User
         {
             //- Cadastradas pelo moderador
@@ -105,4 +103,4 @@ namespace SalesApp.DomainLayer.Model.Companies
         }
 
     }
-}
+
