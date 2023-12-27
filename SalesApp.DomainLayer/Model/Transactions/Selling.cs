@@ -5,24 +5,24 @@ namespace SalesApp.DomainLayer.Model.Transactions
 {
     public class Selling
     {
-        public int? Id { get; private set; }
-        public Client Client { get; private set; }
-        public DateTime SaleStartDate { get; private set; }
-        public DateTime? SaleEndDate { get; private set; }
-        public decimal TotalValue { get; private set; }
+        public int? Id { get; set; }
+        public Customer Customer { get;  set; }
+        public DateTime SaleStartDate { get; set; }
+        public DateTime? SaleEndDate { get; set; }
+        public decimal TotalValue { get; set; }
        // public List<Refund> Refunds { get; private set; }
        // public bool hasRefund { get; private set; }
-        public List<SellingItem> SellingItems {  get; private set; } 
-        public SellingStatus Status { get; private set; }
+        public List<SellingItem> SellingItems {  get; set; } 
+        public SellingStatus Status { get; set; }
 
         public Selling()
         {
              SellingItems = new List<SellingItem>();
         }
 
-        public Selling(Client client)
+        public Selling(Customer customer)
         {
-            Client = client;
+            Customer = customer;
             SaleStartDate = DateTime.Now;
             TotalValue = CalculateTotalValue();
             SellingItems = new List<SellingItem>();

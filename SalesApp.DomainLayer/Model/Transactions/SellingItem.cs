@@ -4,21 +4,29 @@ using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using SalesApp.DomainLayer.Model.Companies;
+using SalesApp.DomainLayer.Model.Products;
 
 namespace SalesApp.DomainLayer.Model.Transactions
 {
     public class SellingItem
     {
-        // public Product Product {  get; private set; }
-        // public  Company Company { get; private set; }
-        public int Quantity { get; private set; }
-        public Decimal Price { get; private set; }
+     //   public Product Product {  get;  set; }
+       // public  Company Company { get;  set; }
+        public int Quantity { get; set; }
+        public Decimal Price { get; set; }
 
 
-        public SellingItem(int quantity, Decimal price)
+        public SellingItem(Product product, Company company, int quantity, Decimal price)
         {
+         //   Product = product;
+           // Company = company;
             Quantity = quantity;
             Price = price;
+        }
+
+        public SellingItem()
+        {
         }
 
         
