@@ -18,7 +18,7 @@ namespace SalesApp.Infrastructure.Repositories
                 review TEXT NOT NULL CHECK(review IN ('Pessimo', 'Ruim', 'Regular', 'Otimo', 'Excelente')),
                 comment VARCHAR(45)
             );";
-
         }
+
     }
 }
