@@ -1,48 +1,59 @@
 using SalesApp.Infrastructure.Operations;
-using System.Runtime.CompilerServices;
+using System;
 
 namespace SalesApp.Infrastructure
-
 {
-    internal class Program
+    public class Program
     {
-        static void Main(string[] args)
+        public static void Main(string[] args)
         {
             try
             {
-                if (DatabaseConnection.Open())
+                if (DatabaseConnection.Instance.Open())
                 {
                     // Creates tables
-                    DatabaseConnection.CreateTables();
+                    DatabaseConnection.Instance.CreateTables();
 
-                    Console.WriteLine($"\nLocalização do banco: {Directory.GetCurrentDirectory()}");
-                    //sqlite3 current directory to check tables
+                    Console.WriteLine($"\nLocalização do banco: {AppDomain.CurrentDomain.BaseDirectory}");
+                    // sqlite3 current directory to check tables
 
                     // Display table schemas
-                    DatabaseConnection.DisplayTableSchema("Address");
-                    DatabaseConnection.DisplayTableSchema("Company");
-                    DatabaseConnection.DisplayTableSchema("Customer");
-                    DatabaseConnection.DisplayTableSchema("ProductCategory");
-                    DatabaseConnection.DisplayTableSchema("Product");
-                    DatabaseConnection.DisplayTableSchema("ProductOffer");
-                    DatabaseConnection.DisplayTableSchema("ProductReview");
-                    DatabaseConnection.DisplayTableSchema("ReviewCompany");
-                    DatabaseConnection.DisplayTableSchema("ReviewSellingItem");
-                    DatabaseConnection.DisplayTableSchema("Selling");
-                    DatabaseConnection.DisplayTableSchema("User");
-                    DatabaseConnection.DisplayTableSchema("WalletTransactions");
+                    DisplayTableSchema("Address");
+                    DisplayTableSchema("Company");
+                    DisplayTableSchema("Customer");
+                    DisplayTableSchema("ProductCategory");
+                    DisplayTableSchema("Product");
+                    DisplayTableSchema("ProductOffer");
+                    DisplayTableSchema("ProductReview");
+                    DisplayTableSchema("ReviewCompany");
+                    DisplayTableSchema("ReviewSellingItem");
+                    DisplayTableSchema("Selling");
+                    DisplayTableSchema("User");
+                    DisplayTableSchema("WalletTransactions");
 
                     // Close the connection
-                    DatabaseConnection.Close();
+                    DatabaseConnection.Instance.Close();
                 }
                 else
                 {
-                    Console.WriteLine("Failed to open the database connection.");
+                    Console.WriteLine("Falha em abrire conexão com o banco de dados.");
                 }
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"An error occurred: {ex.Message}");
+                Console.WriteLine($"Erro: {ex.Message}");
+            }
+        }
+
+        private static void DisplayTableSchema(string tableName)
+        {
+            try
+            {
+                DatabaseConnection.Instance.DisplayTableSchema(tableName);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Erro exibindo o schema da tabela {tableName}: {ex.Message}");
             }
         }
     }

@@ -5,19 +5,40 @@ using SalesApp.Infrastructure.Repositories;
 
 namespace SalesApp.Infrastructure.Operations
 {
-    internal abstract class DatabaseConnection
+    internal sealed class DatabaseConnection
     {
-        private static string _databaseName = "bancotemporario";
-        private static string _connectionString = $"Data Source={_databaseName}.db;Version=3;";
-        protected static SQLiteConnection _connection;
-        protected static SQLiteCommand _command;
+        private static readonly DatabaseConnection instance = new DatabaseConnection();
+        private readonly string _databaseName = "bancotemporario";
+        private readonly string _connectionString;
+        private SQLiteConnection _connection;
+        private SQLiteCommand _command;
 
-        internal static bool Open()
+        public static DatabaseConnection Instance
+        {
+            get { return instance; }
+        }
+
+        private DatabaseConnection()
+        {
+            _connectionString = $"Data Source={_databaseName}.db;Version=3;";
+        }
+
+        public SQLiteConnection Connection
+        {
+            get
+            {
+                if (_connection == null)
+                {
+                    _connection = new SQLiteConnection(_connectionString);
+                }
+                return _connection;
+            }
+        }
+
+        internal bool Open()
         {
             try
             {
-                _connection = new SQLiteConnection(_connectionString);
-
                 if (!File.Exists($"{_databaseName}.db"))
                 {
                     Console.WriteLine("Criando um novo arquivo de banco.\n");
@@ -28,7 +49,7 @@ namespace SalesApp.Infrastructure.Operations
                     Console.WriteLine("Arquivo de banco de dados já existe.\n");
                 }
 
-                _connection.Open();
+                Connection.Open();
 
                 return true;
             }
@@ -40,10 +61,10 @@ namespace SalesApp.Infrastructure.Operations
             }
         }
 
-        internal static void CreateTables()
+        internal void CreateTables()
         {
-            _command = _connection.CreateCommand();
-            using (var transaction = _connection.BeginTransaction())
+            _command = Connection.CreateCommand();
+            using (var transaction = Connection.BeginTransaction())
             {
                 CreateAndLogTable("Address", AddressDB.InitializeTable);
                 CreateAndLogTable("User", UserDB.InitializeTable);
@@ -61,7 +82,8 @@ namespace SalesApp.Infrastructure.Operations
                 transaction.Commit();
             }
         }
-        internal static void CreateDB()
+
+        internal void CreateDB()
         {
             try
             {
@@ -74,9 +96,9 @@ namespace SalesApp.Infrastructure.Operations
             }
         }
 
-        internal static void CreateAndLogTable(string tableName, Func<string> createTableMethod)
+        internal void CreateAndLogTable(string tableName, Func<string> createTableMethod)
         {
-            using (var command = _connection.CreateCommand())
+            using (var command = Connection.CreateCommand())
             {
                 try
                 {
@@ -100,18 +122,18 @@ namespace SalesApp.Infrastructure.Operations
             }
         }
 
-        private static bool TableExists(string tableName, SQLiteCommand command)
+        private bool TableExists(string tableName, SQLiteCommand command)
         {
             command.CommandText = $"SELECT name FROM sqlite_master WHERE type='table' AND name='{tableName}'";
             object result = command.ExecuteScalar();
             return result != null && result.ToString() == tableName;
         }
 
-        internal static bool Close()
+        internal bool Close()
         {
             try
             {
-                _connection.Close();
+                Connection.Close();
                 return true;
             }
             catch (SQLiteException e)
@@ -122,7 +144,7 @@ namespace SalesApp.Infrastructure.Operations
             }
         }
 
-        internal static void DisplayTableSchema(string tableName)
+        internal void DisplayTableSchema(string tableName)
         {
             try
             {
