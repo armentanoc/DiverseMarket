@@ -2,17 +2,29 @@
 using SalesApp.DomainLayer.Model.Companies;
 using SalesApp.DomainLayer.Model.Transactions.Reviews;
 using SalesApp.DomainLayer.Model.Users;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using SalesApp.Infrastructure.Repositories;
+using System.Drawing;
 
 namespace SalesApp.DomainLayer.Service
 {
-    internal class Test
+    internal class CompanyReviewService
     {
-        internal static void TrySavingCompanyReview()
+        public static CompanyReviewDTO GetCompanyReviewDTO(int clientId, int companyId, string review, string? comment)
+        { 
+            return new CompanyReviewDTO(clientId, companyId, review, comment);
+        }
+
+        public static void AddCompanyReview(CompanyReviewDTO companyReviewDTO)
+        {
+            ReviewCompanyRepository.AddCompanyReview(
+                companyReviewDTO.ClientId,
+                companyReviewDTO.CompanyId,
+                companyReviewDTO.Review,
+                companyReviewDTO.Comment
+                );
+        }
+
+        internal static CompanyReview FakeCompanyReviewData()
         {
             var fakeAddress = new Address(
                  zipCode: "12345-678",
@@ -46,7 +58,6 @@ namespace SalesApp.DomainLayer.Service
 
             string fakeComment = "Excelente! Muito bom";
 
-            // Example CompanyReviewDTO
             var companyReview = new CompanyReview(
                 ReviewEnum.Excelente,
                 fakeCompany,
@@ -54,11 +65,8 @@ namespace SalesApp.DomainLayer.Service
                 fakeComment
                 );
 
-            // Create an instance of ReviewRepository and save the data
-            var companyReviewDTO = new CompanyReviewDTO(companyReview);
-            companyReviewDTO.Create();
+            return companyReview;
 
-            Console.WriteLine("Dados salvos com sucesso em ReviewCompany!");
         }
     }
 }

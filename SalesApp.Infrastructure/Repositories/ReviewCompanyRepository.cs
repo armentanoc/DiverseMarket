@@ -1,11 +1,28 @@
-﻿using System;
+﻿using SalesApp.Infrastructure.Operations;
+using System;
+using System.Collections.Generic;
 using System.Data.SQLite;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 
-namespace SalesApp.Infrastructure.Operations
+namespace SalesApp.Infrastructure.Repositories
 {
-    public class SaveCompanyReview
+    public class ReviewCompanyRepository
     {
-        public static void Execute(int clientId, int companyId, string review, string comment)
+        internal static string InitializeTable()
+        {
+            return @"
+            CREATE TABLE IF NOT EXISTS ReviewCompany (
+                id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+                Client_id INTEGER,
+                Company_id INTEGER,
+                review TEXT NOT NULL CHECK(review IN ('Pessimo', 'Ruim', 'Regular', 'Otimo', 'Excelente')),
+                comment VARCHAR(45)
+            );";
+        }
+
+        public static void AddCompanyReview(int clientId, int companyId, string review, string comment)
         {
             try
             {
@@ -28,5 +45,6 @@ namespace SalesApp.Infrastructure.Operations
                 Console.WriteLine($"Error saving CompanyReview: {ex.Message}");
             }
         }
+
     }
 }

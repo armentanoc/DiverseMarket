@@ -41,12 +41,12 @@ namespace SalesApp.Infrastructure.Operations
             {
                 if (!File.Exists($"{_databaseName}.db"))
                 {
-                    Console.WriteLine("Criando um novo arquivo de banco.\n");
+                    Console.WriteLine("Criando um novo arquivo de banco.");
                     CreateDB();
                 }
                 else
                 {
-                    Console.WriteLine("Arquivo de banco de dados já existe.\n");
+                    Console.WriteLine("Arquivo de banco de dados já existe.");
                 }
 
                 Connection.Open();
@@ -74,7 +74,7 @@ namespace SalesApp.Infrastructure.Operations
                 CreateAndLogTable("Product", ProductDB.InitializeTable);
                 CreateAndLogTable("ProductOffer", ProductOfferDB.InitializeTable);
                 CreateAndLogTable("ProductReview", ProductReviewDB.InitializeTable);
-                CreateAndLogTable("ReviewCompany", ReviewCompanyDB.InitializeTable);
+                CreateAndLogTable("ReviewCompany", ReviewCompanyRepository.InitializeTable);
                 CreateAndLogTable("ReviewSellingItem", ReviewSellingItemDB.InitializeTable);
                 CreateAndLogTable("Selling", SellingDB.InitializeTable);
                 CreateAndLogTable("WalletTransactions", WalletTransactionsDB.InitializeTable);
@@ -110,10 +110,10 @@ namespace SalesApp.Infrastructure.Operations
 
                         Console.WriteLine($"Tabela {tableName} criada.");
                     }
-                    else
-                    {
-                        Console.WriteLine($"Tabela {tableName} já existe.");
-                    }
+                    //else
+                    //{
+                    //    Console.WriteLine($"Tabela {tableName} já existe.");
+                    //}
                 }
                 catch (Exception ex)
                 {
