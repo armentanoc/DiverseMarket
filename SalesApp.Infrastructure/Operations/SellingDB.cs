@@ -26,30 +26,36 @@ namespace SalesApp.Infrastructure.Operations
             {
                 try
                 {
-                    // Insert Selling
-                    _command.CommandText = "INSERT INTO Selling (date_sale, amount, Client_id, date_EndSale) " +
+                    using (var command = _connection.CreateCommand())
+                    {
+                        // Insert Selling
+                        command.CommandText = "INSERT INTO Selling (date_sale, amount, Client_id, date_EndSale) " +
                                             "VALUES (@date_sale, @amount, @Client_id, @date_EndSale);";
-                    _command.Parameters.AddWithValue("@date_sale", selling.SaleStartDate);
-                    _command.Parameters.AddWithValue("@amount", selling.TotalValue);
-                    _command.Parameters.AddWithValue("@Client_id", selling.CustomerId);
-                    _command.Parameters.AddWithValue("@date_EndSale", selling.SaleEndDate);
+                        command.Parameters.AddWithValue("@date_sale", selling.SaleStartDate);
+                        command.Parameters.AddWithValue("@amount", selling.TotalValue);
+                        command.Parameters.AddWithValue("@Client_id", selling.CustomerId);
+                        command.Parameters.AddWithValue("@date_EndSale", selling.SaleEndDate);
 
-                    _command.ExecuteNonQuery();
-                    _command.CommandText = "SELECT last_insert_rowid();";
-                    selling.Id = Convert.ToInt32(_command.ExecuteScalar());
+                        command.ExecuteNonQuery();
+                        command.CommandText = "SELECT last_insert_rowid();";
+                        selling.Id = Convert.ToInt32(command.ExecuteScalar());
+                    }
 
                     // Insert SellingItems
                     foreach (var sellingItem in selling.SellingItems)
                     {
-                        _command.CommandText = "INSERT INTO SellingItem (Selling_id, Product_id, quantity, price, Company_id) " +
+                        using (var command = _connection.CreateCommand())
+                        {
+                            command.CommandText = "INSERT INTO SellingItem (Selling_id, Product_id, quantity, price, Company_id) " +
                                               "VALUES (@Selling_id, @Product_id, @quantity, @price, @Company_id);";
-                        _command.Parameters.AddWithValue("@Selling_id", selling.Id);
-                        _command.Parameters.AddWithValue("@Product_id", sellingItem.ProductId);
-                        _command.Parameters.AddWithValue("@quantity", sellingItem.Quantity);
-                        _command.Parameters.AddWithValue("@price", sellingItem.Price);
-                        _command.Parameters.AddWithValue("@Company_id", sellingItem.CompanyId);
+                            command.Parameters.AddWithValue("@Selling_id", selling.Id);
+                            command.Parameters.AddWithValue("@Product_id", sellingItem.ProductId);
+                            command.Parameters.AddWithValue("@quantity", sellingItem.Quantity);
+                            command.Parameters.AddWithValue("@price", sellingItem.Price);
+                            command.Parameters.AddWithValue("@Company_id", sellingItem.CompanyId);
 
-                        _command.ExecuteNonQuery();
+                            command.ExecuteNonQuery();
+                        }
                     }
 
                     transaction.Commit();
@@ -64,36 +70,46 @@ namespace SalesApp.Infrastructure.Operations
 
         public Selling GetSellingById(int sellingId)
         {
-            _command.CommandText = "SELECT * FROM Selling WHERE id = @id;";
-            _command.Parameters.AddWithValue("@id", sellingId);
-
-            using (var reader = _command.ExecuteReader())
+            Selling selling = null;
+            using (var command = _connection.CreateCommand())
             {
-                if (reader.Read())
+                command.CommandText = "SELECT * FROM Selling WHERE id = @sellingId";
+                command.Parameters.AddWithValue("@sellingId", sellingId);
+
+                using (var reader = command.ExecuteReader())
                 {
-                    var selling = MapSellingFromReader(reader);
-                    selling.SellingItems = GetSellingItemsBySellingId(sellingId);
-                    return selling;
+                    if (reader.Read())
+                    {
+                        selling = MapSellingFromReader(reader);
+                        selling.SellingItems = GetSellingItemsBySellingId(sellingId);
+                    }
                 }
-                return null;
             }
+
+            return selling;
         }
 
-        private List<SellingItem> GetSellingItemsBySellingId(int sellingId)
+        public List<SellingItem> GetSellingItemsBySellingId(int sellingId)
         {
             var sellingItems = new List<SellingItem>();
-            _command.CommandText = "SELECT * FROM SellingItem WHERE Selling_id = @Selling_id;";
-            _command.Parameters.AddWithValue("@Selling_id", sellingId);
 
-            using (var reader = _command.ExecuteReader())
+            using (var command = _connection.CreateCommand())  // Use um novo comando para evitar conflitos
             {
-                while (reader.Read())
+                command.CommandText = "SELECT * FROM SellingItem WHERE Selling_id = @Selling_id;";
+                command.Parameters.AddWithValue("@Selling_id", sellingId);
+
+                using (var reader = command.ExecuteReader())
                 {
-                  //  sellingItems.Add(MapSellingItemFromReader(reader));
+                    while (reader.Read())
+                    {
+                        sellingItems.Add(MapSellingItemFromReader(reader));
+                    }
                 }
             }
+
             return sellingItems;
         }
+
 
         public void UpdateSelling(Selling selling)
         {
@@ -101,34 +117,39 @@ namespace SalesApp.Infrastructure.Operations
             {
                 try
                 {
-                    // Update Selling
-                    _command.CommandText = "UPDATE Selling SET date_sale = @date_sale, amount = @amount, " +
+                    using (var command = _connection.CreateCommand())
+                    {
+                        // Update Selling
+                        command.CommandText = "UPDATE Selling SET date_sale = @date_sale, amount = @amount, " +
                                             "Client_id = @Client_id, date_EndSale = @date_EndSale WHERE id = @id;";
-                    _command.Parameters.AddWithValue("@date_sale", selling.SaleStartDate);
-                    _command.Parameters.AddWithValue("@amount", selling.TotalValue);
-                    _command.Parameters.AddWithValue("@Client_id", selling.CustomerId);
-                    _command.Parameters.AddWithValue("@date_EndSale", selling.SaleEndDate);
-                    _command.Parameters.AddWithValue("@id", selling.Id);
+                        command.Parameters.AddWithValue("@date_sale", selling.SaleStartDate);
+                        command.Parameters.AddWithValue("@amount", selling.TotalValue);
+                        command.Parameters.AddWithValue("@Client_id", selling.CustomerId);
+                        command.Parameters.AddWithValue("@date_EndSale", selling.SaleEndDate);
+                        command.Parameters.AddWithValue("@id", selling.Id);
 
-                    _command.ExecuteNonQuery();
+                        command.ExecuteNonQuery();
 
-                    // Delete existing SellingItems
-                    _command.CommandText = "DELETE FROM SellingItem WHERE Selling_id = @Selling_id;";
-                    _command.Parameters.AddWithValue("@Selling_id", selling.Id);
-                    _command.ExecuteNonQuery();
-
+                        // Delete existing SellingItems
+                        command.CommandText = "DELETE FROM SellingItem WHERE Selling_id = @Selling_id;";
+                        command.Parameters.AddWithValue("@Selling_id", selling.Id);
+                        command.ExecuteNonQuery();
+                    }
                     // Insert updated SellingItems
                     foreach (var sellingItem in selling.SellingItems)
                     {
-                        _command.CommandText = "INSERT INTO SellingItem (Selling_id, Product_id, quantity, price, Company_id) " +
+                        using (var command = _connection.CreateCommand())
+                        {
+                            command.CommandText = "INSERT INTO SellingItem (Selling_id, Product_id, quantity, price, Company_id) " +
                                               "VALUES (@Selling_id, @Product_id, @quantity, @price, @Company_id);";
-                        _command.Parameters.AddWithValue("@Selling_id", selling.Id);
-                        _command.Parameters.AddWithValue("@Product_id", sellingItem.ProductId);
-                        _command.Parameters.AddWithValue("@quantity", sellingItem.Quantity);
-                        _command.Parameters.AddWithValue("@price", sellingItem.Price);
-                        _command.Parameters.AddWithValue("@Company_id", sellingItem.CompanyId);
+                            command.Parameters.AddWithValue("@Selling_id", selling.Id);
+                            command.Parameters.AddWithValue("@Product_id", sellingItem.ProductId);
+                            command.Parameters.AddWithValue("@quantity", sellingItem.Quantity);
+                            command.Parameters.AddWithValue("@price", sellingItem.Price);
+                            command.Parameters.AddWithValue("@Company_id", sellingItem.CompanyId);
 
-                        _command.ExecuteNonQuery();
+                            command.ExecuteNonQuery();
+                        }
                     }
 
                     transaction.Commit();
@@ -139,6 +160,42 @@ namespace SalesApp.Infrastructure.Operations
                     Console.WriteLine("erro no update " + ex);
                 }
             }
+        }
+
+        public List<Selling> GetSellingsByCustomerId(int customerId)
+        {
+            var sellings = new List<Selling>();
+
+            using (var transaction = _connection.BeginTransaction())
+            {
+                try
+                {
+                    using (var command = _connection.CreateCommand())
+                    {
+                        command.CommandText = "SELECT * FROM Selling WHERE Client_id = @Client_id;";
+                        command.Parameters.AddWithValue("@Client_id", customerId);
+
+                        using (var reader = command.ExecuteReader())
+                        {
+                            while (reader.Read())
+                            {
+                                var selling = MapSellingFromReader(reader);
+                                selling.SellingItems = GetSellingItemsBySellingId((int)selling.Id);
+                                sellings.Add(selling);
+                            }
+                        }
+                    }
+
+                    transaction.Commit();
+                }
+                catch (Exception)
+                {
+                    transaction.Rollback();
+                    throw;
+                }
+            }
+
+            return sellings;
         }
 
         private Selling MapSellingFromReader(IDataReader reader)
