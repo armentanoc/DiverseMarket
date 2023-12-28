@@ -1,6 +1,7 @@
 ﻿
 using Microsoft.VisualBasic.Logging;
-using SalesApp.UI.Resources;
+using SalesApp.UI.Authentication;
+using SalesApp.UI.Components;
 using SalesApp.UI.Styles;
 
 namespace SalesApp.UI

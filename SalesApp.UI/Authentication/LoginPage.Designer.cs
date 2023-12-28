@@ -1,4 +1,4 @@
-﻿namespace SalesApp.UI
+﻿namespace SalesApp.UI.Authentication
 {
     partial class LoginPage
     {

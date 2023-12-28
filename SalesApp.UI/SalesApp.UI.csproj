@@ -18,4 +18,9 @@
     </None>
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Pages\Moderator\" />
+    <Folder Include="Pages\Customer\" />
+  </ItemGroup>
+
 </Project>

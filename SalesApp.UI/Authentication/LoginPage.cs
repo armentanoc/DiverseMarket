@@ -8,7 +8,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
-namespace SalesApp.UI
+namespace SalesApp.UI.Authentication
 {
     public partial class LoginPage : Form
     {
