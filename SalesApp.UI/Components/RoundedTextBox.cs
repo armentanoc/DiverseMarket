@@ -22,7 +22,7 @@ namespace SalesApp.UI.Components
                 Width = width - 32,
                 Height = height,
                 Text = hintText,
-                BackColor = Color.Transparent,
+                BackColor = Colors.TextBoxFill,
                 ForeColor = Colors.TextBoxForeColor,
                 Font = new Font("Ubuntu", 16)
             };
@@ -46,7 +46,7 @@ namespace SalesApp.UI.Components
 
             Size = new Size(width, height);
             Padding = new Padding(10);
-            BackColor = Color.White;
+            BackColor = Color.Transparent;
             Controls.Add(TextBox);
         }
         protected override void OnPaint(PaintEventArgs e)
