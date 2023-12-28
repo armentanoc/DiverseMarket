@@ -13,7 +13,7 @@ namespace SalesApp.Infrastructure.Repositories
             return @"
             CREATE TABLE IF NOT EXISTS ProductCategory (
                 id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
-                name VARCHAR(45) NOT NULL,
+                name VARCHAR(45) NOT NULL
             );";
 
         }
