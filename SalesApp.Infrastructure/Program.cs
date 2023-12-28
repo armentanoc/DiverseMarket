@@ -14,22 +14,11 @@ namespace SalesApp.Infrastructure
                     // Creates tables
                     DatabaseConnection.Instance.CreateTables();
 
-                    Console.WriteLine($"\nLocalização do banco: {AppDomain.CurrentDomain.BaseDirectory}");
-                    // sqlite3 current directory to check tables
+                    Console.WriteLine($"\nPara abrir o banco no terminal: sqlite3 {AppDomain.CurrentDomain.BaseDirectory}bancotemporario.db\n");
+                    //to check tables locally
 
+                    //DisplayAllTableSchemas();
                     // Display table schemas
-                    DisplayTableSchema("Address");
-                    DisplayTableSchema("Company");
-                    DisplayTableSchema("Customer");
-                    DisplayTableSchema("ProductCategory");
-                    DisplayTableSchema("Product");
-                    DisplayTableSchema("ProductOffer");
-                    DisplayTableSchema("ProductReview");
-                    DisplayTableSchema("ReviewCompany");
-                    DisplayTableSchema("ReviewSellingItem");
-                    DisplayTableSchema("Selling");
-                    DisplayTableSchema("User");
-                    DisplayTableSchema("WalletTransactions");
 
                     // Close the connection
                     DatabaseConnection.Instance.Close();
@@ -43,6 +32,22 @@ namespace SalesApp.Infrastructure
             {
                 Console.WriteLine($"Erro: {ex.Message}");
             }
+        }
+
+        private static void DisplayAllTableSchemas()
+        {
+            DisplayTableSchema("Address");
+            DisplayTableSchema("Company");
+            DisplayTableSchema("Customer");
+            DisplayTableSchema("ProductCategory");
+            DisplayTableSchema("Product");
+            DisplayTableSchema("ProductOffer");
+            DisplayTableSchema("ProductReview");
+            DisplayTableSchema("ReviewCompany");
+            DisplayTableSchema("ReviewSellingItem");
+            DisplayTableSchema("Selling");
+            DisplayTableSchema("User");
+            DisplayTableSchema("WalletTransactions");
         }
 
         private static void DisplayTableSchema(string tableName)
