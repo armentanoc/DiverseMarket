@@ -3,7 +3,7 @@ using SalesApp.DomainLayer.Model.Companies;
 
 namespace SalesApp.DomainLayer.Model.Transactions.Reviews
 {
-    internal class CompanyReview : Review
+    public class CompanyReview : Review
     {
 
         public Company Company { get; private set; }

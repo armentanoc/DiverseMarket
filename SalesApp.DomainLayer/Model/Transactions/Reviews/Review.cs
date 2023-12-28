@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace SalesApp.DomainLayer.Model.Transactions.Reviews
 {
-    internal abstract class Review
+    public abstract class Review
     {
         public int Id { get; private set; }
         public ReviewEnum ReviewEnum { get; private set; }

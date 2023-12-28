@@ -14,7 +14,7 @@ namespace SalesApp.DomainLayer.Model.Users
         private RolesEnum _role;
         private Address _address;
 
-        private int Id { get; }
+        public int Id { get; }
         public String? Username { get { return _username; } }
         public String? Name { get { return _name; } }
         public String? Email { get { return _email; } }
