@@ -16,7 +16,7 @@ namespace SalesApp.DomainLayer.Service
 
         public static void AddCompanyReview(CompanyReviewDTO companyReviewDTO)
         {
-            ReviewCompanyRepository.AddCompanyReview(
+            ReviewCompanyDB.AddCompanyReview(
                 companyReviewDTO.ClientId,
                 companyReviewDTO.CompanyId,
                 companyReviewDTO.Review,

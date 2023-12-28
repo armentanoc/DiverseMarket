@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace SalesApp.Infrastructure.Repositories
 {
-    public class ReviewCompanyRepository
+    public class ReviewCompanyDB
     {
         internal static string InitializeTable()
         {
