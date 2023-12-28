@@ -22,7 +22,7 @@ namespace SalesApp.UI.Components
             BackColor = Color.Transparent;
             Text = text;
             ForeColor = Colors.CallToActionText;
-            Font = new System.Drawing.Font("Ubuntu", 16, FontStyle.Regular);
+            Font = new System.Drawing.Font("Ubuntu", 12, FontStyle.Regular);
         }
 
         protected override void OnPaint(PaintEventArgs e)
