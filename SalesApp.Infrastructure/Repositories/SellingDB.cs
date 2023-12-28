@@ -1,20 +1,32 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Data.SQLite;
-using System.Linq;
+using System.Data.Common;
 using System.Data;
+using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using SalesApp.DomainLayer.Model.Transactions;
-using SalesApp.DomainLayer.Model.Companies;
-using SalesApp.DomainLayer.Model.Products;
-using SalesApp.DomainLayer.Model.Users;
-using System.Diagnostics;
+using SalesApp.Infrastructure.Operations;
 
-namespace SalesApp.Infrastructure.Operations
+namespace SalesApp.Infrastructure.Repositories
 {
-    public class SellingDB : DatabaseConnection
+    internal class SellingDB : DatabaseConnection
     {
+        internal static string InitializeTable()
+        {
+            return @"CREATE TABLE IF NOT EXISTS Selling (
+                            id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+                            date_sale DATE NOT NULL,
+                            amount DECIMAL(10,2),
+                            Client_id INTEGER NOT NULL,
+                            date_EndSale DATETIME,
+                            FOREIGN KEY (Client_id) REFERENCES Client (id)
+                                ON DELETE NO ACTION
+                                ON UPDATE NO ACTION
+                        );";
+
+        }
+
         public SellingDB() : base()
         {
             Open();
@@ -93,7 +105,7 @@ namespace SalesApp.Infrastructure.Operations
         {
             var sellingItems = new List<SellingItem>();
 
-            using (var command = _connection.CreateCommand())  // Use um novo comando para evitar conflitos
+            using (var command = _connection.CreateCommand())  
             {
                 command.CommandText = "SELECT * FROM SellingItem WHERE Selling_id = @Selling_id;";
                 command.Parameters.AddWithValue("@Selling_id", sellingId);
@@ -217,12 +229,9 @@ namespace SalesApp.Infrastructure.Operations
             int product = Convert.ToInt32(reader["Product_id"]);
             int company = Convert.ToInt32(reader["Company_id"]);
             SellingItem sellingItem = new SellingItem(product, company, quantity, price);
-           return sellingItem;
-         
+            return sellingItem;
+
         }
     }
-
-
-
 }
 

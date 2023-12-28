@@ -7,7 +7,7 @@
     <Nullable>enable</Nullable>
     <RootNamespace>SalesApp.DomainLayer</RootNamespace>
     <AssemblyName>$(MSBuildProjectName)</AssemblyName>
-	<EnableWindowsTargeting>true</EnableWindowsTargeting>
+    <EnableWindowsTargeting>true</EnableWindowsTargeting>
   </PropertyGroup>
 
 </Project>
