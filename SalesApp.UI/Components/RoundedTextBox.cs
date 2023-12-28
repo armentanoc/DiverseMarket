@@ -22,7 +22,7 @@ namespace SalesApp.UI.Components
                 Width = width - 32,
                 Height = height,
                 Text = hintText,
-                BackColor = Colors.TextBoxFill,
+                BackColor = Color.Transparent,
                 ForeColor = Colors.TextBoxForeColor,
                 Font = new Font("Ubuntu", 16)
             };
