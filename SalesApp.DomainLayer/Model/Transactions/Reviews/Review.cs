@@ -14,9 +14,12 @@ namespace SalesApp.DomainLayer.Model.Transactions.Reviews
 
         public Review(ReviewEnum reviewEnum, string? comment = null)
         {
-            Id = Math.Abs(Guid.NewGuid().GetHashCode());
             Comment = comment ?? string.Empty;
             ReviewEnum = reviewEnum;
+        }
+        public void SetId(int newId)
+        {
+            Id = newId;
         }
     }
 }
