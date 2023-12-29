@@ -17,7 +17,7 @@ namespace SalesApp.Infrastructure.Repositories
                         username VARCHAR(45) NOT NULL,
                         password VARCHAR(45) NOT NULL,
                         email VARCHAR(45),
-                        telephone INTEGER,
+                        telephone VARCHAR(45),
                         role TEXT NOT NULL CHECK(role IN ('Seller', 'Client', 'Moderator')),
                         Address_id INTEGER,
                         FOREIGN KEY (Address_id) REFERENCES Address(id) ON DELETE NO ACTION ON UPDATE NO ACTION
