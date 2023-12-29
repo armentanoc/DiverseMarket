@@ -15,7 +15,8 @@ namespace SalesApp.DomainLayer.Model.Users
         public string Neighborhood { get; private set; }
         public string City { get; private set; }
         public string State { get; private set; }
-        public Address(string zipCode, string street, string neighborhood, string city, string state, string? complement = null)
+        public string Number { get; private set; }
+        public Address(string zipCode, string street, string neighborhood, string city, string state, string number, string? complement = null)
         {
             Id = GenerateID();
             ZipCode = zipCode;
@@ -24,6 +25,7 @@ namespace SalesApp.DomainLayer.Model.Users
             Neighborhood = neighborhood;
             City = city;
             State = state;
+            Number = number;
         }
 
         private int GenerateID()
