@@ -16,7 +16,7 @@ namespace SalesApp.Infrastructure.Repositories
                         name VARCHAR(45) NOT NULL,
                         username VARCHAR(45) NOT NULL,
                         password VARCHAR(45) NOT NULL,
-                        email VARCHAR(45),
+                        email VARCHAR(60),
                         telephone VARCHAR(45),
                         role TEXT NOT NULL CHECK(role IN ('Seller', 'Client', 'Moderator')),
                         Address_id INTEGER,
