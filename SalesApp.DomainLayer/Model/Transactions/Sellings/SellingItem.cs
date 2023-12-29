@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 using SalesApp.DomainLayer.Model.Companies;
 using SalesApp.DomainLayer.Model.Products;
 
-namespace SalesApp.DomainLayer.Model.Transactions.Selling
+namespace SalesApp.DomainLayer.Model.Transactions.Sellings.Selling
 {
     public class SellingItem
     {

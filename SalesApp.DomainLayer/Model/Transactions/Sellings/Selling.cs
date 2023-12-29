@@ -1,7 +1,7 @@
 ﻿using SalesApp.DomainLayer.Model.Products;
 using SalesApp.DomainLayer.Model.Users;
 
-namespace SalesApp.DomainLayer.Model.Transactions.Selling
+namespace SalesApp.DomainLayer.Model.Transactions.Sellings.Selling
 {
     public class Selling
     {

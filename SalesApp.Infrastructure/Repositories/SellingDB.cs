@@ -6,11 +6,11 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using SalesApp.Infrastructure.Operations;
-using SalesApp.DomainLayer.Model.Transactions.Selling;
+using SalesApp.DomainLayer.Model.Transactions.Sellings.Selling;
 
 namespace SalesApp.Infrastructure.Repositories
 {
-    internal class SellingDB : DatabaseConnection
+    public class SellingDB : DatabaseConnection
     {
         internal static string InitializeTable()
         {
