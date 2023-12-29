@@ -13,10 +13,12 @@ namespace SalesApp.Infrastructure.Repositories
             return @"
             CREATE TABLE IF NOT EXISTS ReviewCompany (
                 id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
-                Client_id INTEGER,
-                Company_id INTEGER,
+                Client_id INTEGER NOT NULL,
+                Company_id INTEGER NOT NULL,
                 review TEXT NOT NULL CHECK(review IN ('Pessimo', 'Ruim', 'Regular', 'Otimo', 'Excelente')),
-                comment VARCHAR(45)
+                comment VARCHAR(150),
+                FOREIGN KEY (Company_id) REFERENCES Company(id) ON DELETE SET NULL ON UPDATE CASCADE,
+                FOREIGN KEY (Client_id) REFERENCES Client(id) ON DELETE SET NULL ON UPDATE CASCADE
             );";
 
         }
