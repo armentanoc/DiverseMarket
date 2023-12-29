@@ -13,11 +13,14 @@ namespace SalesApp.Infrastructure.Repositories
             return @"
             CREATE TABLE IF NOT EXISTS ProductOffer (
                 id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
-                Company_id INTEGER,
-                Product_id INTEGER,
+                Company_id INTEGER NOT NULL,
+                Product_id INTEGER NOT NULL,
                 price DECIMAL(10,2),
-                quantity UNSIGNED INTEGER
-            );";
+                quantity INTEGER,
+                FOREIGN KEY (Company_id) REFERENCES Company(id) ON DELETE SET NULL ON UPDATE CASCADE,
+                FOREIGN KEY (Product_id) REFERENCES Product(id) ON DELETE SET NULL ON UPDATE CASCADE
+            );
+            ";
 
         }
     }

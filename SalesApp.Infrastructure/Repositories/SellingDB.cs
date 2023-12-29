@@ -14,16 +14,15 @@ namespace SalesApp.Infrastructure.Repositories
     {
         internal static string InitializeTable()
         {
-            return @"CREATE TABLE IF NOT EXISTS Selling (
-                            id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
-                            date_sale DATE NOT NULL,
-                            amount DECIMAL(10,2),
-                            Client_id INTEGER NOT NULL,
-                            date_EndSale DATETIME,
-                            FOREIGN KEY (Client_id) REFERENCES Client (id)
-                                ON DELETE NO ACTION
-                                ON UPDATE NO ACTION
-                        );";
+            return @"
+            CREATE TABLE IF NOT EXISTS Selling (
+                id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+                date_sale DATE,
+                amount DECIMAL(10,2),
+                Customer_id INTEGER,
+                date_EndSale DATETIME,
+                FOREIGN KEY (Customer_id) REFERENCES Customer(id) ON DELETE NO ACTION ON UPDATE NO ACTION
+            );";
 
         }
 
@@ -41,11 +40,11 @@ namespace SalesApp.Infrastructure.Repositories
                     using (var command = _connection.CreateCommand())
                     {
                         // Insert Selling
-                        command.CommandText = "INSERT INTO Selling (date_sale, amount, Client_id, date_EndSale) " +
-                                            "VALUES (@date_sale, @amount, @Client_id, @date_EndSale);";
+                        command.CommandText = "INSERT INTO Selling (date_sale, amount, Customer_id, date_EndSale) " +
+                                            "VALUES (@date_sale, @amount, @Customer_id, @date_EndSale);";
                         command.Parameters.AddWithValue("@date_sale", selling.SaleStartDate);
                         command.Parameters.AddWithValue("@amount", selling.TotalValue);
-                        command.Parameters.AddWithValue("@Client_id", selling.CustomerId);
+                        command.Parameters.AddWithValue("@Customer_id", selling.CustomerId);
                         command.Parameters.AddWithValue("@date_EndSale", selling.SaleEndDate);
 
                         command.ExecuteNonQuery();
@@ -133,10 +132,10 @@ namespace SalesApp.Infrastructure.Repositories
                     {
                         // Update Selling
                         command.CommandText = "UPDATE Selling SET date_sale = @date_sale, amount = @amount, " +
-                                            "Client_id = @Client_id, date_EndSale = @date_EndSale WHERE id = @id;";
+                                            "Customer_id = @Customer_id, date_EndSale = @date_EndSale WHERE id = @id;";
                         command.Parameters.AddWithValue("@date_sale", selling.SaleStartDate);
                         command.Parameters.AddWithValue("@amount", selling.TotalValue);
-                        command.Parameters.AddWithValue("@Client_id", selling.CustomerId);
+                        command.Parameters.AddWithValue("@Customer_id", selling.CustomerId);
                         command.Parameters.AddWithValue("@date_EndSale", selling.SaleEndDate);
                         command.Parameters.AddWithValue("@id", selling.Id);
 
@@ -184,8 +183,8 @@ namespace SalesApp.Infrastructure.Repositories
                 {
                     using (var command = _connection.CreateCommand())
                     {
-                        command.CommandText = "SELECT * FROM Selling WHERE Client_id = @Client_id;";
-                        command.Parameters.AddWithValue("@Client_id", customerId);
+                        command.CommandText = "SELECT * FROM Selling WHERE Customer_id = @Customer_id;";
+                        command.Parameters.AddWithValue("@Customer_id", customerId);
 
                         using (var reader = command.ExecuteReader())
                         {
@@ -218,7 +217,7 @@ namespace SalesApp.Infrastructure.Repositories
                 SaleStartDate = Convert.ToDateTime(reader["date_sale"]),
                 SaleEndDate = reader["date_EndSale"] == DBNull.Value ? null : (DateTime?)reader["date_EndSale"],
                 TotalValue = Convert.ToDecimal(reader["amount"]),
-                CustomerId = Convert.ToInt32(reader["Client_id"]),
+                CustomerId = Convert.ToInt32(reader["Customer_id"]),
             };
         }
 
