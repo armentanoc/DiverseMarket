@@ -13,9 +13,11 @@ namespace SalesApp.Infrastructure.Repositories
             return @"
             CREATE TABLE IF NOT EXISTS WalletTransactions (
                 id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+                customer_id INTEGER NOT NULL,
                 amount DECIMAL(10,2),
                 date_transaction DATETIME,
-                type TEXT NOT NULL CHECK(type IN ('Debit', 'Credit'))
+                type TEXT NOT NULL CHECK(type IN ('Debit', 'Credit')),
+                FOREIGN KEY (customer_id) REFERENCES Customer(id) ON DELETE NO ACTION ON UPDATE NO ACTION
             );";
 
         }

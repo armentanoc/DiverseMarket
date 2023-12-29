@@ -15,9 +15,7 @@ namespace SalesApp.Infrastructure.Operations
                         id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
                         User_id INTEGER NOT NULL,
                         cpf VARCHAR(45) NOT NULL,
-                        WalletTransactions_id INTEGER,
                         FOREIGN KEY (User_id) REFERENCES User(id) ON DELETE NO ACTION ON UPDATE NO ACTION
-                        FOREIGN KEY (WalletTransactions_id) REFERENCES WalletTransactions(id) ON DELETE NO ACTION ON UPDATE NO ACTION
                     );";
         }
     }
