@@ -1,4 +1,7 @@
+using SalesApp.DomainLayer.Model.Transactions;
 using SalesApp.Infrastructure.Operations;
+using SalesApp.Infrastructure.Repositories;
+using System;
 using System.Runtime.CompilerServices;
 
 namespace SalesApp.Infrastructure
@@ -29,6 +32,7 @@ namespace SalesApp.Infrastructure
                     DatabaseConnection.DisplayTableSchema("ReviewCompany");
                     DatabaseConnection.DisplayTableSchema("ReviewSellingItem");
                     DatabaseConnection.DisplayTableSchema("Selling");
+                    DatabaseConnection.DisplayTableSchema("SellingItem");
                     DatabaseConnection.DisplayTableSchema("User");
                     DatabaseConnection.DisplayTableSchema("WalletTransactions");
 
@@ -45,5 +49,6 @@ namespace SalesApp.Infrastructure
                 Console.WriteLine($"An error occurred: {ex.Message}");
             }
         }
+            
     }
 }

@@ -5,7 +5,7 @@ using SalesApp.Infrastructure.Repositories;
 
 namespace SalesApp.Infrastructure.Operations
 {
-    internal abstract class DatabaseConnection
+    public abstract class DatabaseConnection
     {
         private static string _databaseName = "bancotemporario";
         private static string _connectionString = $"Data Source={_databaseName}.db;Version=3;";
@@ -56,6 +56,7 @@ namespace SalesApp.Infrastructure.Operations
                 CreateAndLogTable("ReviewCompany", ReviewCompanyDB.InitializeTable);
                 CreateAndLogTable("ReviewSellingItem", ReviewSellingItemDB.InitializeTable);
                 CreateAndLogTable("Selling", SellingDB.InitializeTable);
+                CreateAndLogTable("SellingItem", SellingItemDB.InitializeTable);
                 CreateAndLogTable("WalletTransactions", WalletTransactionsDB.InitializeTable);
 
                 transaction.Commit();
