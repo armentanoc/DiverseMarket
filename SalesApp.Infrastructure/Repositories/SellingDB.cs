@@ -5,8 +5,8 @@ using System.Data;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using SalesApp.DomainLayer.Model.Transactions;
 using SalesApp.Infrastructure.Operations;
+using SalesApp.DomainLayer.Model.Transactions.Selling;
 
 namespace SalesApp.Infrastructure.Repositories
 {

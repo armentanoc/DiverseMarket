@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace SalesApp.DomainLayer.Model.Transactions
+namespace SalesApp.DomainLayer.Model.Transactions.Selling
 {
     public enum SellingStatus
     {

@@ -7,17 +7,17 @@ using System.Threading.Tasks;
 using SalesApp.DomainLayer.Model.Companies;
 using SalesApp.DomainLayer.Model.Products;
 
-namespace SalesApp.DomainLayer.Model.Transactions
+namespace SalesApp.DomainLayer.Model.Transactions.Selling
 {
     public class SellingItem
     {
-        public int ProductId {  get; set; }
-        public  int CompanyId { get;  set; }
+        public int ProductId { get; set; }
+        public int CompanyId { get; set; }
         public int Quantity { get; set; }
-        public Decimal Price { get; set; }
+        public decimal Price { get; set; }
 
 
-        public SellingItem(int productId, int companyId, int quantity, Decimal price)
+        public SellingItem(int productId, int companyId, int quantity, decimal price)
         {
             ProductId = productId;
             CompanyId = companyId;
@@ -29,7 +29,7 @@ namespace SalesApp.DomainLayer.Model.Transactions
         {
         }
 
-        
+
         public void IncrementQuantity()
         {
             Quantity++;

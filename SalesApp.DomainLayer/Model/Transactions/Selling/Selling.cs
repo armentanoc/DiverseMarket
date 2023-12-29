@@ -1,23 +1,23 @@
 ﻿using SalesApp.DomainLayer.Model.Products;
 using SalesApp.DomainLayer.Model.Users;
 
-namespace SalesApp.DomainLayer.Model.Transactions
+namespace SalesApp.DomainLayer.Model.Transactions.Selling
 {
     public class Selling
     {
         public int? Id { get; set; }
-        public int CustomerId { get;  set; }
+        public int CustomerId { get; set; }
         public DateTime SaleStartDate { get; set; }
         public DateTime? SaleEndDate { get; set; }
         public decimal TotalValue { get; set; }
-       // public List<Refund> Refunds { get; private set; }
-       // public bool hasRefund { get; private set; }
-        public List<SellingItem> SellingItems {  get; set; } 
+        // public List<Refund> Refunds { get; private set; }
+        // public bool hasRefund { get; private set; }
+        public List<SellingItem> SellingItems { get; set; }
         public SellingStatus Status { get; set; }
 
         public Selling()
         {
-             SellingItems = new List<SellingItem>();
+            SellingItems = new List<SellingItem>();
         }
 
         public Selling(int customerId)
@@ -80,5 +80,5 @@ namespace SalesApp.DomainLayer.Model.Transactions
 
 
     }
-        
+
 }
