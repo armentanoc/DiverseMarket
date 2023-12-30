@@ -12,9 +12,9 @@ namespace SalesApp.UI.Pages.Company
 {
     public partial class HomePageCompany : Form
     {
-        public HomePageCompany()
+        public HomePageCompany(long userId)
         {
-            InitializeComponent();
+            InitializeComponent(userId);
         }
     }
 }
