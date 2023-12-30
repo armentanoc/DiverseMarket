@@ -5,7 +5,7 @@ using SalesApp.Infrastructure.Repositories;
 
 namespace SalesApp.Infrastructure.Operations
 {
-    internal abstract class DatabaseConnection
+    public abstract class DatabaseConnection
     {
         private static string _databaseName = "bancotemporario";
         private static string _connectionString = $"Data Source={_databaseName}.db;Version=3;";
@@ -42,6 +42,7 @@ namespace SalesApp.Infrastructure.Operations
 
         internal static void CreateTables()
         {
+            _connection.Open();
             _command = _connection.CreateCommand();
             using (var transaction = _connection.BeginTransaction())
             {
@@ -60,12 +61,14 @@ namespace SalesApp.Infrastructure.Operations
 
                 transaction.Commit();
             }
+            _connection.Close();
         }
         internal static void CreateDB()
         {
             try
             {
                 SQLiteConnection.CreateFile($"{_databaseName}.db");
+                CreateTables();
             }
             catch (Exception ex)
             {
