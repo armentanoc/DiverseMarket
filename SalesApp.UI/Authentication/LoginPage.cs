@@ -16,5 +16,10 @@ namespace SalesApp.UI.Authentication
         {
             InitializeComponent();
         }
+
+        private void LoginPage_FormClosed(object sender, FormClosedEventArgs e)
+        {
+            Application.Exit();
+        }
     }
 }
