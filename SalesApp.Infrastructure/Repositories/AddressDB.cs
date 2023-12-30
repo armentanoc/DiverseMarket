@@ -14,6 +14,7 @@ namespace SalesApp.Infrastructure.Repositories
                     CREATE TABLE IF NOT EXISTS Address (
                         id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
                         street VARCHAR(45) NOT NULL,
+                        number VARCHAR(10) NOT NULL,
                         complement VARCHAR(45),
                         zipcode VARCHAR(45) NOT NULL,
                         neighborhood VARCHAR(45) NOT NULL,
