@@ -11,7 +11,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Folder Include="Service\" />
+    <ProjectReference Include="..\SalesApp.Infrastructure\SalesApp.Infrastructure.csproj" />
   </ItemGroup>
 
 </Project>
