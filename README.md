@@ -17,7 +17,7 @@
 
 1. **Baixar o SQLite:**
    - Visite a [página de download do SQLite](https://www.sqlite.org/download.html).
-   - Baixe o binário pré-compilado para Windows (32 bits ou 64 bits, dependendo do seu sistema).
+   - Baixe o binário pré-compilado para Windows (32 bits ou 64 bits, dependendo do seu sistema). Certifique-se de baixar o .zip que contém as ferramentas de linhas de comando, incluindo o binário `sqlite3.exe`. No dia 2 de Janeiro de 2024, o arquivo .zip mais novo era o `sqlite-tools-win-x64-3440200.zip`.
 
 2. **Extrair o SQLite:**
    - Descompacte o arquivo ZIP baixado em um diretório de sua escolha.
