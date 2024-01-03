@@ -19,8 +19,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Pages\Moderator\" />
-    <Folder Include="Pages\Customer\" />
+    <ProjectReference Include="..\SalesApp.DomainLayer\SalesApp.DomainLayer.csproj" />
   </ItemGroup>
 
 </Project>

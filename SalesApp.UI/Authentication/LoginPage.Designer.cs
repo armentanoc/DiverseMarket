@@ -1,5 +1,11 @@
 ﻿using Microsoft.VisualBasic.Logging;
+using SalesApp.DomainLayer.DTOs;
+using SalesApp.DomainLayer.Service;
 using SalesApp.UI.Components;
+using SalesApp.UI.Messages;
+using SalesApp.UI.Pages.Company;
+using SalesApp.UI.Pages.Customer;
+using SalesApp.UI.Pages.Moderator;
 using SalesApp.UI.Styles;
 
 namespace SalesApp.UI.Authentication
@@ -25,7 +31,7 @@ namespace SalesApp.UI.Authentication
             base.Dispose(disposing);
         }
 
-        #region Windows Form Design
+        #region Init Screen Components
 
         private void InitializeComponent()
         {
@@ -35,8 +41,8 @@ namespace SalesApp.UI.Authentication
             StartPosition = FormStartPosition.CenterScreen;
             Text = "DiverseMarket";
             this.BackColor = Colors.MainBackgroundColor;
+            FormClosed += LoginPage_FormClosed;
             InitScreen();
-            
         }
 
         private void InitComponents()
@@ -46,15 +52,36 @@ namespace SalesApp.UI.Authentication
             InitButtons();
         }
 
+        private void InitScreen()
+        {
+            InitLogo();
+            InitComponents();
+        }
+
+        
+
+        private void InitLogo()
+        {
+            this.Icon = new Icon(@"Resources\icon.ico");
+
+            Logo logo = new Logo();
+            logo.Location = new Point(378, 142);
+            logo.Width = 523;
+            logo.Height = 61;
+
+            this.Controls.Add(logo);
+        }
         private void InitButtons()
         {
             this.loginButton = new RoundedButton("LOGIN", 224, 57, Colors.CallToActionButton, 32);
             this.loginButton.Location = new System.Drawing.Point(528, 564);
+            this.loginButton.MouseEnter += new EventHandler((object sender, EventArgs e) => { this.loginButton.Cursor = Cursors.Hand; });
             this.loginButton.Click += new EventHandler(loginButton_Click);
             this.Controls.Add(loginButton);
 
             this.registerButton = new RoundedButton("CADASTRE-SE", 224, 57, Colors.SecondaryButton, 32);
             this.registerButton.Location = new System.Drawing.Point(528, 643);
+            this.registerButton.MouseEnter += new EventHandler((object sender, EventArgs e) => { this.registerButton.Cursor = Cursors.Hand; });
             this.registerButton.Click += new EventHandler(registerButton_Click);
             this.Controls.Add(registerButton);
         }
@@ -79,6 +106,8 @@ namespace SalesApp.UI.Authentication
             this.forgotPasswordLabel.Location = new Point(323, 499);
             this.forgotPasswordLabel.Size = new Size(140,20);
             this.forgotPasswordLabel.Click += new EventHandler(forgotPasswordLabel_Click);
+            this.forgotPasswordLabel.MouseEnter += new EventHandler((object sender, EventArgs e) => 
+                                                    { this.forgotPasswordLabel.Cursor = Cursors.Hand; });
             this.Controls.Add(forgotPasswordLabel);
 
             this.orLabel = new Label();
@@ -91,6 +120,9 @@ namespace SalesApp.UI.Authentication
             this.Controls.Add(orLabel);
         }
 
+        #endregion
+
+        #region OnClickLogic
         private void forgotPasswordLabel_Click(object sender, EventArgs e)
         {
 
@@ -98,32 +130,38 @@ namespace SalesApp.UI.Authentication
 
         private void registerButton_Click(object sender, EventArgs e)
         {
-            
+            new RegisterPage().Show();
+            this.Hide();
         }
 
         private void loginButton_Click(object sender, EventArgs e)
         {
-            
+            LoginResponseDTO response = AuthenticationService.Login(new LoginRequestDTO(this.usernameTextBox.TextBox.Text.ToLower(), 
+                this.passwordTextBox.TextBox.Text));
+
+            switch(response.UserRole){
+                case "Client":
+                    new HomePageCustomer(response.Id!.Value).Show();
+                    this.Close();
+                    break;
+                case "Seller":
+                    new HomePageCompany(response.Id!.Value).Show();
+                    this.Close();
+                    break;
+                case "Moderator":
+                    new HomePageModerator(response.Id!.Value).Show();
+                    this.Close();
+                    break;
+                default: this.ShowLoginIncorrectMessage(); break;
+            }
         }
 
-        private void InitScreen()
+        private void ShowLoginIncorrectMessage()
         {
-            InitLogo();
-            InitComponents();
-        }
-
-        private void InitLogo()
-        {
-            this.Icon = new Icon(@"Resources\icon.ico");
-
-            Logo logo = new Logo();
-            logo.Location = new Point(378, 142);
-            logo.Width = 523;
-            logo.Height = 61;
-
-            this.Controls.Add(logo);
+            new LoginIncorrectMessage().Show();
         }
 
         #endregion
+
     }
 }

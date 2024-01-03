@@ -8,18 +8,13 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
-namespace SalesApp.UI.Authentication
+namespace SalesApp.UI.Messages
 {
-    public partial class LoginPage : Form
+    public partial class LoginIncorrectMessage : Form
     {
-        public LoginPage()
+        public LoginIncorrectMessage()
         {
             InitializeComponent();
-        }
-
-        private void LoginPage_FormClosed(object sender, FormClosedEventArgs e)
-        {
-            Application.Exit();
         }
     }
 }

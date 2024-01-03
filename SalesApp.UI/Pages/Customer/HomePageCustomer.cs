@@ -8,11 +8,11 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
-namespace SalesApp.UI.Pages.Company
+namespace SalesApp.UI.Pages.Customer
 {
-    public partial class HomePageCompany : Form
+    public partial class HomePageCustomer : Form
     {
-        public HomePageCompany(long userId)
+        public HomePageCustomer(long userId)
         {
             InitializeComponent(userId);
         }
