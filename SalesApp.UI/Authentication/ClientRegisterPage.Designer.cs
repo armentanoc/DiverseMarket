@@ -1,5 +1,10 @@
-﻿using SalesApp.UI.Components;
+﻿using SalesApp.DomainLayer.DTOs;
+using SalesApp.DomainLayer.Model.Users;
+using SalesApp.DomainLayer.Service;
+using SalesApp.UI.Components;
 using SalesApp.UI.Styles;
+using SalesApp.UI.Util;
+using System.Text;
 
 namespace SalesApp.UI.Authentication
 {
@@ -82,7 +87,114 @@ namespace SalesApp.UI.Authentication
 
         private void registerButton_Click(object sender, EventArgs e)
         {
-           
+            if (CheckFields())
+            {
+                string fullName = this.fullNameTextBox.TextBox.Text;
+                string email = this.emailTextBox.TextBox.Text;
+                string username = this.usernameTextBox.TextBox.Text;
+                string? telephone = (this.telephoneTextBox.TextBox.Text.Equals("Telefone") ? null : this.telephoneTextBox.TextBox.Text);
+                string CPF = this.cpfTextBox.TextBox.Text;
+                AddressDTO address = new AddressDTO(this.cepTextBox.TextBox.Text, 
+                    this.streetTextBox.TextBox.Text, 
+                    (this.complementTextBox.TextBox.Text.Equals("Complemento") ? null : this.complementTextBox.TextBox.Text), 
+                    this.numberTextBox.TextBox.Text, this.cityTextBox.TextBox.Text);
+                string password = this.passwordTextBox.TextBox.Text;
+
+                LoginResponseDTO response = AuthenticationService.RegisterCustomer(
+                    new DomainLayer.DTOs.RegisterCustomerDTO(fullName, email, username, telephone, CPF, address, password));
+                if (response.Id != null)
+                {
+                    MessageBox.Show("Conta criada com sucesso.");
+                    new LoginPage().Show();
+                    this.Hide();
+                }
+                else
+                    MessageBox.Show("Houve um erro, tente novamente.");
+            }
+        }
+
+        private bool CheckFields()
+        {
+            List<string> wrongFields = new List<string>();
+
+            string fullName = this.fullNameTextBox.TextBox.Text;
+
+            if (!ValidationUtils.IsInputAValidName(fullName, "Nome completo*", true))
+                wrongFields.Add("Nome completo");
+
+            string email = emailTextBox.TextBox.Text;
+
+            if (!ValidationUtils.IsEmailValid(email))
+            {
+                wrongFields.Add("e-mail");
+                if (!email.Equals("E-mail*"))
+                    this.emailWarningLabel.Visible = true;
+            }
+            else
+                this.emailWarningLabel.Visible = false;
+
+            string username = usernameTextBox.TextBox.Text;
+
+            if (!ValidationUtils.IsUsernameValid(username))
+            {
+                wrongFields.Add("username");
+                if (!username.Equals("Username"))
+                    this.usernameWarningLabel.Visible = true;
+            }
+            else
+                this.usernameWarningLabel.Visible = false;
+
+            string password = passwordTextBox.TextBox.Text;
+
+            if (!ValidationUtils.IsPasswordValid(password))
+            {
+                wrongFields.Add("password");
+                this.passwordWarningLabel.ForeColor = Color.MediumVioletRed;
+            }
+            else
+                this.passwordWarningLabel.ForeColor = Color.White;
+
+
+            string cpf = cpfTextBox.TextBox.Text;
+
+            if (!ValidationUtils.IsCPFValid(cpf))
+            {
+                wrongFields.Add("CPF");
+                if (!cpf.Equals("CPF*"))
+                    this.cpfWarningLabel.Visible = true;
+            }
+            else
+                this.cpfWarningLabel.Visible = false;
+
+            bool validInputs = wrongFields.Count == 0;
+
+            if (!validInputs)
+                ShowMessageForWrongFields(wrongFields);
+
+
+            return validInputs;
+        }
+
+        private void ShowMessageForWrongFields(List<string> wrongFields)
+        {
+            StringBuilder sb = new StringBuilder();
+            sb.Append("Você digitou os seguintes campos errados: ");
+
+            foreach (var field in wrongFields)
+            {
+                sb.Append(field + ", ");
+            }
+
+            string message = sb.ToString();
+
+            if (message[message.Length - 2] == ',')
+            {
+                message = message.Substring(0, message.Length - 2);
+            }
+
+
+
+            MessageBox.Show(message, "Atenção");
         }
 
         private void InitTextBoxes()
@@ -163,7 +275,7 @@ namespace SalesApp.UI.Authentication
             passwordWarningLabel.Font = new Font("Ubuntu", 6);
             passwordWarningLabel.BackColor = Color.Transparent;
             passwordWarningLabel.Location = new Point(380, 760);
-            passwordWarningLabel.Visible = false;
+            passwordWarningLabel.Visible = true;
             this.Controls.Add(passwordWarningLabel);
 
             emailWarningLabel = new Label();

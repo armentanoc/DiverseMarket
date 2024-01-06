@@ -17,9 +17,7 @@ namespace SalesApp.Infrastructure.Repositories
                         number VARCHAR(10) NOT NULL,
                         complement VARCHAR(45),
                         zipcode VARCHAR(45) NOT NULL,
-                        neighborhood VARCHAR(45) NOT NULL,
-                        city VARCHAR(45) NOT NULL,
-                        state VARCHAR(45) NOT NULL
+                        city VARCHAR(45) NOT NULL
                     );";
         }
     }
