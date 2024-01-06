@@ -22,4 +22,8 @@
     <ProjectReference Include="..\SalesApp.DomainLayer\SalesApp.DomainLayer.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Pages\Moderator\NewFolder\" />
+  </ItemGroup>
+
 </Project>
