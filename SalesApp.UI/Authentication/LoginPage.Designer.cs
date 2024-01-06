@@ -130,7 +130,7 @@ namespace SalesApp.UI.Authentication
 
         private void registerButton_Click(object sender, EventArgs e)
         {
-            new RegisterPage().Show();
+            new FlowSelectionPage().Show();
             this.Hide();
         }
 

@@ -10,9 +10,9 @@ using System.Windows.Forms;
 
 namespace SalesApp.UI.Authentication
 {
-    public partial class RegisterPage : Form
+    public partial class ClientRegisterPage : Form
     {
-        public RegisterPage()
+        public ClientRegisterPage()
         {
             InitializeComponent();
         }
