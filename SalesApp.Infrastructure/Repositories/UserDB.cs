@@ -200,5 +200,33 @@ namespace SalesApp.Infrastructure.Repositories
             return id;
         }
 
+        public static string GetUserFullNameById(long userId)
+        {
+            string name = "";
+            try
+            {
+                Open();
+                string query = "SELECT name FROM User WHERE id = @id;";
+                _command = new SQLiteCommand(query, _connection);
+
+                _command.Parameters.AddWithValue("@id", userId);
+
+                var reader = _command.ExecuteReader();
+
+                if (reader.Read())
+                {
+                    name = reader["name"].ToString();
+                }
+
+                return name;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("An error occured: " + ex.Message);
+                return name;
+
+            }
+            finally { Close(); }
+        }
     }
 }
