@@ -175,7 +175,7 @@ namespace SalesApp.UI.Authentication
 
         private void registerButton_Click(object sender, EventArgs e)
         {
-            
+            new CompanyRegisterMessagePage().Show();
         }
 
         private void CompanyRegisterPage_FormClosed(object sender, FormClosedEventArgs e)
