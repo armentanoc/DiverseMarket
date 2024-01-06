@@ -8,11 +8,11 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
-namespace SalesApp.UI.Authentication
+namespace SalesApp.UI.Pages.Customer
 {
-    public partial class RegisterPage : Form
+    public partial class CartPage : Form
     {
-        public RegisterPage()
+        public CartPage()
         {
             InitializeComponent();
         }

@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Data.SQLite;
 using System.IO;
 using System.Linq;
+using System.Net;
 using System.Reflection.Emit;
 using System.Runtime.CompilerServices;
 using System.Security.Cryptography.X509Certificates;
@@ -43,7 +44,7 @@ namespace SalesApp.Infrastructure.Repositories
                         User_id INTEGER NOT NULL PRIMARY KEY,
                         salt VARCHAR(45) NOT NULL,
                         FOREIGN KEY (User_id) REFERENCES User(id) ON DELETE NO ACTION ON UPDATE NO ACTION
-                    );" + query;
+                    );";
         }
 
         public static (long? id, string? userRole) Login(string username, string password)
@@ -95,5 +96,146 @@ namespace SalesApp.Infrastructure.Repositories
             }
         }
 
+        public static long GetUserIdByUsername(string username)
+        {
+            long id = 0;
+            try
+            {
+                Open();
+                string query = "SELECT id FROM User WHERE username = @username;";
+                _command = new SQLiteCommand(query, _connection);
+
+                _command.Parameters.AddWithValue("@username", username);
+
+                var reader = _command.ExecuteReader();
+
+                if (reader.Read())
+                {
+                    id = (long)(reader["id"]);
+                }
+
+                return id;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("An error occured: " + ex.Message);
+                return id;
+
+            }
+            finally { Close(); }
+        }
+
+        public static bool RegisterCustomer(string fullName, string email, string username, string? telephone, string CPF, 
+           string cep,
+                    string street,
+                    string? complement, 
+                    string number, string city, string password)
+        {
+            try
+            {
+                long addressId = RegisterAddress(cep, street, complement, number, city);
+                if (addressId > 0)
+                {
+
+                    Open();
+
+                    (string password, string salt) obj = HashUtil.GetHashedAndSalt(password);
+
+                    string query = @"insert into User(name, username, password, email, telephone, role, Address_id) 
+                        values (@fullName, @username, '" + $"{obj.password}" + @"', @email, @telephone, 'Client', @addressId);";
+
+                    _command = new SQLiteCommand(query, _connection);
+
+                    _command.Parameters.AddWithValue("@fullName", fullName);
+                    _command.Parameters.AddWithValue("@username", username);
+                    _command.Parameters.AddWithValue("@email", email);
+                    _command.Parameters.AddWithValue("@telephone", (object)telephone ?? DBNull.Value);
+                    _command.Parameters.AddWithValue("@addressId", addressId);
+
+                    _command.ExecuteNonQuery();
+
+                    long id = _connection.LastInsertRowId;
+
+                    query = @"insert into User_Salt values (@id, '" + $"{obj.salt}" + @"')";
+
+                    _command = new SQLiteCommand(query, _connection);
+
+                    _command.Parameters.AddWithValue("@id", id);
+
+                    return _command.ExecuteNonQuery() > 0;
+
+                }
+                return false;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("An error occured: " + ex.Message);
+                return false;
+
+            }
+            finally { Close(); }
+        }
+
+        public static long RegisterAddress(string cep, string street, string? complement, string number, string city)
+        {
+            long id = 0;
+            try
+            {
+                Open();
+                string query = @"INSERT INTO Address (street, number, complement, zipcode, city) 
+                         VALUES (@street, @number, @complement, @zipcode, @city);";
+                _command = new SQLiteCommand(query, _connection);
+
+                _command.Parameters.AddWithValue("@street", street);
+                _command.Parameters.AddWithValue("@number", number);
+                _command.Parameters.AddWithValue("@complement", (object)complement ?? DBNull.Value); 
+                _command.Parameters.AddWithValue("@zipcode", cep);
+                _command.Parameters.AddWithValue("@city", city);
+
+                _command.ExecuteNonQuery();
+
+                id = _connection.LastInsertRowId;
+
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("An error occured: " + ex.Message);
+                id = -1;
+            }
+            finally
+            {
+                Close();
+            }
+            return id;
+        }
+
+        public static string GetUserFullNameById(long userId)
+        {
+            string name = "";
+            try
+            {
+                Open();
+                string query = "SELECT name FROM User WHERE id = @id;";
+                _command = new SQLiteCommand(query, _connection);
+
+                _command.Parameters.AddWithValue("@id", userId);
+
+                var reader = _command.ExecuteReader();
+
+                if (reader.Read())
+                {
+                    name = reader["name"].ToString();
+                }
+
+                return name;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("An error occured: " + ex.Message);
+                return name;
+
+            }
+            finally { Close(); }
+        }
     }
 }

@@ -1,6 +1,6 @@
-﻿namespace SalesApp.UI.Authentication
+﻿namespace SalesApp.UI.Pages.Customer
 {
-    partial class RegisterPage
+    partial class CartPage
     {
         /// <summary>
         /// Required designer variable.
@@ -31,7 +31,7 @@
             this.components = new System.ComponentModel.Container();
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(800, 450);
-            this.Text = "Register";
+            this.Text = "CartPage";
         }
 
         #endregion

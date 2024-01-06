@@ -125,12 +125,13 @@ namespace SalesApp.UI.Authentication
         #region OnClickLogic
         private void forgotPasswordLabel_Click(object sender, EventArgs e)
         {
-
+            new ForgotPasswordPage().Show();
+            this.Hide();
         }
 
         private void registerButton_Click(object sender, EventArgs e)
         {
-            new RegisterPage().Show();
+            new FlowSelectionPage().Show();
             this.Hide();
         }
 
