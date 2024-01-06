@@ -1,4 +1,5 @@
-﻿using SalesApp.UI.Authentication;
+﻿using SalesApp.DomainLayer.Service;
+using SalesApp.UI.Authentication;
 using SalesApp.UI.Components;
 using SalesApp.UI.Pages.Moderator.Category;
 using SalesApp.UI.Pages.Moderator.Company;
@@ -64,8 +65,10 @@ namespace SalesApp.UI.Pages.Moderator
 
         private void InitLabels(long userId)
         {
+            string userName = UserService.GetUserFullNameById(userId);
+
             this.helloLabel = new Label();
-            this.helloLabel.Text = $"Olá,{userId}";
+            this.helloLabel.Text = $"Olá, {userName}";
             this.helloLabel.ForeColor = Colors.SecondaryButton;
             this.helloLabel.Font = new Font("Ubuntu", 24);
             this.helloLabel.Location = new Point(50, 100);
