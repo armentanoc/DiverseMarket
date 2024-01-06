@@ -142,15 +142,15 @@ namespace SalesApp.UI.Authentication
             switch(response.UserRole){
                 case "Client":
                     new HomePageCustomer(response.Id!.Value).Show();
-                    this.Close();
+                    this.Hide();
                     break;
                 case "Seller":
                     new HomePageCompany(response.Id!.Value).Show();
-                    this.Close();
+                    this.Hide();
                     break;
                 case "Moderator":
                     new HomePageModerator(response.Id!.Value).Show();
-                    this.Close();
+                    this.Hide();
                     break;
                 default: this.ShowLoginIncorrectMessage(); break;
             }
