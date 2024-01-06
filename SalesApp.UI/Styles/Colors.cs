@@ -15,5 +15,6 @@ namespace SalesApp.UI.Styles
         internal static readonly Color CallToActionButton = ColorTranslator.FromHtml("#D3E4F6");
         internal static readonly Color CallToActionText = ColorTranslator.FromHtml("#0C1D29");
         internal static readonly Color SecondaryButton = ColorTranslator.FromHtml("#FFFFFF");
+        internal static readonly Color LightBlue = ColorTranslator.FromHtml("#034872");
     }
 }
