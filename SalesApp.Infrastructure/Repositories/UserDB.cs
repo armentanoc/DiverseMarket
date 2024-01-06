@@ -23,8 +23,9 @@ namespace SalesApp.Infrastructure.Repositories
                     zipcode, neighborhood, city, state) values('rua jac', '394', 'apto 11', '13560000', 'Jardim Luftalla', 'São Carlos', 'São Paulo');"
                     +
                      @"insert into User(name, username, password, email, telephone, role, Address_id) 
-                values ('vitória', 'vitorialira', '" + $"{obj.password}" + @"', 'vitoria@email.com', '55', 'Client', 1);"+
-                     @"insert into User_Salt values (1, '"+ $"{obj.salt}" +@"');";
+                        values ('vitória', 'vitorialira', '" + $"{obj.password}" + @"', 'vitoria@email.com', '55', 'Client', 1),
+                               ('paula', 'paulamarinho', '" + $"{obj.password}" + @"', 'paula@email.com', '55', 'Moderator', 1);" +
+                     @"insert into User_Salt values (1, '" + $"{obj.salt}" + @"'), (2, '" + $"{obj.salt}" + @"');";
             return @"
                     CREATE TABLE IF NOT EXISTS User (
                         id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
