@@ -84,7 +84,7 @@ namespace SalesApp.UI.Pages.Moderator
         private void InitButtons()
         {
             this.logoutButton = new RoundedButton("Sair", 150, 57, Colors.SecondaryButton, 32);
-            this.logoutButton.Location = new System.Drawing.Point(1105, 25);
+            this.logoutButton.Location = new System.Drawing.Point(1080, 50);
             this.logoutButton.MouseEnter += new EventHandler((object sender, EventArgs e) => { this.logoutButton.Cursor = Cursors.Hand; });
             //this.logoutButton.Click += new EventHandler(logoutButton_Click);
             this.Controls.Add(logoutButton);
