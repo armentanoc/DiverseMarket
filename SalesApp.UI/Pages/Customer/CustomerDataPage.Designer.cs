@@ -3,6 +3,8 @@ using SalesApp.DomainLayer.Service;
 using SalesApp.Infrastructure.Operations;
 using SalesApp.UI.Components;
 using SalesApp.UI.Styles;
+using SalesApp.UI.Util;
+using System.Runtime.Loader;
 
 namespace SalesApp.UI.Pages.Customer
 {
@@ -115,6 +117,12 @@ namespace SalesApp.UI.Pages.Customer
             cepTextBox = new RoundedTextBox(customerDTO.Address.ZipCode, 205, 60);
             cepTextBox.Location = new Point(721, 430);
             cepTextBox.TextBox.Font = new Font("Ubuntu", 10);
+            cepTextBox.TextBox.Leave += async (object sender, EventArgs e) =>
+            {
+                var addressAutoComplete = await CepUtils.GetAddressByCep(cepTextBox.TextBox.Text);
+                streetTextBox.TextBox.Text = addressAutoComplete.Logradouro;
+                cityTextBox.TextBox.Text = addressAutoComplete.Localidade + " - " + addressAutoComplete.Uf;
+            };
             this.Controls.Add(cepTextBox);
 
             streetTextBox = new RoundedTextBox(customerDTO.Address.Street, 431, 60);
