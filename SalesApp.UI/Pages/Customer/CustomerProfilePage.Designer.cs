@@ -134,6 +134,8 @@ namespace SalesApp.UI.Pages.Customer
 
         private void InitLogo()
         {
+            this.Icon = new Icon(@"Resources\icon.ico");
+
             Logo logo = new Logo();
             logo.Location = new Point(1033, 93);
             logo.Width = 192;

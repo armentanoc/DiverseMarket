@@ -2,8 +2,7 @@
 
 namespace SalesApp.DomainLayer.Model.Companies
 {
-    public class Company : User
-    {
+    public class Company { 
         //- Cadastradas pelo moderador
         //- Lidas atraves de um json
         //- Podem ser atualizadas pelo moderador
@@ -31,7 +30,7 @@ namespace SalesApp.DomainLayer.Model.Companies
         public string TradeName { get; private set; }
         public int? LegalEntityTypeCode { get; private set; }
 
-        public Company(string username, string name, string email, string password, int phone, Address address, string cnpj, string corporateName, string tradeName, int? legalEntityTypeCode = null, RolesEnum role = RolesEnum.Company) : base (username, name, email, password, phone, role, address)
+        public Company(string username, string name, string email, string password, int phone,string cnpj, string corporateName, string tradeName, int? legalEntityTypeCode = null, RolesEnum role = RolesEnum.Company) 
         {
             _cnpj = cnpj;
             CorporateName = corporateName;

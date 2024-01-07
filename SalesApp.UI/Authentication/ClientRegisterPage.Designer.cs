@@ -96,8 +96,8 @@ namespace SalesApp.UI.Authentication
                 string CPF = this.cpfTextBox.TextBox.Text;
                 AddressDTO address = new AddressDTO(this.cepTextBox.TextBox.Text, 
                     this.streetTextBox.TextBox.Text, 
-                    (this.complementTextBox.TextBox.Text.Equals("Complemento") ? null : this.complementTextBox.TextBox.Text), 
-                    this.numberTextBox.TextBox.Text, this.cityTextBox.TextBox.Text);
+                    (this.complementTextBox.TextBox.Text.Equals("Complemento") ? null : this.complementTextBox.TextBox.Text),
+                    this.cityTextBox.TextBox.Text, this.numberTextBox.TextBox.Text);
                 string password = this.passwordTextBox.TextBox.Text;
 
                 LoginResponseDTO response = AuthenticationService.RegisterCustomer(
