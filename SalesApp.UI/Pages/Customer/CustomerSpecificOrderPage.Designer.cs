@@ -1,14 +1,13 @@
-﻿using SalesApp.DomainLayer.DTOs;
-using SalesApp.DomainLayer.Service;
-using SalesApp.UI.Components;
+﻿using SalesApp.UI.Components;
 using SalesApp.UI.Styles;
 
 namespace SalesApp.UI.Pages.Customer
 {
-    partial class CustomerOrdersPage
+    partial class CustomerSpecificOrderPage
     {
         private System.ComponentModel.IContainer components = null;
-        private long userId;
+
+        private long orderId;
         private Button homepageButton;
         protected override void Dispose(bool disposing)
         {
@@ -18,10 +17,9 @@ namespace SalesApp.UI.Pages.Customer
             }
             base.Dispose(disposing);
         }
-
-        private void InitializeComponent(long userId)
+        private void InitializeComponent(long orderId)
         {
-            this.userId = userId;
+            this.orderId = orderId;
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(1280, 832);
             StartPosition = FormStartPosition.CenterScreen;
@@ -36,49 +34,12 @@ namespace SalesApp.UI.Pages.Customer
             InitLogo();
             InitLabel();
             InitButtons();
-            InitOrders();
-        }
-
-        private void InitOrders()
-        {
-
-            List<OrderBasicInfoDTO> ordersDTO = OrderService.GetAllOrdersByUserId(this.userId);
-
-            Panel container = new Panel();
-            container.Size = new Size(1188, 568);
-            container.Location = new Point(178, 188);
-            container.BackColor = Colors.MainBackgroundColor;
-            container.AutoScroll = true;
-            Controls.Add(container);
-
-            int x = 15, y = 12;
-
-            foreach (var order in ordersDTO)
-            {
-                OrderCard orderCard = new OrderCard(order.Id, order.Date, order.Status, order.TotalAmount);
-                orderCard.Location = new Point(x, y);
-                orderCard.Click += new EventHandler((object sender, EventArgs e) =>
-                {
-                    new CustomerSpecificOrderPage(order.Id).Show();
-                    this.Hide();
-                });
-
-                this.Controls.Add(orderCard);
-
-                if (x == 959)
-                {
-                    x = 15;
-                    y = 152;
-                }
-                else
-                    x += 236;
-            }
         }
 
         private void InitLabel()
         {
             Label pageTitle = new Label();
-            pageTitle.Text = "Pedidos";
+            pageTitle.Text = "Reembolsos";
             pageTitle.Location = new Point(140, 67);
             pageTitle.AutoSize = true;
             pageTitle.ForeColor = Color.White;
@@ -122,6 +83,5 @@ namespace SalesApp.UI.Pages.Customer
         {
             Application.Exit();
         }
-
     }
 }

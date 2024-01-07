@@ -16,5 +16,17 @@ namespace SalesApp.UI.Styles
         internal static readonly Color CallToActionText = ColorTranslator.FromHtml("#0C1D29");
         internal static readonly Color SecondaryButton = ColorTranslator.FromHtml("#FFFFFF");
         internal static readonly Color LightBlue = ColorTranslator.FromHtml("#034872");
+
+        internal static readonly Color ApprovedRefund = ColorTranslator.FromHtml("#0C7203");
+        internal static readonly Color AnalysisRefund = ColorTranslator.FromHtml("#50606F");
+        internal static readonly Color DeniedRefund = ColorTranslator.FromHtml("#BA1A1A");
+
+        internal static readonly Color SentOrder = ColorTranslator.FromHtml("#0C7203");
+        internal static readonly Color RecievedOrder = ColorTranslator.FromHtml("#50606F");
+        internal static readonly Color CanceledOrder = ColorTranslator.FromHtml("#BA1A1A");
+        internal static readonly Color PreparationOrder = ColorTranslator.FromHtml("#034872");
+
+        internal static readonly Color SubText = ColorTranslator.FromHtml("#6B6464");
+
     }
 }
