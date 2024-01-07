@@ -1,13 +1,49 @@
-﻿using System;
+﻿using SalesApp.Infrastructure.Model;
+using SalesApp.Infrastructure.Operations;
+using System;
 using System.Collections.Generic;
+using System.Data.Common;
+using System.Data.Entity;
+using System.Data.SQLite;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
 namespace SalesApp.Infrastructure.Repositories
 {
-    internal class ProductDB
+    public class ProductDB : DatabaseConnection
     {
+        public static List<Product> GetAllProducst()
+        {
+            List<Product> products = new List<Product>();   
+            try
+            {
+                Open();
+                string query = @"SELECT p.id, p.name, p.description, pc.name AS category_name
+                     FROM Product p
+                     JOIN ProductCategory pc ON p.ProductCategory_id = pc.id;";
+                _command = new SQLiteCommand(query, _connection);
+
+                var reader = _command.ExecuteReader();
+
+                while (reader.Read())
+                {
+                    products.Add(new Product((long)reader["id"], reader["name"].ToString(), 
+                        reader["description"].ToString(), reader["category_name"].ToString()));
+                }
+
+                return products;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("An error occured: " + ex.Message);
+                return products;
+
+            }
+            finally { Close(); }
+        }
+
+
         internal static string InitializeTable()
         {
             return @"
@@ -17,7 +53,7 @@ namespace SalesApp.Infrastructure.Repositories
                 description VARCHAR(45) NOT NULL,
                 ProductCategory_id INTEGER NOT NULL,  
                 FOREIGN KEY (ProductCategory_id) REFERENCES ProductCategory(id) ON DELETE NO ACTION ON UPDATE NO ACTION
-            );";
+            ); insert into Product (name, description, ProductCategory_id) values ('Camiseta', 'camiseta nike', 1);";
 
         }
     }

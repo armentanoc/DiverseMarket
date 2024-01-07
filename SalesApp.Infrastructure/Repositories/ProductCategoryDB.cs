@@ -14,7 +14,7 @@ namespace SalesApp.Infrastructure.Repositories
             CREATE TABLE IF NOT EXISTS ProductCategory (
                 id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
                 name VARCHAR(45) NOT NULL
-            );";
+            ); insert into ProductCategory (name) values ('roupa');";
 
         }
     }

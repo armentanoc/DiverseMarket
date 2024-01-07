@@ -1,4 +1,7 @@
-﻿using SalesApp.UI.Authentication;
+﻿using SalesApp.DomainLayer.DTOs;
+using SalesApp.DomainLayer.Service;
+using SalesApp.Infrastructure.Service;
+using SalesApp.UI.Authentication;
 using SalesApp.UI.Components;
 using SalesApp.UI.Styles;
 
@@ -10,6 +13,8 @@ namespace SalesApp.UI.Pages.Customer
         private long _userId;
 
         private Button cartButton, profileButton;
+        private List<ProductCard> productCards;
+        private Panel productsPanel;
 
         protected override void Dispose(bool disposing)
         {
@@ -37,6 +42,49 @@ namespace SalesApp.UI.Pages.Customer
         {
             InitLogo();
             InitButtons();
+            InitProducts();
+        }
+
+        private void InitProducts()
+        {
+            this.productsPanel = new Panel();
+            this.productsPanel.Size = new Size(927, 603);
+            this.productsPanel.Location = new Point(178, 188);
+            this.productsPanel.BackColor = Colors.MainBackgroundColor;
+            this.productsPanel.AutoScroll = true;
+            this.Controls.Add(productsPanel);
+
+            List<ProductBasicInfoDTO> productBasicInfoDTOs = ProductService.GetAllProducstBasicInfo();
+
+            int x = 8;
+            int y = 17;
+
+            this.productCards = new List<ProductCard>();
+
+            foreach(var productBasicInfoDTO in productBasicInfoDTOs)
+            {
+                ProductCard productCard = new ProductCard(productBasicInfoDTO.Name, productBasicInfoDTO.Description, 
+                    productBasicInfoDTO.Category, productBasicInfoDTO.LowestPrice);
+                productCard.Location = new Point(x, y);
+                productCard.Click += new EventHandler((object sender, EventArgs e) =>
+                {
+                    new SpecificProductPage(productBasicInfoDTO.Id, this._userId).Show();
+                    this.Hide();
+                });
+
+                this.productCards.Add(productCard);
+
+                this.productsPanel.Controls.Add(productCard);
+
+                if(x == 713)
+                {
+                    x = 8;
+                    y += 150;
+                }
+                else
+                    x += 235;
+
+            }
         }
 
         private void InitButtons()

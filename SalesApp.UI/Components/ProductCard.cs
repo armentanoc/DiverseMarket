@@ -16,6 +16,7 @@ namespace SalesApp.UI.Components
             Width = 203;
             Height = 118;
             BorderStyle = BorderStyle.None;
+            Cursor = Cursors.Hand;
             AddProductName(productName);
             AddDescription(description);
             AddCategory(category);
