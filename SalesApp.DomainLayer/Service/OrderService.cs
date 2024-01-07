@@ -13,5 +13,20 @@ namespace SalesApp.DomainLayer.Service
         {
             throw new NotImplementedException();
         }
+
+        public static DateTime GetOrderDateById(long orderId)
+        {
+            throw new NotImplementedException();
+        }
+
+        public static OrderDetailsDTO GetOrderDetailsById(long orderId)
+        {
+            throw new NotImplementedException();
+        }
+
+        public static void SetOrderItemAsRecieved(long orderId, long itemId)
+        {
+            throw new NotImplementedException();
+        }
     }
 }
