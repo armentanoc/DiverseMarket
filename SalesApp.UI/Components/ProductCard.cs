@@ -11,6 +11,8 @@ namespace SalesApp.UI.Components
 {
     internal class ProductCard : Panel
     {
+        public Label name;
+        public Label categoryLabel;
         public ProductCard(string productName, string description, string category, double lowestPrice)
         {
             Width = 203;
@@ -25,7 +27,7 @@ namespace SalesApp.UI.Components
 
         private void AddProductName(string productName)
         {
-            Label name = new Label();
+            name = new Label();
             name.Text = productName;
             name.ForeColor = Colors.MainBackgroundColor;
             name.Font = new Font("Ubuntu", 10);
@@ -49,7 +51,7 @@ namespace SalesApp.UI.Components
 
         private void AddCategory(string category)
         {
-            Label categoryLabel = new Label();
+            categoryLabel = new Label();
             categoryLabel.Text = category;
             categoryLabel.ForeColor = Colors.LightBlue;
             categoryLabel.Font = new Font("Ubuntu", 8);
