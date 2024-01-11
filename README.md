@@ -38,3 +38,10 @@
    - Você deve ver o prompt do SQLite (`sqlite>`).
 
 Agora está pronto para começar a trabalhar com o SQLite nesse projeto!
+
+## 🎨 Figma
+<a href="https://www.figma.com/file/GgynaA4Ea1Lbbf0CItpRx6/PLAN?type=design&node-id=0-1&mode=design&t=LsNKdmuf3Qd0tijM-0">
+  <img src="https://github.com/armentanoc/SalesApp/assets/88147887/f98575a0-d2d6-4a6b-8868-6a9bab78ea62" alt="DiverseMarket" width="200">
+</a>
+
+Clique na badge para acessar o projeto do Figma.
