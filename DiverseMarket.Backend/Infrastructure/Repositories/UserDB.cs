@@ -3,6 +3,7 @@ using DiverseMarket.Backend.Infrastructure.Util;
 using DiverseMarket.Backend.Model;
 using DiverseMarket.Backend.Model.Companies;
 using DiverseMarket.Backend.Model.Enums;
+using System.Collections.Generic;
 using System.Data.SQLite;
 
 namespace DiverseMarket.Backend.Infrastructure.Repositories
@@ -348,6 +349,34 @@ namespace DiverseMarket.Backend.Infrastructure.Repositories
 
             }
             finally { Close(); }
+        }
+
+        internal static bool UpdateUser(long id, string email, string? telephone)
+        {
+            
+            try
+            {
+                Open();
+                string query = @"UPDATE User
+                        SET email = @email, telephone = @telephone
+                        WHERE id = @id;";
+                _command = new SQLiteCommand(query, _connection);
+
+                _command.Parameters.AddWithValue("@id", id);
+                _command.Parameters.AddWithValue("@email", email);
+                _command.Parameters.AddWithValue("@telephone", (object)telephone ?? DBNull.Value);
+
+                return _command.ExecuteNonQuery() > 0;
+
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("An error occured: " + ex.Message);
+                return false;
+
+            }
+            finally { Close(); }
+
         }
     }
 }

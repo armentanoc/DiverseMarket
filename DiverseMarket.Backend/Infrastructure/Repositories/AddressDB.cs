@@ -1,4 +1,5 @@
-﻿using DiverseMarket.Backend.Infrastructure.Operations;
+﻿using DiverseMarket.Backend.DTOs;
+using DiverseMarket.Backend.Infrastructure.Operations;
 using DiverseMarket.Backend.Model;
 using System.Data.SQLite;
 
@@ -82,6 +83,42 @@ namespace DiverseMarket.Backend.Infrastructure.Repositories
             {
                 Console.WriteLine("An error occured: " + ex.Message);
                 return null;
+
+            }
+            finally { Close(); }
+        }
+
+        internal static bool UpdateAddressByUserId(long userId, AddressDTO address)
+        {
+            try
+            {
+                Open();
+                string query = @"UPDATE Address
+                        SET
+                            street = @street,
+                            number = @number,
+                            complement = @complement,
+                            zipcode = @zipcode,
+                            neighborhood = @neighborhood,
+                            city = @city
+                        WHERE User_id = @userId";
+                _command = new SQLiteCommand(query, _connection);
+
+                _command.Parameters.AddWithValue("@userId", userId);
+                _command.Parameters.AddWithValue("@street", address.Street);
+                _command.Parameters.AddWithValue("@number", address.Number);
+                _command.Parameters.AddWithValue("@zipcode", address.ZipCode);
+                _command.Parameters.AddWithValue("@city", address.City);
+                _command.Parameters.AddWithValue("@neighborhood", address.Neighborhood);
+                _command.Parameters.AddWithValue("@complement", (object)address.Complement ?? DBNull.Value);
+
+                return _command.ExecuteNonQuery() > 0;
+
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("An error occured: " + ex.Message);
+                return false;
 
             }
             finally { Close(); }
