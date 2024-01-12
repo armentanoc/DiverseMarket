@@ -77,7 +77,7 @@ namespace DiverseMarket.Backend.Infrastructure.Operations
             Company company = new Company("88222925000128", "CA Tecnologia Ltda.", "TechCA");
             UserDB.RegisterCompany(
             company,
-            new Address("40280000", "Avenida Antonio Carlos Magalhães", "Edifício Fake", "1234", "Salvador"),
+            new Address("40280000", "Avenida Antonio Carlos Magalhães", "Salvador", "1234", "Edifício Fake"),
             "tech@ca.com",
             "7133581234",
             "carolina",
