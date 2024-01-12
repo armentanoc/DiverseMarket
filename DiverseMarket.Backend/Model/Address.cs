@@ -14,6 +14,15 @@ namespace DiverseMarket.Backend.Model
         public string? Complement { get; private set; }
         public string City { get; private set; }
         public string Number { get; private set; }
+        public Address(string zipCode, string street, string city, string number, string? complement = null)
+        {
+            ZipCode = zipCode;
+            Street = street;
+            Complement = complement;
+            City = city;
+            Number = number;
+        }
+
         public Address(long id, string zipCode, string street, string city, string number, string? complement = null)
         {
             Id = id;
