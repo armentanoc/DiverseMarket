@@ -40,6 +40,8 @@ namespace DiverseMarket.UI.Authentication
             Name = "LoginPage";
             StartPosition = FormStartPosition.CenterScreen;
             Text = "DiverseMarket";
+            KeyPreview = true;
+            AcceptButton = loginButton;
             this.BackColor = Colors.MainBackgroundColor;
             FormClosed += LoginPage_FormClosed;
             InitScreen();
@@ -57,8 +59,6 @@ namespace DiverseMarket.UI.Authentication
             InitLogo();
             InitComponents();
         }
-
-        
 
         private void InitLogo()
         {
@@ -134,8 +134,22 @@ namespace DiverseMarket.UI.Authentication
             new FlowSelectionPage().Show();
             this.Hide();
         }
-
         private void loginButton_Click(object sender, EventArgs e)
+        {
+            PerformLogin();
+        }
+
+        protected override void OnKeyPress(KeyPressEventArgs e)
+        {
+            if (e.KeyChar == (char)Keys.Enter)
+            {
+                e.Handled = true;
+                PerformLogin();
+            }
+            base.OnKeyPress(e);
+        }
+
+        private void PerformLogin()
         {
             LoginResponseDTO response = AuthenticationService.Login(new LoginRequestDTO(this.usernameTextBox.TextBox.Text.ToLower(), 
                 this.passwordTextBox.TextBox.Text));
