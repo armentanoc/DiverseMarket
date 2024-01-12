@@ -23,7 +23,7 @@ namespace DiverseMarket.Backend.Services
             Address address = AddressDB.GetAddressByUserId(user.Id);
 
             return new CustomerDTO(user.Id, user.Name, user.Email, user.Username, user.Phone, cpf,
-                new AddressDTO(address.ZipCode, address.Street, address.Complement, address.City, address.Number));
+                new AddressDTO(address.ZipCode, address.Street, address.Complement, address.Neighborhood, address.City, address.Number));
         }
     }
 }

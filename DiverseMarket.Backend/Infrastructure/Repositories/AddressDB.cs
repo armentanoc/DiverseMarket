@@ -1,11 +1,6 @@
 ﻿using DiverseMarket.Backend.Infrastructure.Operations;
 using DiverseMarket.Backend.Model;
-using System;
-using System.Collections.Generic;
 using System.Data.SQLite;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace DiverseMarket.Backend.Infrastructure.Repositories
 {
@@ -21,20 +16,21 @@ namespace DiverseMarket.Backend.Infrastructure.Repositories
                         number VARCHAR(10) NOT NULL,
                         complement VARCHAR(45),
                         zipcode VARCHAR(45) NOT NULL,
+                        neighborhood VARCHAR(45) NOT NULL,
                         city VARCHAR(45) NOT NULL,
                         FOREIGN KEY (User_id) REFERENCES User(id) ON DELETE NO ACTION ON UPDATE NO ACTION
                     );";
         }
 
 
-        public static long RegisterAddress(long userId, string cep, string street, string? complement, string number, string city)
+        public static long RegisterAddress(long userId, string cep, string street, string number, string? complement, string neighborhood, string city)
         {
             long id = 0;
             try
             {
                 Open();
-                string query = @"INSERT INTO Address (User_id, street, number, complement, zipcode, city) 
-                         VALUES (@userId, @street, @number, @complement, @zipcode, @city);";
+                string query = @"INSERT INTO Address (User_id, street, number, complement, zipcode, neighborhood, city) 
+                         VALUES (@userId, @street, @number, @complement, @zipcode, @neighborhood, @city);";
                 _command = new SQLiteCommand(query, _connection);
 
                 _command.Parameters.AddWithValue("@userId", userId);
@@ -42,6 +38,7 @@ namespace DiverseMarket.Backend.Infrastructure.Repositories
                 _command.Parameters.AddWithValue("@number", number);
                 _command.Parameters.AddWithValue("@complement", (object)complement ?? DBNull.Value);
                 _command.Parameters.AddWithValue("@zipcode", cep);
+                _command.Parameters.AddWithValue("@neighborhood", neighborhood);
                 _command.Parameters.AddWithValue("@city", city);
                 _command.ExecuteNonQuery();
 

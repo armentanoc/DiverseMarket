@@ -9,6 +9,8 @@ namespace DiverseMarket.UI.Authentication
 {
     partial class ClientRegisterPage
     {
+        private static string addressNeighborhood;
+
         private System.ComponentModel.IContainer components = null;
 
         private Label usernameWarningLabel;
@@ -18,7 +20,7 @@ namespace DiverseMarket.UI.Authentication
         private Label cpfWarningLabel;
 
         private RoundedTextBox fullNameTextBox, emailTextBox, usernameTextBox, telephoneTextBox, cpfTextBox, cepTextBox, streetTextBox,
-            numberTextBox, complementTextBox, cityTextBox;
+            numberTextBox, complementTextBox, neighbordhoodTextBox, cityTextBox;
         private PasswordRoundedTextBox passwordTextBox;
 
         private Button loginButton;
@@ -93,10 +95,13 @@ namespace DiverseMarket.UI.Authentication
                 string username = this.usernameTextBox.TextBox.Text;
                 string? telephone = (this.telephoneTextBox.TextBox.Text.Equals("Telefone") ? null : this.telephoneTextBox.TextBox.Text);
                 string CPF = this.cpfTextBox.TextBox.Text;
+
                 AddressDTO address = new AddressDTO(this.cepTextBox.TextBox.Text, 
                     this.streetTextBox.TextBox.Text, 
                     (this.complementTextBox.TextBox.Text.Equals("Complemento") ? null : this.complementTextBox.TextBox.Text),
-                    this.cityTextBox.TextBox.Text, this.numberTextBox.TextBox.Text);
+                    addressNeighborhood,
+                    this.cityTextBox.TextBox.Text, 
+                    this.numberTextBox.TextBox.Text);
                 string password = this.passwordTextBox.TextBox.Text;
 
                 LoginResponseDTO response = AuthenticationService.RegisterCustomer(
@@ -223,14 +228,22 @@ namespace DiverseMarket.UI.Authentication
             cpfTextBox.TextBox.Font = new Font("Ubuntu", 10);
             this.Controls.Add(cpfTextBox);
 
+
             cepTextBox = new RoundedTextBox("CEP*", 205, 60);
             cepTextBox.Location = new Point(721, 430);
             cepTextBox.TextBox.Font = new Font("Ubuntu", 10);
             cepTextBox.TextBox.Leave += async (object sender, EventArgs e) =>
             {
                 var addressAutoComplete = await CepUtils.GetAddressByCep(cepTextBox.TextBox.Text);
-                streetTextBox.TextBox.Text = addressAutoComplete.Logradouro;
-                cityTextBox.TextBox.Text = addressAutoComplete.Localidade + " - " + addressAutoComplete.Uf;
+                
+                streetTextBox.TextBox.Text = 
+                addressAutoComplete.Logradouro
+                + " - " + addressAutoComplete.Bairro;
+
+                addressNeighborhood = addressAutoComplete.Bairro;
+                cityTextBox.TextBox.Text = 
+                    addressAutoComplete.Localidade 
+                    + " - " + addressAutoComplete.Uf;
             };
             this.Controls.Add(cepTextBox);
 

@@ -1,10 +1,7 @@
 ﻿using DiverseMarket.Backend.Infrastructure.Repositories;
-using System;
-using System.Collections.Generic;
+using DiverseMarket.Backend.Model;
+using DiverseMarket.Backend.Model.Companies;
 using System.Data.SQLite;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace DiverseMarket.Backend.Infrastructure.Operations
 {
@@ -64,8 +61,68 @@ namespace DiverseMarket.Backend.Infrastructure.Operations
 
                 transaction.Commit();
             }
+
+            InitializeDefaultUsers();
             _connection.Close();
         }
+
+        private static void InitializeDefaultUsers()
+        {
+            RegisterDefaultCustomer();
+            RegisterDefaultUserCompany();
+            RegisterDefaultModerator();
+        }
+
+        private static void RegisterDefaultUserCompany()
+        {
+            Company company = new Company("88222925000128", "CA Tecnologia Ltda.", "TechCA");
+            UserDB.RegisterCompany(
+            company,
+            new Address("40280000", "Avenida Antonio Carlos Magalhães", "1234", "Brotas", "Salvador", "Cond. Ômega"),
+            "tech@ca.com",
+            "7133581234",
+            "carolina",
+            "Aa12345@" //senha
+            );
+        }
+
+        private static void RegisterDefaultCustomer()
+        {
+            UserDB.RegisterCustomer
+            (
+            "Vitória Lira",
+            "vitoria@vitoria.com",
+            "vitoria",
+            "123456789",
+            "73883712060",
+            "24330350",
+            "Estrada E",
+            "Cond. Gama, Ap. 101",
+            "13",
+            "Várzea das Moças",
+            "Niterói",
+            "Aa12345@" //senha
+            );
+        }
+            private static void RegisterDefaultModerator()
+            {
+                UserDB.RegisterModerator
+                (
+                "Paula Andrezza",
+                "paula@gmail.com",
+                "paula",
+                "123456789",
+                "89403309008",
+                "53620819",
+                "Rua Senhor do Bonfim",
+                "Cond. Delta, Ap. 202",
+                "12",
+                "Santa Rita",
+                "Igarassu",
+                "Aa12345@" //senha
+                );
+            }
+
         internal static void CreateDB()
         {
             try
