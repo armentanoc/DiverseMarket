@@ -1,13 +1,9 @@
 ﻿using DiverseMarket.Backend.Infrastructure.Operations;
 using DiverseMarket.Backend.Infrastructure.Util;
 using DiverseMarket.Backend.Model;
+using DiverseMarket.Backend.Model.Companies;
 using DiverseMarket.Backend.Model.Enums;
-using System;
-using System.Collections.Generic;
 using System.Data.SQLite;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace DiverseMarket.Backend.Infrastructure.Repositories
 {
@@ -30,7 +26,8 @@ namespace DiverseMarket.Backend.Infrastructure.Repositories
                         User_id INTEGER NOT NULL PRIMARY KEY,
                         salt VARCHAR(45) NOT NULL,
                         FOREIGN KEY (User_id) REFERENCES User(id) ON DELETE NO ACTION ON UPDATE NO ACTION
-                    );";
+                    );"
+                    ;
         }
 
         public static (long? id, string? userRole) Login(string username, string password)
@@ -111,11 +108,18 @@ namespace DiverseMarket.Backend.Infrastructure.Repositories
             finally { Close(); }
         }
 
-        public static bool RegisterCustomer(string fullName, string email, string username, string? telephone, string CPF,
-           string cep,
-                    string street,
-                    string? complement,
-                    string number, string city, string password)
+        public static bool RegisterCustomer(
+            string fullName, 
+            string email, 
+            string username, 
+            string? telephone, 
+            string CPF,
+            string cep,
+            string street,
+            string? complement,
+            string number, 
+            string city, 
+            string password)
         {
             try
             {
@@ -162,7 +166,60 @@ namespace DiverseMarket.Backend.Infrastructure.Repositories
             finally { Close(); }
         }
 
+        public static bool RegisterCompany(Company company, Address address, string email, string phone, string username, string password) 
+        {
+            try
+            {
+                Open();
 
+                (string password, string salt) obj = HashUtil.GetHashedAndSalt(password);
+
+                string query = @"insert into User(name, username, password, email, telephone, role) 
+                        values (@fullName, @username, '" + $"{obj.password}" + @"', @email, @telephone, 'Seller');";
+
+                _command = new SQLiteCommand(query, _connection);
+
+                _command.Parameters.AddWithValue("@fullName", company.TradeName);
+                _command.Parameters.AddWithValue("@username", username);
+                _command.Parameters.AddWithValue("@email", email);
+                _command.Parameters.AddWithValue("@telephone", (object)phone ?? DBNull.Value);
+
+                _command.ExecuteNonQuery();
+
+                long userId = _connection.LastInsertRowId;
+
+                query = @"insert into User_Salt values (@id, '" + $"{obj.salt}" + @"')";
+
+                _command = new SQLiteCommand(query, _connection);
+
+                _command.Parameters.AddWithValue("@id", userId);
+
+                bool registered = _command.ExecuteNonQuery() > 0;
+
+                long saltId = _connection.LastInsertRowId;
+
+                AddressDB.RegisterAddress
+                    (
+                    userId, 
+                    address.ZipCode, 
+                    address.Street, 
+                    address.Complement, 
+                    address.Number, 
+                    address.City
+                    );
+
+                CompanyDB.RegisterCompany(userId, company);
+
+                return registered;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("An error occured: " + ex.Message);
+                return false;
+
+            }
+            finally { Close(); }
+        }
 
         public static string GetUserFullNameById(long userId)
         {

@@ -81,7 +81,7 @@ namespace DiverseMarket.Backend.Infrastructure.Operations
             "tech@ca.com",
             "7133581234",
             "carolina",
-            "123" //senha
+            "Aa12345@" //senha
             );
         }
 
@@ -99,7 +99,7 @@ namespace DiverseMarket.Backend.Infrastructure.Operations
             "Apt 123",
             "42",
             "Cityville",
-            "123" //senha
+            "Aa12345@" //senha
             );
 
         }

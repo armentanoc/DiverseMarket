@@ -1,12 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using DiverseMarket.Backend.Infrastructure.Operations;
+using DiverseMarket.Backend.Infrastructure.Util;
+using DiverseMarket.Backend.Model.Companies;
+using System.Data.SQLite;
 
 namespace DiverseMarket.Backend.Infrastructure.Repositories
 {
-    internal class CompanyDB
+    internal class CompanyDB : DatabaseConnection
     {
         internal static string InitializeTable()
         {
@@ -20,6 +19,35 @@ namespace DiverseMarket.Backend.Infrastructure.Repositories
                 FOREIGN KEY (User_id) REFERENCES User(id) ON DELETE NO ACTION ON UPDATE NO ACTION
             );";
 
+        }
+
+        internal static bool RegisterCompany(long userId, Company company)
+        {
+            try
+            {
+                Open();
+
+                string query = @"insert into Company(cnpj, corporate_name, trade_name, User_id) 
+                        values (@cnpj, @corporateName, @tradeName, @userId);";
+
+                _command = new SQLiteCommand(query, _connection);
+
+                _command.Parameters.AddWithValue("@cnpj", company.Cnpj);
+                _command.Parameters.AddWithValue("@corporateName", company.CorporateName);
+                _command.Parameters.AddWithValue("@tradeName", company.TradeName);
+                _command.Parameters.AddWithValue("@userId", (object)userId ?? DBNull.Value);
+
+                bool registered = _command.ExecuteNonQuery() > 0;
+
+                return registered;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("An error occured: " + ex.Message);
+                return false;
+
+            }
+            finally { Close(); }
         }
     }
 }
