@@ -53,7 +53,7 @@ namespace DiverseMarket.Backend.Infrastructure.Repositories
                 amount DECIMAL(10,2) NOT NULL,
                 Customer_id INTEGER NOT NULL,
                 status INTEGER NOT NULL CHECK(Status IN (1, 2, 3, 4)),
-                FOREIGN KEY (Company_id) REFERENCES Company(id) ON DELETE NO ACTION ON UPDATE NO ACTION
+                FOREIGN KEY (Customer_id) REFERENCES User(id) ON DELETE NO ACTION ON UPDATE NO ACTION
             );";
 
         }
