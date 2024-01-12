@@ -1,6 +1,7 @@
 ﻿using DiverseMarket.Backend.DTOs;
 using DiverseMarket.Backend.Infrastructure.Repositories;
 using DiverseMarket.Backend.Model;
+using DiverseMarket.Backend.Model.Products;
 using System;
 using System.Collections.Generic;
 using System.Linq;
