@@ -1,10 +1,7 @@
 ﻿using DiverseMarket.Backend.Infrastructure.Repositories;
-using System;
-using System.Collections.Generic;
+using DiverseMarket.Backend.Model;
+using DiverseMarket.Backend.Model.Companies;
 using System.Data.SQLite;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace DiverseMarket.Backend.Infrastructure.Operations
 {
@@ -64,8 +61,49 @@ namespace DiverseMarket.Backend.Infrastructure.Operations
 
                 transaction.Commit();
             }
+
+            InitializeDefaultUsers();
             _connection.Close();
         }
+
+        private static void InitializeDefaultUsers()
+        {
+            RegisterDefaultCustomer();
+            RegisterDefaultUserCompany();
+        }
+
+        private static void RegisterDefaultUserCompany()
+        {
+            Company company = new Company("88222925000128", "CA Tecnologia Ltda.", "TechCA");
+            UserDB.RegisterCompany(
+            company,
+            new Address("40280000", "Avenida Antonio Carlos Magalhães", "Edifício Fake", "1234", "Salvador"),
+            "tech@ca.com",
+            "7133581234",
+            "carolina",
+            "123" //senha
+            );
+        }
+
+        private static void RegisterDefaultCustomer()
+        {
+            UserDB.RegisterCustomer
+            (
+            "Vitória Lira",
+            "vitoria@vitoria.com",
+            "vitoria",
+            "123456789",
+            "123.456.789-01",
+            "12345-678",
+            "Main Street",
+            "Apt 123",
+            "42",
+            "Cityville",
+            "123" //senha
+            );
+
+        }
+
         internal static void CreateDB()
         {
             try
