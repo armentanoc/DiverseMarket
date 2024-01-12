@@ -1,11 +1,6 @@
-﻿using SalesApp.DomainLayer.DTOs;
+﻿using SalesApp.Backend.DTOs;
+using SalesApp.Backend.Model.Enums;
 using SalesApp.UI.Styles;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace SalesApp.UI.Components
 {
@@ -104,7 +99,7 @@ namespace SalesApp.UI.Components
 
         private void AddButtons(DateTime date)
         {
-            bool recieved = (this.item.Status == DomainLayer.Model.Enum.OrderStatus.Recieved); 
+            bool recieved = (this.item.Status == OrderStatus.Recieved); 
 
             Color recieveButtonColor = ColorTranslator.FromHtml (recieved ? ("#D2D2D2") : ("#72B4DB"));
             recievedButton = new RoundedButton("RECEBI ESTE ITEM", 265, 57, recieveButtonColor, 32);
@@ -117,8 +112,8 @@ namespace SalesApp.UI.Components
 
             Controls.Add(recievedButton);
             
-            bool refundEnabled = (this.item.Status != DomainLayer.Model.Enum.OrderStatus.Recieved && date > DateTime.Today) 
-                || (this.item.Status == DomainLayer.Model.Enum.OrderStatus.Recieved && date.AddDays(7).Date >= DateTime.Today);
+            bool refundEnabled = (this.item.Status != OrderStatus.Recieved && date > DateTime.Today) 
+                || (this.item.Status == OrderStatus.Recieved && date.AddDays(7).Date >= DateTime.Today);
             Color refundButtonColor = ColorTranslator.FromHtml ( refundEnabled ? ("#72B4DB") : ("#D2D2D2"));
             refundButton = new RoundedButton("SOLICITAR REEMBOLSO", 265, 57,refundButtonColor, 32);
             if (!refundEnabled)

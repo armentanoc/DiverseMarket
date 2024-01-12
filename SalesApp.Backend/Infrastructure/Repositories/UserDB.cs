@@ -1,7 +1,7 @@
 ﻿using SalesApp.Backend.Infrastructure.Operations;
 using SalesApp.Backend.Infrastructure.Util;
 using SalesApp.Backend.Model;
-using SalesApp.Backend.Model.Enum;
+using SalesApp.Backend.Model.Enums;
 using System;
 using System.Collections.Generic;
 using System.Data.SQLite;

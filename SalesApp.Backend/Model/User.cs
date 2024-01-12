@@ -1,4 +1,4 @@
-﻿using SalesApp.Backend.Model.Enum;
+﻿using SalesApp.Backend.Model.Enums;
 using System;
 using System.Collections.Generic;
 using System.Data;

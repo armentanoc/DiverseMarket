@@ -1,6 +1,5 @@
-﻿using SalesApp.DomainLayer.DTOs;
-using SalesApp.DomainLayer.Model.Users;
-using SalesApp.DomainLayer.Service;
+﻿using SalesApp.Backend.DTOs;
+using SalesApp.Backend.Services;
 using SalesApp.UI.Components;
 using SalesApp.UI.Styles;
 using SalesApp.UI.Util;
@@ -101,7 +100,7 @@ namespace SalesApp.UI.Authentication
                 string password = this.passwordTextBox.TextBox.Text;
 
                 LoginResponseDTO response = AuthenticationService.RegisterCustomer(
-                    new DomainLayer.DTOs.RegisterCustomerDTO(fullName, email, username, telephone, CPF, address, password));
+                    new RegisterCustomerDTO(fullName, email, username, telephone, CPF, address, password));
                 if (response.Id != null)
                 {
                     MessageBox.Show("Conta criada com sucesso.");

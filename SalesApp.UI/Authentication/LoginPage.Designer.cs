@@ -1,6 +1,6 @@
-﻿using Microsoft.VisualBasic.Logging;
-using SalesApp.DomainLayer.DTOs;
-using SalesApp.DomainLayer.Service;
+﻿
+using SalesApp.Backend.DTOs;
+using SalesApp.Backend.Services;
 using SalesApp.UI.Components;
 using SalesApp.UI.Messages;
 using SalesApp.UI.Pages.Company;

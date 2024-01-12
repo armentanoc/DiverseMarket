@@ -1,7 +1,5 @@
-﻿using SalesApp.DomainLayer.DTOs;
-using SalesApp.DomainLayer.Service;
-using SalesApp.Infrastructure.Service;
-using SalesApp.UI.Authentication;
+﻿using SalesApp.Backend.DTOs;
+using SalesApp.Backend.Services;
 using SalesApp.UI.Components;
 using SalesApp.UI.Styles;
 

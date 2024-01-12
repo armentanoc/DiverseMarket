@@ -1,10 +1,5 @@
-﻿using SalesApp.DomainLayer.Model.Enum;
+﻿using SalesApp.Backend.Model.Enums;
 using SalesApp.UI.Styles;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace SalesApp.UI.Components
 {

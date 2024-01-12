@@ -14,6 +14,10 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\SalesApp.Backend\SalesApp.Backend.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
     <None Update="Resources\atualizar-meus-dados.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
@@ -50,10 +54,6 @@
     <None Update="Resources\search.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-  </ItemGroup>
-
-  <ItemGroup>
-    <ProjectReference Include="..\SalesApp.DomainLayer\SalesApp.DomainLayer.csproj" />
   </ItemGroup>
 
 </Project>

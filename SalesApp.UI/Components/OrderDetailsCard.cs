@@ -1,10 +1,4 @@
-﻿using SalesApp.DomainLayer.DTOs;
-using SalesApp.UI.Styles;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using SalesApp.Backend.DTOs;
 
 namespace SalesApp.UI.Components
 {
