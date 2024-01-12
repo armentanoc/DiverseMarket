@@ -1,25 +1,21 @@
 ﻿using DiverseMarket.Backend.Services;
 using DiverseMarket.UI.Components;
-using DiverseMarket.UI.Pages.Moderator.Category;
 using DiverseMarket.UI.Pages.Moderator.Company;
 using DiverseMarket.UI.Styles;
-using static System.Net.Mime.MediaTypeNames;
 
-namespace DiverseMarket.UI.Pages.Moderator
+namespace DiverseMarket.UI.Pages.Moderator.Category
 {
-    partial class HomePageModerator
+    partial class CategoriesList
     {
         /// <summary>
         /// Required designer variable.
         /// </summary>
         private System.ComponentModel.IContainer components = null;
         private long _userId;
-        private RoundedButton companiesList;
-        private RoundedButton categoriesList;
-        private RoundedButton refundList;
         private RoundedButton logoutButton;
         private Label helloLabel;
         private Label textLabel;
+
         /// <summary>
         /// Clean up any resources being used.
         /// </summary>
@@ -44,13 +40,12 @@ namespace DiverseMarket.UI.Pages.Moderator
             this._userId = userId;
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(1280, 832);
-            Name = "LoginPage";
+            Name = "CategoriesListPage";
             StartPosition = FormStartPosition.CenterScreen;
-            Text = "HomePageModerator";
+            Text = "CategoriesList";
             this.BackColor = Colors.MainBackgroundColor;
             InitScreen(userId);
         }
-
 
         private void InitScreen(long userId)
         {
@@ -86,41 +81,6 @@ namespace DiverseMarket.UI.Pages.Moderator
 
         private void InitButtons()
         {
-            this.logoutButton = new RoundedButton("Sair", 150, 57, Colors.SecondaryButton, 32);
-            this.logoutButton.Location = new System.Drawing.Point(1080, 50);
-            this.logoutButton.MouseEnter += new EventHandler((object sender, EventArgs e) => { this.logoutButton.Cursor = Cursors.Hand; });
-            //this.logoutButton.Click += new EventHandler(logoutButton_Click);
-            this.Controls.Add(logoutButton);
-
-            this.companiesList = new RoundedButton("Listar Estabelecimentos", 300, 57, Colors.SecondaryButton, 32);
-            this.companiesList.Location = new System.Drawing.Point(50, 300);
-            this.companiesList.MouseEnter += new EventHandler((object sender, EventArgs e) => { this.companiesList.Cursor = Cursors.Hand; });
-            this.companiesList.Click += new EventHandler(companiesList_Click);
-            this.Controls.Add(companiesList);
-
-            this.categoriesList = new RoundedButton("Listar categorias", 300, 57, Colors.SecondaryButton, 32);
-            this.categoriesList.Location = new System.Drawing.Point(370, 300);
-            this.categoriesList.MouseEnter += new EventHandler((object sender, EventArgs e) => { this.categoriesList.Cursor = Cursors.Hand; });
-            this.categoriesList.Click += new EventHandler(categoriesList_Click);
-            this.Controls.Add(categoriesList);
-
-            this.refundList = new RoundedButton("Listar categorias", 300, 57, Colors.SecondaryButton, 32);
-            this.refundList.Location = new System.Drawing.Point(690, 300);
-            this.refundList.MouseEnter += new EventHandler((object sender, EventArgs e) => { this.refundList.Cursor = Cursors.Hand; });
-            //this.refundList.Click += new EventHandler(refundList_Click);
-            this.Controls.Add(refundList);
-        }
-
-        private void companiesList_Click(object sender, EventArgs e)
-        {
-            new CompaniesList(this._userId).Show();
-            this.Hide();
-        }
-
-        private void categoriesList_Click(object sender, EventArgs e)
-        {
-            new CategoriesList(this._userId).Show();
-            this.Hide();
         }
 
         #endregion
