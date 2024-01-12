@@ -1,4 +1,6 @@
 ﻿using DiverseMarket.Backend.DTOs;
+using DiverseMarket.Backend.Infrastructure.Repositories;
+using DiverseMarket.Backend.Model.Transactions;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,9 +11,17 @@ namespace DiverseMarket.Backend.Services
 {
     public static class OrderService
     {
-        public static List<OrderBasicInfoDTO> GetAllOrdersByUserId(long userId)
+        public static List<OrderBasicInfoDTO> GetAllOrdersByCustomerId(long customerId)
         {
-            throw new NotImplementedException();
+            List<Selling> allOrdersByUserId = SellingDB.GetAllSellingByCustomerId(customerId);
+
+            List<OrderBasicInfoDTO> allOrdersBasicInfo = new List<OrderBasicInfoDTO>(); 
+
+            foreach(Selling order in allOrdersByUserId)
+            {
+                allOrdersBasicInfo.Add(new OrderBasicInfoDTO(order.Id, order.Date, order.Status, order.TotalAmount));
+            }
+            return allOrdersBasicInfo;
         }
 
         public static DateTime GetOrderDateById(long orderId)

@@ -43,7 +43,7 @@ namespace DiverseMarket.UI.Pages.Customer
         private void InitOrders()
         {
 
-            List<OrderBasicInfoDTO> ordersDTO = OrderService.GetAllOrdersByUserId(this.userId);
+            List<OrderBasicInfoDTO> ordersDTO = OrderService.GetAllOrdersByCustomerId(this.userId);
 
             Panel container = new Panel();
             container.Size = new Size(1188, 568);
