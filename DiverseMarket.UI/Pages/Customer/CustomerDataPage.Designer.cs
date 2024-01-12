@@ -10,6 +10,8 @@ namespace DiverseMarket.UI.Pages.Customer
     {
         private System.ComponentModel.IContainer components = null;
 
+        private string addressNeighborhood;
+
         private long userId;
         private CustomerDTO customerDTO;
 
@@ -79,7 +81,51 @@ namespace DiverseMarket.UI.Pages.Customer
 
         private void saveButton_Click(object sender, EventArgs e)
         {
-           
+            if (WasThereChanges())
+            {
+                if (CheckFields())
+                {
+                    AddressDTO address;
+                    if (this.customerDTO.Address.ZipCode == this.cepTextBox.TextBox.Text)
+                        address = this.customerDTO.Address;
+                    else
+                        address = new AddressDTO(this.cepTextBox.TextBox.Text,
+                            this.streetTextBox.TextBox.Text,
+                            (this.complementTextBox.TextBox.Text.Equals("Complemento") ? null : this.complementTextBox.TextBox.Text),
+                            addressNeighborhood,
+                            this.cityTextBox.TextBox.Text,
+                            this.numberTextBox.TextBox.Text);
+
+                    string? telephone = this.telephoneTextBox.TextBox.Text == "Telefone" ? (null) : (this.telephoneTextBox.TextBox.Text); 
+
+                    CustomerDTO updatedCustomer = new CustomerDTO(this.customerDTO.Id, this.customerDTO.FullName, this.emailTextBox.TextBox.Text,
+                                            this.customerDTO.Username, telephone, this.customerDTO.CPF, address);
+
+                    if (UserService.UpdateUser(updatedCustomer))
+                    {
+                        MessageBox.Show("Atualizado com sucesso!");
+                        this.customerDTO = updatedCustomer;
+                    }
+                    else
+                        MessageBox.Show("Houve um problema ao atualizar seus dados. Tente novamente mais tarde.");
+
+
+                }
+                else
+                {
+                    MessageBox.Show("Não houve mudança em nenhum campo.");
+                }
+            }
+        }
+
+        private bool WasThereChanges()
+        {
+            throw new NotImplementedException();
+        }
+
+        private bool CheckFields()
+        {
+            throw new NotImplementedException();
         }
 
         private void InitTextBoxes()
@@ -120,6 +166,7 @@ namespace DiverseMarket.UI.Pages.Customer
                 var addressAutoComplete = await CepUtils.GetAddressByCep(cepTextBox.TextBox.Text);
                 streetTextBox.TextBox.Text = addressAutoComplete.Logradouro;
                 cityTextBox.TextBox.Text = addressAutoComplete.Localidade + " - " + addressAutoComplete.Uf;
+                addressNeighborhood = addressAutoComplete.Bairro;
             };
             this.Controls.Add(cepTextBox);
 
