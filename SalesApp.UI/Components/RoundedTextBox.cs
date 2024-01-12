@@ -27,6 +27,7 @@ namespace SalesApp.UI.Components
                 Font = new Font("Ubuntu", 16)
             };
 
+
             TextBox.Enter += new EventHandler((sender, e) =>
             {
                 TextBox textBox = sender as TextBox;

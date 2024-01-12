@@ -1,14 +1,17 @@
-﻿using System;
+﻿using SalesApp.Infrastructure.Operations;
+using System;
 using System.Collections.Generic;
+using System.Data.Common;
+using System.Data.SQLite;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
 namespace SalesApp.Infrastructure.Repositories
 {
-    internal class ProductOfferDB
+    public class ProductOfferDB : DatabaseConnection
     {
-        internal static string InitializeTable()
+        public static string InitializeTable()
         {
             return @"
             CREATE TABLE IF NOT EXISTS ProductOffer (
@@ -21,7 +24,39 @@ namespace SalesApp.Infrastructure.Repositories
                 FOREIGN KEY (Product_id) REFERENCES Product(id) ON DELETE SET NULL ON UPDATE CASCADE
             );
             ";
-
         }
+
+
+        public static double GetLowestPriceByProductId(long producId)
+        {
+            double price = 0;
+            try
+            {
+                Open();
+                string query = @"SELECT MIN(price) AS lowest_price
+                                FROM ProductOffer
+                                WHERE Product_id = @ProductId;";
+                _command = new SQLiteCommand(query, _connection);
+
+                _command.Parameters.AddWithValue("@ProductId", producId);
+
+                var reader = _command.ExecuteReader();
+
+                if (reader.Read())
+                {
+                    price = (double)(reader[0]);
+                }
+
+                return price;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("An error occured: " + ex.Message);
+                return price;
+
+            }
+            finally { Close(); }
+        }
+
     }
 }

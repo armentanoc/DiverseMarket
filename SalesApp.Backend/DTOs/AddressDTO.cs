@@ -4,37 +4,36 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace SalesApp.DomainLayer.Model.Users
+namespace SalesApp.Backend.DTOs
 {
-    public class Address
+    public class AddressDTO
     {
-        public int Id { get; }
+        public long Id { get; private set; }
         public string ZipCode { get; private set; }
         public string Street { get; private set; }
         public string? Complement { get; private set; }
-        public string Neighborhood { get; private set; }
         public string City { get; private set; }
         public string State { get; private set; }
         public string Number { get; private set; }
-        public Address(string zipCode, string street, string neighborhood, string city, string state, string number, string? complement = null)
+
+        public AddressDTO(long id, string zipCode, string street, string? complement, string city, string state, string number)
         {
-            Id = GenerateID();
+            Id = id;
             ZipCode = zipCode;
             Street = street;
             Complement = complement;
-            Neighborhood = neighborhood;
             City = city;
             State = state;
             Number = number;
         }
 
-        private int GenerateID()
+        public AddressDTO(string zipCode, string street, string? complement, string city, string number)
         {
-            return Math.Abs(Guid.NewGuid().GetHashCode());
+            ZipCode = zipCode;
+            Street = street;
+            Complement = complement;
+            City = city;
+            Number = number;
         }
-
-        // Metódos (?)
-        //private void SetZipCode(string zipCode){}
-        //private void SetComplement(string complement){}
     }
 }
