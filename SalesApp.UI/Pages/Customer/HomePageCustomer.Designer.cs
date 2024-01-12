@@ -1,4 +1,7 @@
-﻿using SalesApp.UI.Authentication;
+﻿using SalesApp.DomainLayer.DTOs;
+using SalesApp.DomainLayer.Service;
+using SalesApp.Infrastructure.Service;
+using SalesApp.UI.Authentication;
 using SalesApp.UI.Components;
 using SalesApp.UI.Styles;
 
@@ -10,6 +13,9 @@ namespace SalesApp.UI.Pages.Customer
         private long _userId;
 
         private Button cartButton, profileButton;
+        private List<ProductCard> productCards;
+        private Panel productsPanel;
+        private SearchBar searchBar;
 
         protected override void Dispose(bool disposing)
         {
@@ -36,7 +42,118 @@ namespace SalesApp.UI.Pages.Customer
         private void InitScreen()
         {
             InitLogo();
+            InitSearchBar();
             InitButtons();
+            InitProducts();
+        }
+        private void InitSearchBar()
+        {
+            searchBar = new SearchBar();
+            searchBar.Location = new Point(184, 126);
+
+            searchBar.SearchButton.Click += new EventHandler(searchButton_Click);
+
+            this.Controls.Add(searchBar);
+        }
+
+        private void searchButton_Click(object sender, EventArgs e)
+        {
+            if(this.searchBar.Text() != "Pesquisar")
+            {
+                List<ProductCard> productsAfterSearch = new List<ProductCard>(this.productCards);
+
+                foreach (var product in this.productCards)
+                {
+
+                    if (!product.name.Text.Contains(this.searchBar.Text(), StringComparison.CurrentCultureIgnoreCase))
+                    {
+                        productsAfterSearch.Remove(product);
+                    }
+                }
+
+                ReloadProducts(productsAfterSearch);
+            }
+           else
+             ReloadProducts(this.productCards);
+        }
+
+        private void ReloadProducts(List<ProductCard> products)
+        {
+            ClearProducts();
+
+            int x = 8;
+            int y = 17;
+
+            foreach (var product in products)
+            {
+                product.Location = new Point(x, y);
+
+                product.Visible = true; 
+                this.productsPanel.Controls.Add(product);
+                product.BringToFront();
+
+                if (x == 713)
+                {
+                    x = 8;
+                    y += 150;
+                }
+                else
+                    x += 235;
+
+            }
+            productsPanel.Invalidate();
+            productsPanel.Update();
+        }
+
+        private void ClearProducts()
+        {
+            foreach (Control control in this.productsPanel.Controls.OfType<Control>().ToList())
+            {
+                productsPanel.Controls.Remove(control);
+            }
+
+        }
+
+        private void InitProducts()
+        {
+            this.productsPanel = new Panel();
+            this.productsPanel.Size = new Size(927, 603);
+            this.productsPanel.Location = new Point(178, 188);
+            this.productsPanel.BackColor = Colors.MainBackgroundColor;
+            this.productsPanel.AutoScroll = true;
+            this.Controls.Add(productsPanel);
+
+            List<ProductBasicInfoDTO> productBasicInfoDTOs = ProductService.GetAllProducstBasicInfo();
+
+            int x = 8;
+            int y = 17;
+
+            this.productCards = new List<ProductCard>();
+
+            foreach(var productBasicInfoDTO in productBasicInfoDTOs)
+            {
+                ProductCard productCard = new ProductCard(productBasicInfoDTO.Name, productBasicInfoDTO.Description, 
+                    productBasicInfoDTO.Category, productBasicInfoDTO.LowestPrice);
+                productCard.Location = new Point(x, y);
+                productCard.Click += new EventHandler((object sender, EventArgs e) =>
+                {
+                    new SpecificProductPage(productBasicInfoDTO.Id, this._userId).Show();
+                    this.Hide();
+                });
+
+                this.productCards.Add(productCard);
+
+                this.productsPanel.Controls.Add(productCard);
+
+                if(x == 713)
+                {
+                    x = 8;
+                    y += 150;
+                }
+                else
+                    x += 235;
+
+            }
         }
 
         private void InitButtons()

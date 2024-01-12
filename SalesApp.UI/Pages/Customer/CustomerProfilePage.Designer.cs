@@ -48,7 +48,8 @@ namespace SalesApp.UI.Pages.Customer
             this.homepageButton.FlatStyle = FlatStyle.Flat;
             this.homepageButton.FlatAppearance.BorderSize = 0;
             this.homepageButton.Cursor = Cursors.Hand;
-            this.homepageButton.Image = Image.FromFile(@"Resources\logo-dm.png");
+            this.homepageButton.Image = Image.FromFile(@"Resources\logo-reduzida.png");
+            this.homepageButton.BackgroundImageLayout = ImageLayout.Zoom;
             this.homepageButton.Click += new EventHandler((object sender, EventArgs e) =>
             {
                 this.Hide();
@@ -67,7 +68,7 @@ namespace SalesApp.UI.Pages.Customer
             this.updateDataButton.Click += new EventHandler((object sender, EventArgs e) =>
             {
                 this.Hide();
-                new HomePageCustomer(this.userId).Show();
+                new CustomerDataPage(this.userId).Show();
             });
 
             this.Controls.Add(updateDataButton);
@@ -82,7 +83,7 @@ namespace SalesApp.UI.Pages.Customer
             this.refundButton.Click += new EventHandler((object sender, EventArgs e) =>
             {
                 this.Hide();
-                new HomePageCustomer(this.userId).Show();
+                new CustomerRefundPage(this.userId).Show();
             });
 
             this.Controls.Add(refundButton);
@@ -97,7 +98,7 @@ namespace SalesApp.UI.Pages.Customer
             this.ordersButton.Click += new EventHandler((object sender, EventArgs e) =>
             {
                 this.Hide();
-                new HomePageCustomer(this.userId).Show();
+                new CustomerOrdersPage(this.userId).Show();
             });
 
             this.Controls.Add(ordersButton);
@@ -112,7 +113,7 @@ namespace SalesApp.UI.Pages.Customer
             this.walletButton.Click += new EventHandler((object sender, EventArgs e) =>
             {
                 this.Hide();
-                new HomePageCustomer(this.userId).Show();
+                new CustomerWalletHistoryPage(this.userId).Show();
             });
 
             this.Controls.Add(walletButton);
@@ -123,7 +124,7 @@ namespace SalesApp.UI.Pages.Customer
         {
             Label greeting = new Label();
             greeting.Text = $"Olá, {UserService.GetUserFullNameById(this.userId)}";
-            greeting.Location = new Point(140, 37);
+            greeting.Location = new Point(140, 67);
             greeting.AutoSize = true;
             greeting.ForeColor = Color.White;
             greeting.Font = new Font("Ubuntu", 32);
@@ -133,6 +134,8 @@ namespace SalesApp.UI.Pages.Customer
 
         private void InitLogo()
         {
+            this.Icon = new Icon(@"Resources\icon.ico");
+
             Logo logo = new Logo();
             logo.Location = new Point(1033, 93);
             logo.Width = 192;

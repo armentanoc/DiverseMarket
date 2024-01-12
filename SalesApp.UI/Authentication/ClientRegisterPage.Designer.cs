@@ -96,8 +96,8 @@ namespace SalesApp.UI.Authentication
                 string CPF = this.cpfTextBox.TextBox.Text;
                 AddressDTO address = new AddressDTO(this.cepTextBox.TextBox.Text, 
                     this.streetTextBox.TextBox.Text, 
-                    (this.complementTextBox.TextBox.Text.Equals("Complemento") ? null : this.complementTextBox.TextBox.Text), 
-                    this.numberTextBox.TextBox.Text, this.cityTextBox.TextBox.Text);
+                    (this.complementTextBox.TextBox.Text.Equals("Complemento") ? null : this.complementTextBox.TextBox.Text),
+                    this.cityTextBox.TextBox.Text, this.numberTextBox.TextBox.Text);
                 string password = this.passwordTextBox.TextBox.Text;
 
                 LoginResponseDTO response = AuthenticationService.RegisterCustomer(
@@ -227,10 +227,17 @@ namespace SalesApp.UI.Authentication
             cepTextBox = new RoundedTextBox("CEP*", 205, 60);
             cepTextBox.Location = new Point(721, 430);
             cepTextBox.TextBox.Font = new Font("Ubuntu", 10);
+            cepTextBox.TextBox.Leave += async (object sender, EventArgs e) =>
+            {
+                var addressAutoComplete = await CepUtils.GetAddressByCep(cepTextBox.TextBox.Text);
+                streetTextBox.TextBox.Text = addressAutoComplete.Logradouro;
+                cityTextBox.TextBox.Text = addressAutoComplete.Localidade + " - " + addressAutoComplete.Uf;
+            };
             this.Controls.Add(cepTextBox);
 
             streetTextBox = new RoundedTextBox("Rua*", 431, 60);
             streetTextBox.Location = new Point(354, 518);
+            streetTextBox.TextBox.Enabled = false;
             streetTextBox.TextBox.Font = new Font("Ubuntu", 10);
             this.Controls.Add(streetTextBox);
 
@@ -246,6 +253,7 @@ namespace SalesApp.UI.Authentication
 
             cityTextBox = new RoundedTextBox("Cidade*", 286, 60);
             cityTextBox.Location = new Point(640, 606);
+            cityTextBox.TextBox.Enabled = false;
             cityTextBox.TextBox.Font = new Font("Ubuntu", 10);
             this.Controls.Add(cityTextBox);
 
