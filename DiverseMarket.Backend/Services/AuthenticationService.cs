@@ -33,7 +33,7 @@ namespace DiverseMarket.Backend.Services
                 registerCustomerDTO.Address.ZipCode,
                 registerCustomerDTO.Address.Street,
                 registerCustomerDTO.Address.Complement,
-                registerCustomerDTO.Address.Number, registerCustomerDTO.Address.City, registerCustomerDTO.Password))
+                registerCustomerDTO.Address.Number, registerCustomerDTO.Address.Neighborhood, registerCustomerDTO.Address.City, registerCustomerDTO.Password))
             {
                 return Login(new LoginRequestDTO(registerCustomerDTO.Username, registerCustomerDTO.Password));
             }

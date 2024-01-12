@@ -118,7 +118,8 @@ namespace DiverseMarket.Backend.Infrastructure.Repositories
             string street,
             string? complement,
             string number, 
-            string city, 
+            string neighborhood,
+            string city,
             string password)
         {
             try
@@ -151,7 +152,7 @@ namespace DiverseMarket.Backend.Infrastructure.Repositories
 
                 id = _connection.LastInsertRowId;
 
-                AddressDB.RegisterAddress(id, cep, street, complement, number, city);
+                AddressDB.RegisterAddress(id, cep, street, number, complement, neighborhood, city);
 
                 CustomerDB.RegisterCustomer(id, CPF);
 
@@ -202,9 +203,10 @@ namespace DiverseMarket.Backend.Infrastructure.Repositories
                     (
                     userId, 
                     address.ZipCode, 
-                    address.Street, 
+                    address.Street,
+                    address.Number,
                     address.Complement, 
-                    address.Number, 
+                    address.Neighborhood,
                     address.City
                     );
 
@@ -221,6 +223,64 @@ namespace DiverseMarket.Backend.Infrastructure.Repositories
             finally { Close(); }
         }
 
+        public static bool RegisterModerator(
+            string fullName,
+            string email,
+            string username,
+            string? telephone,
+            string CPF,
+            string cep,
+            string street,
+            string? complement,
+            string number,
+            string neighborhood,
+            string city,
+            string password)
+        {
+            try
+            {
+                Open();
+
+                (string password, string salt) obj = HashUtil.GetHashedAndSalt(password);
+
+                string query = @"insert into User(name, username, password, email, telephone, role) 
+                        values (@fullName, @username, '" + $"{obj.password}" + @"', @email, @telephone, 'Moderator');";
+
+                _command = new SQLiteCommand(query, _connection);
+
+                _command.Parameters.AddWithValue("@fullName", fullName);
+                _command.Parameters.AddWithValue("@username", username);
+                _command.Parameters.AddWithValue("@email", email);
+                _command.Parameters.AddWithValue("@telephone", (object)telephone ?? DBNull.Value);
+
+                _command.ExecuteNonQuery();
+
+                long id = _connection.LastInsertRowId;
+
+                query = @"insert into User_Salt values (@id, '" + $"{obj.salt}" + @"')";
+
+                _command = new SQLiteCommand(query, _connection);
+
+                _command.Parameters.AddWithValue("@id", id);
+
+                bool registered = _command.ExecuteNonQuery() > 0;
+
+                id = _connection.LastInsertRowId;
+
+                AddressDB.RegisterAddress(id, cep, street, number, complement, neighborhood, city);
+
+                CustomerDB.RegisterCustomer(id, CPF);
+
+                return registered;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("An error occured: " + ex.Message);
+                return false;
+
+            }
+            finally { Close(); }
+        }
         public static string GetUserFullNameById(long userId)
         {
             string name = "";
