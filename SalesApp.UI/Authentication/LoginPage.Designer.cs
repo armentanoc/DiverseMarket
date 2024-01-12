@@ -125,12 +125,13 @@ namespace SalesApp.UI.Authentication
         #region OnClickLogic
         private void forgotPasswordLabel_Click(object sender, EventArgs e)
         {
-
+            new ForgotPasswordPage().Show();
+            this.Hide();
         }
 
         private void registerButton_Click(object sender, EventArgs e)
         {
-            new RegisterPage().Show();
+            new FlowSelectionPage().Show();
             this.Hide();
         }
 
@@ -142,15 +143,15 @@ namespace SalesApp.UI.Authentication
             switch(response.UserRole){
                 case "Client":
                     new HomePageCustomer(response.Id!.Value).Show();
-                    this.Close();
+                    this.Hide();
                     break;
                 case "Seller":
                     new HomePageCompany(response.Id!.Value).Show();
-                    this.Close();
+                    this.Hide();
                     break;
                 case "Moderator":
                     new HomePageModerator(response.Id!.Value).Show();
-                    this.Close();
+                    this.Hide();
                     break;
                 default: this.ShowLoginIncorrectMessage(); break;
             }
