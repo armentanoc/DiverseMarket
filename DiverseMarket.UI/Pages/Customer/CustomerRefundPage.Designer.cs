@@ -42,7 +42,7 @@ namespace DiverseMarket.UI.Pages.Customer
 
         private void InitRefunds()
         {
-            List<RefundBasicInfoDTO> refundsDTO = RefundService.GetAllRefundsByUserId(this.userId);
+            List<RefundBasicInfoDTO> refundsDTO = RefundService.GetAllRefundsByCustomerId(this.userId);
 
             Panel container = new Panel();
             container.Size = new Size(1188, 568);

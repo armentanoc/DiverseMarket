@@ -11,9 +11,9 @@ namespace DiverseMarket.Backend.Services
 {
     public static class RefundService
     {
-        public static List<RefundBasicInfoDTO> GetAllRefundsByUserId(long userId)
+        public static List<RefundBasicInfoDTO> GetAllRefundsByCustomerId(long customerId)
         {
-            List<Refund> allRefundsByUserId = RefundDB.GetAllRefundsByUserId(userId);
+            List<Refund> allRefundsByUserId = RefundDB.GetAllRefundsByCustomerId(customerId);
 
             List<RefundBasicInfoDTO> refundsBasicInfo = new List<RefundBasicInfoDTO>();
 
