@@ -19,7 +19,6 @@ namespace DiverseMarket.UI.Util
             {
                 string url = $"https://viacep.com.br/ws/{cep}/json/";
                 var response = await httpClient.GetStringAsync(url);
-                MessageBox.Show(response.ToString());
                 return JsonConvert.DeserializeObject<Endereco>(response);
             }
         }
