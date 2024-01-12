@@ -7,6 +7,35 @@ namespace DiverseMarket.Backend.Infrastructure.Repositories
 {
     internal class CompanyDB : DatabaseConnection
     {
+        internal static string GetCompanyNameById(long id)
+        {
+            string name = "";
+            try
+            {
+                Open();
+                string query = @"SELECT trade_name
+                     FROM Company 
+                     where = @id;";
+                _command = new SQLiteCommand(query, _connection);
+
+                _command.Parameters.AddWithValue("@id", id);
+
+                var reader = _command.ExecuteReader();
+
+                if (reader.Read())
+                    name = reader["name"].ToString();
+
+                return name;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("An error occured: " + ex.Message);
+                return name;
+
+            }
+            finally { Close(); }
+        }
+
         internal static string InitializeTable()
         {
             return @"

@@ -54,6 +54,7 @@ namespace DiverseMarket.Backend.Infrastructure.Operations
                 CreateAndLogTable("Product", ProductDB.InitializeTable);
                 CreateAndLogTable("ProductOffer", ProductOfferDB.InitializeTable);
                 CreateAndLogTable("ProductReview", ProductReviewDB.InitializeTable);
+                CreateAndLogTable("Refund", RefundDB.InitializeTable);
                 CreateAndLogTable("ReviewCompany", ReviewCompanyDB.InitializeTable);
                 CreateAndLogTable("ReviewSellingItem", ReviewSellingItemDB.InitializeTable);
                 CreateAndLogTable("Selling", SellingDB.InitializeTable);

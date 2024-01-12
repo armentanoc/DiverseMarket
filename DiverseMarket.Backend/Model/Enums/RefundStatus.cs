@@ -9,7 +9,8 @@ namespace DiverseMarket.Backend.Model.Enums
     public enum RefundStatus
     {
         Accepted = 1,
-        Analysis = 2,
-        Denied = 3
+        SellerAnalysis = 2,
+        ModeratorAnalysis = 3,
+        Denied = 4
     }
 }

@@ -1,17 +1,19 @@
 ﻿using DiverseMarket.Backend.Infrastructure.Operations;
 using DiverseMarket.Backend.Model;
+using DiverseMarket.Backend.Model.Products;
 using System;
 using System.Collections.Generic;
 using System.Data.SQLite;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Product = DiverseMarket.Backend.Model.Products.Product;
 
 namespace DiverseMarket.Backend.Infrastructure.Repositories
 {
     public class ProductDB : DatabaseConnection
     {
-        public static List<Product> GetAllProducst()
+        internal static List<Product> GetAllProducst()
         {
             List<Product> products = new List<Product>();
             try
@@ -41,6 +43,34 @@ namespace DiverseMarket.Backend.Infrastructure.Repositories
             finally { Close(); }
         }
 
+        internal static string GetProductNameById(long id)
+        {
+            string name = "";
+            try
+            {
+                Open();
+                string query = @"SELECT name
+                     FROM Product 
+                     where = @id;";
+                _command = new SQLiteCommand(query, _connection);
+
+                _command.Parameters.AddWithValue("@id", id);
+
+                var reader = _command.ExecuteReader();
+
+                if (reader.Read())
+                    name = reader["name"].ToString();
+
+                return name;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("An error occured: " + ex.Message);
+                return name;
+
+            }
+            finally { Close(); }
+        }
 
         internal static string InitializeTable()
         {
