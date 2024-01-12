@@ -1,16 +1,19 @@
-﻿namespace DiverseMarket.UI.Pages.Company
+﻿using DiverseMarket.Backend.DTOs;
+using DiverseMarket.Backend.Services;
+using DiverseMarket.UI.Components;
+using DiverseMarket.UI.Pages.Customer;
+using DiverseMarket.UI.Styles;
+
+namespace DiverseMarket.UI.Pages.Company
 {
     partial class HomePageCompany
     {
-        /// <summary>
-        /// Required designer variable.
-        /// </summary>
         private System.ComponentModel.IContainer components = null;
-        private long _userId;
-        /// <summary>
-        /// Clean up any resources being used.
-        /// </summary>
-        /// <param name="disposing">true if managed resources should be disposed; otherwise, false.</param>
+
+        private long userId;
+
+        private Button homepageButton, productsButton, ordersButton;
+
         protected override void Dispose(bool disposing)
         {
             if (disposing && (components != null))
@@ -20,21 +23,97 @@
             base.Dispose(disposing);
         }
 
-        #region Windows Form Designer generated code
-
-        /// <summary>
-        /// Required method for Designer support - do not modify
-        /// the contents of this method with the code editor.
-        /// </summary>
         private void InitializeComponent(long userId)
         {
-            this._userId = userId;
-            this.components = new System.ComponentModel.Container();
-            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(800, 450);
-            this.Text = "HomePageCompany";
+            this.userId = userId;
+            AutoScaleMode = AutoScaleMode.Font;
+            ClientSize = new Size(1280, 832);
+            StartPosition = FormStartPosition.CenterScreen;
+            Text = "DiverseMarket";
+            this.BackColor = Colors.MainBackgroundColor;
+            FormClosed += CustomerProfilePage_FormClosed;
+            InitScreen();
+        }
+        private void InitScreen()
+        {
+            InitLogo();
+            InitLabels();
+            InitButtons();
         }
 
-        #endregion
+        private void InitButtons()
+        {
+            this.homepageButton = new System.Windows.Forms.Button();
+            this.homepageButton.Location = new Point(37, 67);
+            this.homepageButton.Size = new Size(79, 71);
+            this.homepageButton.FlatStyle = FlatStyle.Flat;
+            this.homepageButton.FlatAppearance.BorderSize = 0;
+            this.homepageButton.Cursor = Cursors.Hand;
+            this.homepageButton.Image = Image.FromFile(@"Resources\logo-reduzida.png");
+            this.homepageButton.BackgroundImageLayout = ImageLayout.Zoom;
+            this.homepageButton.Click += new EventHandler((object sender, EventArgs e) =>
+            {
+                this.Hide();
+                new HomePageCustomer(this.userId).Show();
+            });
+
+            this.Controls.Add(homepageButton);
+
+            this.productsButton = new RoundedButton("Listar Produtos", 300, 57, Colors.SecondaryButton, 32);
+            this.productsButton.Location = new System.Drawing.Point(50, 300);
+            this.productsButton.FlatStyle = FlatStyle.Flat;
+            this.productsButton.FlatAppearance.BorderSize = 0;
+            this.productsButton.Cursor = Cursors.Hand;
+            this.productsButton.Click += new EventHandler((object sender, EventArgs e) =>
+            {
+                this.Hide();
+                new CompanyProductPage(this.userId).Show();
+            });
+
+            this.Controls.Add(productsButton);
+
+            this.ordersButton = new RoundedButton("Listar categorias", 300, 57, Colors.SecondaryButton, 32);
+            this.ordersButton.Location = new System.Drawing.Point(370, 300);
+            this.ordersButton.FlatStyle = FlatStyle.Flat;
+            this.ordersButton.FlatAppearance.BorderSize = 0;
+            this.ordersButton.Cursor = Cursors.Hand;
+            this.ordersButton.Click += new EventHandler((object sender, EventArgs e) =>
+            {
+                this.Hide();
+                new CompanyOrderPage(this.userId).Show();
+            });
+
+            this.Controls.Add(ordersButton);
+
+        }
+
+        private void InitLabels()
+        {
+            Label greeting = new Label();
+            greeting.Text = $"Olá, {UserService.GetUserFullNameById(this.userId)}";
+            greeting.Location = new Point(140, 67);
+            greeting.AutoSize = true;
+            greeting.ForeColor = Color.White;
+            greeting.Font = new Font("Ubuntu", 32);
+
+            this.Controls.Add(greeting);
+        }
+
+        private void InitLogo()
+        {
+            this.Icon = new Icon(@"Resources\icon.ico");
+
+            Logo logo = new Logo();
+            logo.Location = new Point(1033, 93);
+            logo.Width = 192;
+            logo.Height = 22;
+
+            this.Controls.Add(logo);
+        }
+
+        private void CustomerProfilePage_FormClosed(object sender, FormClosedEventArgs e)
+        {
+            Application.Exit();
+        }
     }
 }
