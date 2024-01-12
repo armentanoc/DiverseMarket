@@ -96,7 +96,7 @@ namespace DiverseMarket.UI.Pages.Customer
                             this.cityTextBox.TextBox.Text,
                             this.numberTextBox.TextBox.Text);
 
-                    string? telephone = this.telephoneTextBox.TextBox.Text == "Telefone" ? (null) : (this.telephoneTextBox.TextBox.Text); 
+                    var telephone = this.telephoneTextBox.TextBox.Text == "Telefone" ? (null) : (this.telephoneTextBox.TextBox.Text); 
 
                     CustomerDTO updatedCustomer = new CustomerDTO(this.customerDTO.Id, this.customerDTO.FullName, this.emailTextBox.TextBox.Text,
                                             this.customerDTO.Username, telephone, this.customerDTO.CPF, address);
