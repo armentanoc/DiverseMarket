@@ -17,10 +17,25 @@ namespace DiverseMarket.UI.Util
         {
             using (var httpClient = new HttpClient())
             {
-                string url = $"https://viacep.com.br/ws/{cep}/json/";
-                var response = await httpClient.GetStringAsync(url);
-                return JsonConvert.DeserializeObject<Endereco>(response);
+                try
+                {
+                    string url = $"https://viacep.com.br/ws/{cep}/json/";
+                    var response = await httpClient.GetStringAsync(url);
+                    return JsonConvert.DeserializeObject<Endereco>(response);
+                }
+                catch (HttpRequestException e)
+                {
+                    throw new CepException("Cep inválido");
+                }
             }
+        }
+    }
+
+    public class CepException : Exception
+    {
+        public string Message { get; private set; }
+        public CepException(string message) {
+            Message = message;
         }
     }
 }

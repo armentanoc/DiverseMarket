@@ -16,7 +16,6 @@ namespace DiverseMarket.UI.Authentication
         private Label usernameWarningLabel;
         private Label passwordWarningLabel;
         private Label emailWarningLabel;
-        private Label cepWarningLabel;
         private Label cpfWarningLabel;
 
         private RoundedTextBox fullNameTextBox, emailTextBox, usernameTextBox, telephoneTextBox, cpfTextBox, cepTextBox, streetTextBox,
@@ -234,16 +233,28 @@ namespace DiverseMarket.UI.Authentication
             cepTextBox.TextBox.Font = new Font("Ubuntu", 10);
             cepTextBox.TextBox.Leave += async (object sender, EventArgs e) =>
             {
-                var addressAutoComplete = await CepUtils.GetAddressByCep(cepTextBox.TextBox.Text);
-                
-                streetTextBox.TextBox.Text = 
-                addressAutoComplete.Logradouro
-                + " - " + addressAutoComplete.Bairro;
+                try
+                {
+                    var addressAutoComplete = await CepUtils.GetAddressByCep(cepTextBox.TextBox.Text);
 
-                addressNeighborhood = addressAutoComplete.Bairro;
-                cityTextBox.TextBox.Text = 
-                    addressAutoComplete.Localidade 
-                    + " - " + addressAutoComplete.Uf;
+                    streetTextBox.TextBox.Text =
+                    addressAutoComplete.Logradouro
+                    + " - " + addressAutoComplete.Bairro;
+
+                    addressNeighborhood = addressAutoComplete.Bairro;
+                    cityTextBox.TextBox.Text =
+                        addressAutoComplete.Localidade
+                        + " - " + addressAutoComplete.Uf;
+
+                }
+                catch (CepException)
+                {
+                    MessageBox.Show("CEP inválido");
+                    this.cepTextBox.TextBox.Text = "CEP*";
+                    streetTextBox.TextBox.Text = "Rua*";
+                    cityTextBox.TextBox.Text = "Cidade*";
+                }
+                
             };
             this.Controls.Add(cepTextBox);
 
@@ -307,16 +318,6 @@ namespace DiverseMarket.UI.Authentication
             emailWarningLabel.Location = new Point(380, 314);
             emailWarningLabel.Visible = false;
             this.Controls.Add(emailWarningLabel);
-
-            cepWarningLabel = new Label();
-            cepWarningLabel.Text = "CEP inválido.";
-            cepWarningLabel.ForeColor = Color.White;
-            cepWarningLabel.AutoSize = true;
-            cepWarningLabel.Font = new Font("Ubuntu", 6);
-            cepWarningLabel.BackColor = Color.Transparent;
-            cepWarningLabel.Location = new Point(745, 494);
-            cepWarningLabel.Visible = false;
-            this.Controls.Add(cepWarningLabel);
 
             cpfWarningLabel = new Label();
             cpfWarningLabel.Text = "Cpf inválido.";

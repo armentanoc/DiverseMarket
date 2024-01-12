@@ -163,10 +163,28 @@ namespace DiverseMarket.UI.Pages.Customer
             cepTextBox.TextBox.Font = new Font("Ubuntu", 10);
             cepTextBox.TextBox.Leave += async (object sender, EventArgs e) =>
             {
-                var addressAutoComplete = await CepUtils.GetAddressByCep(cepTextBox.TextBox.Text);
-                streetTextBox.TextBox.Text = addressAutoComplete.Logradouro;
-                cityTextBox.TextBox.Text = addressAutoComplete.Localidade + " - " + addressAutoComplete.Uf;
-                addressNeighborhood = addressAutoComplete.Bairro;
+                try
+                {
+                    var addressAutoComplete = await CepUtils.GetAddressByCep(cepTextBox.TextBox.Text);
+
+                    streetTextBox.TextBox.Text =
+                    addressAutoComplete.Logradouro
+                    + " - " + addressAutoComplete.Bairro;
+
+                    addressNeighborhood = addressAutoComplete.Bairro;
+                    cityTextBox.TextBox.Text =
+                        addressAutoComplete.Localidade
+                        + " - " + addressAutoComplete.Uf;
+
+                }
+                catch (CepException)
+                {
+                    MessageBox.Show("CEP inválido");
+                    this.cepTextBox.TextBox.Text = "CEP*";
+                    streetTextBox.TextBox.Text = "Rua*";
+                    cityTextBox.TextBox.Text = "Cidade*";
+                }
+
             };
             this.Controls.Add(cepTextBox);
 
@@ -204,6 +222,7 @@ namespace DiverseMarket.UI.Pages.Customer
             greeting.Font = new Font("Ubuntu", 32);
 
             this.Controls.Add(greeting);
+
         }
 
         private void InitLogo()
