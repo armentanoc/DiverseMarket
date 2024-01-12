@@ -1,7 +1,9 @@
 ﻿using DiverseMarket.Backend.Infrastructure.Operations;
+using DiverseMarket.Backend.Model.Products;
 using System;
 using System.Collections.Generic;
 using System.Data.SQLite;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -57,5 +59,34 @@ namespace DiverseMarket.Backend.Infrastructure.Repositories
             finally { Close(); }
         }
 
+        internal static long GetProductIdByProductOfferId(long productOfferId)
+        {
+            long id = 0;
+            try
+            {
+                Open();
+                string query = @"SELECT Product_id from ProductOffer
+                                WHERE id = @id;";
+                _command = new SQLiteCommand(query, _connection);
+
+                _command.Parameters.AddWithValue("@id", productOfferId);
+
+                var reader = _command.ExecuteReader();
+
+                if (reader.Read())
+                {
+                    id = (long)reader[0];
+                }
+
+                return id;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("An error occured: " + ex.Message);
+                return id;
+
+            }
+            finally { Close(); }
+        }
     }
 }

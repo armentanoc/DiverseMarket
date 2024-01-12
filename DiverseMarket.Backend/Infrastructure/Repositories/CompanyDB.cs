@@ -36,6 +36,7 @@ namespace DiverseMarket.Backend.Infrastructure.Repositories
             finally { Close(); }
         }
 
+
         internal static string InitializeTable()
         {
             return @"

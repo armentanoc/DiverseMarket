@@ -43,6 +43,35 @@ namespace DiverseMarket.Backend.Infrastructure.Repositories
             finally { Close(); }
         }
 
+        internal static string GetProductDescriptionById(long productId)
+        {
+            string description = "";
+            try
+            {
+                Open();
+                string query = @"SELECT description
+                     FROM Product 
+                     where id = @id;";
+                _command = new SQLiteCommand(query, _connection);
+
+                _command.Parameters.AddWithValue("@id", productId);
+
+                var reader = _command.ExecuteReader();
+
+                if (reader.Read())
+                    description = reader["description"].ToString();
+
+                return description;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("An error occured: " + ex.Message);
+                return description;
+
+            }
+            finally { Close(); }
+        }
+
         internal static string GetProductNameById(long id)
         {
             string name = "";
@@ -51,7 +80,7 @@ namespace DiverseMarket.Backend.Infrastructure.Repositories
                 Open();
                 string query = @"SELECT name
                      FROM Product 
-                     where = @id;";
+                     where id = @id;";
                 _command = new SQLiteCommand(query, _connection);
 
                 _command.Parameters.AddWithValue("@id", id);

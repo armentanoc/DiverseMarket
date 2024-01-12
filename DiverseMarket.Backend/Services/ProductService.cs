@@ -29,5 +29,19 @@ namespace DiverseMarket.Backend.Services
 
             return productBasicInfoDTOs;
         }
+
+        internal static string GetProductDescriptionByProductOfferId(long productOfferId)
+        {
+            long productId = ProductOfferDB.GetProductIdByProductOfferId(productOfferId);
+
+            return ProductDB.GetProductDescriptionById(productId);
+        }
+
+        internal static string GetProductNameByProductOfferId(long productOfferId)
+        {
+            long productId = ProductOfferDB.GetProductIdByProductOfferId(productOfferId);
+
+            return ProductDB.GetProductNameById(productId);
+        }
     }
 }

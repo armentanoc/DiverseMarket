@@ -10,6 +10,7 @@ using System.Data.SQLite;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace DiverseMarket.Backend.Infrastructure.Repositories
 {
@@ -39,6 +40,64 @@ namespace DiverseMarket.Backend.Infrastructure.Repositories
             {
                 Console.WriteLine("An error occured: " + ex.Message);
                 return sellings;
+
+            }
+            finally { Close(); }
+        }
+
+        internal static DateTime GetOrderDateById(long orderId)
+        {
+            DateTime date = default;
+            try
+            {
+                Open();
+                string query = @"SELECT date_sale where id = @id;";
+
+                _command = new SQLiteCommand(query, _connection);
+                _command.Parameters.AddWithValue("@id", orderId);
+                var reader = _command.ExecuteReader();
+
+                if (reader.Read())
+                {
+                    try { return DateTime.Parse(reader["date_sale"].ToString()); }
+                    catch { return date; }
+                }
+
+                return date;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("An error occured: " + ex.Message);
+                return date;
+
+            }
+            finally { Close(); }
+        }
+
+        internal static Selling GetSellingById(long id)
+        {
+            Selling selling = null;
+            try
+            {
+                Open();
+                string query = @"SELECT id, date_sale, amount, Customer_id, status where id = @customerId;";
+
+                _command = new SQLiteCommand(query, _connection);
+                _command.Parameters.AddWithValue("@id", id);
+                var reader = _command.ExecuteReader();
+
+                if (reader.Read())
+                {
+                    return new Selling((long)reader["id"], (long)reader["Customer_id"], DateTime.Parse(reader["date_sale"].ToString()), 
+                        (OrderStatus)(long)reader["status"], (double)reader["amount"]);
+                }
+
+                return selling;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("An error occured: " + ex.Message);
+                return selling;
 
             }
             finally { Close(); }

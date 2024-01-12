@@ -26,17 +26,33 @@ namespace DiverseMarket.Backend.Services
 
         public static DateTime GetOrderDateById(long orderId)
         {
-            throw new NotImplementedException();
+            return SellingDB.GetOrderDateById(orderId);
         }
 
         public static OrderDetailsDTO GetOrderDetailsById(long orderId)
         {
-            throw new NotImplementedException();
+            Selling selling = SellingDB.GetSellingById(orderId);
+            List<SellingItem> sellingItems = SellingItemDB.GetAllItemsBySellingId(orderId);
+
+            AddressDTO address = UserService.GetAddressByUserId(selling.CustomerId);
+
+            List<OrderItemDTO> items = new List<OrderItemDTO>();
+            
+            foreach (var item in sellingItems)
+            {
+                items.Add(new OrderItemDTO(item.Id, ProductService.GetProductNameByProductOfferId(item.ProductOfferId),
+                    ProductService.GetProductDescriptionByProductOfferId(item.ProductOfferId), item.Quantity, CompanyService.GetCompanyNameBySellingItemId(item.Id),
+                    item.UnityPrice, item.Status)) ;
+            }
+
+            OrderDetailsDTO order = new OrderDetailsDTO(selling.Id, address, items);
+
+            return order;
         }
 
         public static void SetOrderItemAsRecieved(long orderId, long itemId)
         {
-            throw new NotImplementedException();
+            
         }
     }
 }

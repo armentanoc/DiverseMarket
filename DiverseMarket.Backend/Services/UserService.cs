@@ -50,5 +50,11 @@ namespace DiverseMarket.Backend.Services
             return false;
                 
         }
+        public static AddressDTO GetAddressByUserId(long userId)
+        {
+            Address address = AddressDB.GetAddressByUserId(userId);
+
+            return new AddressDTO(address.ZipCode, address.Street, address.Complement, address.Neighborhood, address.City, address.Number);
+        }
     }
 }
