@@ -3,9 +3,9 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.8.34316.72
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SalesApp.UI", "SalesApp.UI\SalesApp.UI.csproj", "{2982207B-59DC-4E4D-8A35-08B650127CD2}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DiverseMarket.UI", "DiverseMarket.UI\DiverseMarket.UI.csproj", "{2982207B-59DC-4E4D-8A35-08B650127CD2}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SalesApp.Backend", "SalesApp.Backend\SalesApp.Backend.csproj", "{F491E094-B98C-40F8-9F64-B28C01F4F816}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DiverseMarket.Backend", "DiverseMarket.Backend\DiverseMarket.Backend.csproj", "{F491E094-B98C-40F8-9F64-B28C01F4F816}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
