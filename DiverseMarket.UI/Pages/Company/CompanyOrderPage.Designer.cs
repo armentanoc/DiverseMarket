@@ -1,16 +1,16 @@
-﻿namespace DiverseMarket.UI.Pages.Company
+﻿using DiverseMarket.Backend.DTOs;
+using DiverseMarket.Backend.Services;
+using DiverseMarket.UI.Components;
+using DiverseMarket.UI.Pages.Company;
+using DiverseMarket.UI.Styles;
+
+namespace DiverseMarket.UI.Pages.Company
 {
     partial class CompanyOrderPage
     {
-        /// <summary>
-        /// Required designer variable.
-        /// </summary>
         private System.ComponentModel.IContainer components = null;
-
-        /// <summary>
-        /// Clean up any resources being used.
-        /// </summary>
-        /// <param name="disposing">true if managed resources should be disposed; otherwise, false.</param>
+        private long userId;
+        private Button homepageButton;
         protected override void Dispose(bool disposing)
         {
             if (disposing && (components != null))
@@ -20,20 +20,108 @@
             base.Dispose(disposing);
         }
 
-        #region Windows Form Designer generated code
-
-        /// <summary>
-        /// Required method for Designer support - do not modify
-        /// the contents of this method with the code editor.
-        /// </summary>
         private void InitializeComponent(long userId)
         {
-            this.components = new System.ComponentModel.Container();
-            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(800, 450);
-            this.Text = "CompanyOrderPage";
+            this.userId = userId;
+            AutoScaleMode = AutoScaleMode.Font;
+            ClientSize = new Size(1280, 832);
+            StartPosition = FormStartPosition.CenterScreen;
+            Text = "DiverseMarket";
+            this.BackColor = Colors.MainBackgroundColor;
+            FormClosed += _FormClosed;
+            InitScreen();
         }
 
-        #endregion
+        private void InitScreen()
+        {
+            InitLogo();
+            InitLabel();
+            InitButtons();
+            InitOrders();
+        }
+
+        private void InitOrders()
+        {
+
+            List<OrderBasicInfoDTO> ordersDTO = OrderService.GetAllOrdersByCompanyUserId(this.userId);
+
+            Panel container = new Panel();
+            container.Size = new Size(1188, 568);
+            container.Location = new Point(178, 188);
+            container.BackColor = Colors.MainBackgroundColor;
+            container.AutoScroll = true;
+            Controls.Add(container);
+
+            int x = 15, y = 12;
+
+            foreach (var order in ordersDTO)
+            {
+                OrderCard orderCard = new OrderCard(order.Id, order.Date, order.TotalAmount, order.CustomerId, order.CompanyId);
+                orderCard.Location = new Point(x, y);
+                orderCard.Click += new EventHandler((object sender, EventArgs e) =>
+                {
+                    new CompanySpecificOrderPage(order.Id).Show();
+                    this.Hide();
+                });
+
+                this.Controls.Add(orderCard);
+
+                if (x == 959)
+                {
+                    x = 15;
+                    y = 152;
+                }
+                else
+                    x += 236;
+            }
+        }
+
+        private void InitLabel()
+        {
+            Label pageTitle = new Label();
+            pageTitle.Text = "Pedidos";
+            pageTitle.Location = new Point(140, 67);
+            pageTitle.AutoSize = true;
+            pageTitle.ForeColor = Color.White;
+            pageTitle.Font = new Font("Ubuntu", 32);
+
+            this.Controls.Add(pageTitle);
+        }
+
+        private void InitLogo()
+        {
+            this.Icon = new Icon(@"Resources\icon.ico");
+
+            Logo logo = new Logo();
+            logo.Location = new Point(1033, 93);
+            logo.Width = 192;
+            logo.Height = 22;
+
+            this.Controls.Add(logo);
+        }
+
+        private void InitButtons()
+        {
+            this.homepageButton = new System.Windows.Forms.Button();
+            this.homepageButton.Location = new Point(37, 67);
+            this.homepageButton.Size = new Size(79, 71);
+            this.homepageButton.FlatStyle = FlatStyle.Flat;
+            this.homepageButton.FlatAppearance.BorderSize = 0;
+            this.homepageButton.Cursor = Cursors.Hand;
+            this.homepageButton.Image = Image.FromFile(@"Resources\logo-reduzida.png");
+            this.homepageButton.BackgroundImageLayout = ImageLayout.Zoom;
+            this.homepageButton.Click += new EventHandler((object sender, EventArgs e) =>
+            {
+                this.Hide();
+                new HomePageCompany(this.userId).Show();
+            });
+
+            this.Controls.Add(homepageButton);
+        }
+
+        private void _FormClosed(object sender, FormClosedEventArgs e)
+        {
+            Application.Exit();
+        }
     }
 }

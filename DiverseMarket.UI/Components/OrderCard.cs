@@ -5,7 +5,7 @@ namespace DiverseMarket.UI.Components
 {
     public class OrderCard : Panel
     {
-        public OrderCard(long id, DateTime date, OrderStatus status, double price)
+        public OrderCard(long id, DateTime date, decimal price, long customerId, long companyId) //OrderStatus status
         {
             Width = 203;
             Height = 118;
@@ -13,20 +13,24 @@ namespace DiverseMarket.UI.Components
             Cursor = Cursors.Hand;
             AddId(id);
             AddDate(date);
-            AddStatus(status);
+            AddPrice(price);
+            //AddCustomerId(customerId);
+            //AddCompanyId(companyId);
+
+            //AddStatus(status);
         }
 
-        private void AddStatus(OrderStatus status)
-        {
-            Label name = new Label();
-            name.Text = GetStatusToString(status);
-            name.ForeColor = GetStatusColor(status);
-            name.Font = new Font("Ubuntu", 10);
-            name.Location = new Point(16, 90);
-            name.AutoSize = true;
-            name.BackColor = Color.Transparent;
-            Controls.Add(name);
-        }
+        //private void AddStatus(OrderStatus status)
+        //{
+        //    Label name = new Label();
+        //    name.Text = GetStatusToString(status);
+        //    name.ForeColor = GetStatusColor(status);
+        //    name.Font = new Font("Ubuntu", 10);
+        //    name.Location = new Point(16, 90);
+        //    name.AutoSize = true;
+        //    name.BackColor = Color.Transparent;
+        //    Controls.Add(name);
+        //}
 
 
         private Color GetStatusColor(OrderStatus status)
@@ -74,7 +78,7 @@ namespace DiverseMarket.UI.Components
             name.BackColor = Color.Transparent;
             Controls.Add(name);
         }
-        private void AddPrice(double totalPrice)
+        private void AddPrice(decimal totalPrice)
         {
             Label price = new Label();
             price.Text = $"| Total: R${string.Format("{0:N2}", totalPrice).Replace('.', ',')}";

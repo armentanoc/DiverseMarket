@@ -1,5 +1,6 @@
 ﻿using DiverseMarket.Backend.DTOs;
 using DiverseMarket.Backend.Services;
+using DiverseMarket.UI.Authentication;
 using DiverseMarket.UI.Components;
 using DiverseMarket.UI.Pages.Customer;
 using DiverseMarket.UI.Styles;
@@ -12,7 +13,7 @@ namespace DiverseMarket.UI.Pages.Company
 
         private long userId;
 
-        private Button homepageButton, productsButton, ordersButton;
+        private Button homepageButton, productsButton, ordersButton, logoutButton;
 
         protected override void Dispose(bool disposing)
         {
@@ -43,6 +44,7 @@ namespace DiverseMarket.UI.Pages.Company
 
         private void InitButtons()
         {
+
             this.homepageButton = new System.Windows.Forms.Button();
             this.homepageButton.Location = new Point(37, 67);
             this.homepageButton.Size = new Size(79, 71);
@@ -67,12 +69,12 @@ namespace DiverseMarket.UI.Pages.Company
             this.productsButton.Click += new EventHandler((object sender, EventArgs e) =>
             {
                 this.Hide();
-                new CompanyProductPage(this.userId).Show();
+                new CompanyProductOfferPage(this.userId).Show();
             });
 
             this.Controls.Add(productsButton);
 
-            this.ordersButton = new RoundedButton("Listar categorias", 300, 57, Colors.SecondaryButton, 32);
+            this.ordersButton = new RoundedButton("Listar Pedidos", 300, 57, Colors.SecondaryButton, 32);
             this.ordersButton.Location = new System.Drawing.Point(370, 300);
             this.ordersButton.FlatStyle = FlatStyle.Flat;
             this.ordersButton.FlatAppearance.BorderSize = 0;
@@ -84,6 +86,20 @@ namespace DiverseMarket.UI.Pages.Company
             });
 
             this.Controls.Add(ordersButton);
+
+            this.logoutButton = new RoundedButton("Sair", 150, 67, Colors.SecondaryButton, 32);
+            this.logoutButton.Location = new System.Drawing.Point(1080, 57);
+            this.logoutButton.MouseEnter += new EventHandler((object sender, EventArgs e) =>
+            {
+                this.logoutButton.Cursor = Cursors.Hand;
+            });
+            this.logoutButton.Click += new EventHandler((object sender, EventArgs e) =>
+            {
+                this.Hide();
+                new LoginPage().Show();
+            });
+
+            this.Controls.Add(logoutButton);
 
         }
 
@@ -104,7 +120,7 @@ namespace DiverseMarket.UI.Pages.Company
             this.Icon = new Icon(@"Resources\icon.ico");
 
             Logo logo = new Logo();
-            logo.Location = new Point(1033, 93);
+            logo.Location = new Point(820, 77);
             logo.Width = 192;
             logo.Height = 22;
 

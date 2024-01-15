@@ -1,6 +1,6 @@
 ﻿namespace DiverseMarket.UI.Pages.Company
 {
-    partial class CompanyProductPage
+    partial class CompanySpecificProductOfferPage
     {
         /// <summary>
         /// Required designer variable.
@@ -26,12 +26,12 @@
         /// Required method for Designer support - do not modify
         /// the contents of this method with the code editor.
         /// </summary>
-        private void InitializeComponent(long userId)
+        private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(800, 450);
-            this.Text = "CompanyProductPage";
+            this.Text = "CompanySpecificProductOfferPage";
         }
 
         #endregion
