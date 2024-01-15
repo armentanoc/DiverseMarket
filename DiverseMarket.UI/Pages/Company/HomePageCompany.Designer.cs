@@ -61,7 +61,7 @@ namespace DiverseMarket.UI.Pages.Company
 
             this.Controls.Add(homepageButton);
 
-            this.productsButton = new RoundedButton("Listar Produtos", 300, 57, Colors.SecondaryButton, 32);
+            this.productsButton = new RoundedButton("Produtos", 300, 57, Colors.SecondaryButton, 32);
             this.productsButton.Location = new System.Drawing.Point(50, 300);
             this.productsButton.FlatStyle = FlatStyle.Flat;
             this.productsButton.FlatAppearance.BorderSize = 0;
@@ -74,7 +74,7 @@ namespace DiverseMarket.UI.Pages.Company
 
             this.Controls.Add(productsButton);
 
-            this.ordersButton = new RoundedButton("Listar Pedidos", 300, 57, Colors.SecondaryButton, 32);
+            this.ordersButton = new RoundedButton("Pedidos", 300, 57, Colors.SecondaryButton, 32);
             this.ordersButton.Location = new System.Drawing.Point(370, 300);
             this.ordersButton.FlatStyle = FlatStyle.Flat;
             this.ordersButton.FlatAppearance.BorderSize = 0;
@@ -87,7 +87,7 @@ namespace DiverseMarket.UI.Pages.Company
 
             this.Controls.Add(ordersButton);
 
-            this.logoutButton = new RoundedButton("Sair", 150, 67, Colors.SecondaryButton, 32);
+            this.logoutButton = new RoundedButton("Sair", 150, 57, Colors.SecondaryButton, 32);
             this.logoutButton.Location = new System.Drawing.Point(1080, 57);
             this.logoutButton.MouseEnter += new EventHandler((object sender, EventArgs e) =>
             {

@@ -10,7 +10,7 @@ namespace DiverseMarket.UI.Pages.Company
     {
         private System.ComponentModel.IContainer components = null;
         private long userId;
-        private Button homepageButton;
+        private Button homepageButton, returnButton;
         protected override void Dispose(bool disposing)
         {
             if (disposing && (components != null))
@@ -93,7 +93,7 @@ namespace DiverseMarket.UI.Pages.Company
             this.Icon = new Icon(@"Resources\icon.ico");
 
             Logo logo = new Logo();
-            logo.Location = new Point(1033, 93);
+            logo.Location = new Point(820, 77);
             logo.Width = 192;
             logo.Height = 22;
 
@@ -117,6 +117,20 @@ namespace DiverseMarket.UI.Pages.Company
             });
 
             this.Controls.Add(homepageButton);
+
+            this.returnButton = new RoundedButton("Voltar", 150, 57, Colors.SecondaryButton, 32);
+            this.returnButton.Location = new System.Drawing.Point(1080, 57);
+            this.returnButton.MouseEnter += new EventHandler((object sender, EventArgs e) =>
+            {
+                this.returnButton.Cursor = Cursors.Hand;
+            });
+            this.returnButton.Click += new EventHandler((object sender, EventArgs e) =>
+            {
+                this.Hide();
+                new HomePageCompany(this.userId).Show();
+            });
+
+            this.Controls.Add(returnButton);
         }
 
         private void _FormClosed(object sender, FormClosedEventArgs e)

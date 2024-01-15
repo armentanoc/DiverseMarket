@@ -1,20 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Forms;
+﻿using DiverseMarket.Backend.DTOs;
 
 namespace DiverseMarket.UI.Pages.Company
 {
     public partial class CompanySpecificProductOfferPage : Form
     {
-        public CompanySpecificProductOfferPage(long productOfferId, long userId)
+        public CompanySpecificProductOfferPage(ProductOfferCompleteInfoDTO completeOfferInfo, long userId)
         {
-            InitializeComponent();
+            InitializeComponent(completeOfferInfo, userId);
         }
     }
 }

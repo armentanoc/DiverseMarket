@@ -16,6 +16,20 @@ namespace DiverseMarket.UI.Util
             return isValid;
         }
 
+        internal static bool IsInputAValidLong(string input, string? hintText, bool? allowSpaces)
+        {
+            long longValue;
+            bool isLong = long.TryParse(input, out longValue) && longValue >= 0;
+
+            bool isValid = isLong;
+
+            if (hintText != null) isValid = isValid && !input.Equals(hintText);
+
+            if (allowSpaces == false) isValid = isValid && !input.Contains(" ");
+
+            return isValid;
+        }
+
         internal static bool IsEmailValid(string input)
         {
             string regex = @"^[a-zA-Z0-9]+[a-zA-Z0-9_.-]*@[a-zA-Z]+\.[a-zA-Z]+(\.[a-zA-Z]+)?$";
@@ -61,6 +75,20 @@ namespace DiverseMarket.UI.Util
                 return false;
 
             return true;
+        }
+
+        internal static bool IsInputAValidDecimal(string input, string hintText, bool? allowSpaces)
+        {
+            decimal decimalValue;
+            bool isDecimal = decimal.TryParse(input, out decimalValue) && decimalValue >= 0;
+
+            bool isValid = isDecimal;
+
+            if (hintText != null) isValid = isValid && !input.Equals(hintText);
+
+            if (allowSpaces == false) isValid = isValid && !input.Contains(" ");
+
+            return isValid;
         }
     }
 }

@@ -1,6 +1,7 @@
 ﻿
 using DiverseMarket.Backend.DTOs;
 using DiverseMarket.Backend.Services;
+using DiverseMarket.UI.Authentication;
 using DiverseMarket.UI.Components;
 using DiverseMarket.UI.Styles;
 
@@ -11,7 +12,7 @@ namespace DiverseMarket.UI.Pages.Company
         private System.ComponentModel.IContainer components = null;
         private long _userId;
 
-        private Button profileButton, homepageButton;
+        private Button profileButton, homepageButton, returnButton;
         private List<ProductOfferCard> productOfferCards;
         private Panel productsPanel;
         private SearchBar searchBar;
@@ -38,7 +39,7 @@ namespace DiverseMarket.UI.Pages.Company
         }
         private void InitScreen()
         {
-            //InitLogo();
+            InitLogo();
             InitLabel();
             InitSearchBar();
             InitButtons();
@@ -141,7 +142,7 @@ namespace DiverseMarket.UI.Pages.Company
                 productOfferCard.Location = new Point(x, y);
                 productOfferCard.Click += new EventHandler((object sender, EventArgs e) =>
                 {
-                    new CompanySpecificProductOfferPage(completeOfferDTO.Id, this._userId).Show();
+                    new CompanySpecificProductOfferPage(completeOfferDTO, this._userId).Show();
                     this.Hide();
                 });
 
@@ -188,18 +189,33 @@ namespace DiverseMarket.UI.Pages.Company
             });
 
             this.Controls.Add(homepageButton);
+
+            this.returnButton = new RoundedButton("Voltar", 150, 57, Colors.SecondaryButton, 32);
+            this.returnButton.Location = new System.Drawing.Point(1080, 57);
+            this.returnButton.MouseEnter += new EventHandler((object sender, EventArgs e) =>
+            {
+                this.returnButton.Cursor = Cursors.Hand;
+            });
+            this.returnButton.Click += new EventHandler((object sender, EventArgs e) =>
+            {
+                this.Hide();
+                new HomePageCompany(this._userId).Show();
+            });
+
+            this.Controls.Add(returnButton);
         }
-        //private void InitLogo()
-        //{
-        //    this.Icon = new Icon(@"Resources\icon.ico");
 
-        //    Logo logo = new Logo();
-        //    logo.Location = new Point(1033, 93);
-        //    logo.Width = 192;
-        //    logo.Height = 22;
+        private void InitLogo()
+        {
+            this.Icon = new Icon(@"Resources\icon.ico");
 
-        //    this.Controls.Add(logo);
-        //}
+            Logo logo = new Logo();
+            logo.Location = new Point(820, 77);
+            logo.Width = 192;
+            logo.Height = 22;
+
+            this.Controls.Add(logo);
+        }
         private void HomePage_FormClosed(object sender, FormClosedEventArgs e)
         {
             Application.Exit();
