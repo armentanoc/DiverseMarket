@@ -24,6 +24,11 @@ namespace DiverseMarket.Backend.Services
             return productBasicInfoDTOs;
         }
 
+        public static List<ProductOfferCompleteInfoDTO> GetAllProductOfferInfo(List<ProductOfferBasicInfoDTO> productOfferBasicInfoDTOs)
+        {
+            return ProductOfferDB.GetAllProductOfferInformation(productOfferBasicInfoDTOs);
+        }
+
         public static List<ProductOfferBasicInfoDTO> GetAllProductOffersByCompanyUserId(long userId)
         {
             List<ProductOffer> productOffers = ProductOfferDB.GetAllCompanyProductOffers(userId);

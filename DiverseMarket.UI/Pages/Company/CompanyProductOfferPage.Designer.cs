@@ -12,7 +12,7 @@ namespace DiverseMarket.UI.Pages.Company
         private long _userId;
 
         private Button profileButton, homepageButton;
-        private List<ProductCard> productCards;
+        private List<ProductOfferCard> productOfferCards;
         private Panel productsPanel;
         private SearchBar searchBar;
 
@@ -57,9 +57,9 @@ namespace DiverseMarket.UI.Pages.Company
         {
             if (this.searchBar.Text() != "Pesquisar")
             {
-                List<ProductCard> productsAfterSearch = new List<ProductCard>(this.productCards);
+                var productsAfterSearch = new List<ProductOfferCard>(this.productOfferCards);
 
-                foreach (var product in this.productCards)
+                foreach (var product in this.productOfferCards)
                 {
 
                     if (!product.name.Text.Contains(this.searchBar.Text(), StringComparison.CurrentCultureIgnoreCase))
@@ -71,9 +71,9 @@ namespace DiverseMarket.UI.Pages.Company
                 ReloadProducts(productsAfterSearch);
             }
             else
-                ReloadProducts(this.productCards);
+                ReloadProducts(this.productOfferCards);
         }
-        private void ReloadProducts(List<ProductCard> products)
+        private void ReloadProducts(List<ProductOfferCard> products)
         {
             ClearProducts();
 
@@ -120,25 +120,34 @@ namespace DiverseMarket.UI.Pages.Company
             List<ProductOfferBasicInfoDTO> productOfferBasicInfoDTOs = 
                 ProductService.GetAllProductOffersByCompanyUserId(_userId);
 
+            List<ProductOfferCompleteInfoDTO> productOfferCompleteInfoDTOs =
+            ProductService.GetAllProductOfferInfo(productOfferBasicInfoDTOs);
+
             int x = 8;
             int y = 17;
 
-            this.productCards = new List<ProductCard>();
+            this.productOfferCards = new();
 
-            foreach (var productOfferBasicInfoDTO in productOfferBasicInfoDTOs)
+            foreach (var completeOfferDTO in productOfferCompleteInfoDTOs)
             {
-                ProductCard productCard = new ProductCard("teste", "teste",
-                    "teste", Convert.ToDouble(productOfferBasicInfoDTO.Price));
-                productCard.Location = new Point(x, y);
-                productCard.Click += new EventHandler((object sender, EventArgs e) =>
+                var productOfferCard = new ProductOfferCard(
+                    productName: completeOfferDTO.Name,
+                    description: completeOfferDTO.Description,
+                    category: completeOfferDTO.Category,
+                    price: completeOfferDTO.Price,
+                    quantity: completeOfferDTO.Quantity
+                    );
+
+                productOfferCard.Location = new Point(x, y);
+                productOfferCard.Click += new EventHandler((object sender, EventArgs e) =>
                 {
-                    new CompanySpecificProductOfferPage(productOfferBasicInfoDTO.Id, this._userId).Show();
+                    new CompanySpecificProductOfferPage(completeOfferDTO.Id, this._userId).Show();
                     this.Hide();
                 });
 
-                this.productCards.Add(productCard);
+                this.productOfferCards.Add(productOfferCard);
 
-                this.productsPanel.Controls.Add(productCard);
+                this.productsPanel.Controls.Add(productOfferCard);
 
                 if (x == 713)
                 {
