@@ -16,16 +16,16 @@ namespace DiverseMarket.UI.Util
             return isValid;
         }
 
-        internal static bool IsInputAValidLong(string input, string? hintText, bool? allowSpaces)
+        internal static bool IsInputAValidLong(string input, long current, bool? allowSpaces)
         {
             long longValue;
             bool isLong = long.TryParse(input, out longValue) && longValue >= 0;
 
             bool isValid = isLong;
 
-            if (hintText != null) isValid = isValid && !input.Equals(hintText);
+            if (current != null) isValid = isValid && !input.Equals(current);
 
-            if (allowSpaces == false) isValid = isValid && !input.Contains(" ");
+            if (allowSpaces is false) isValid = isValid && !input.Contains(" ");
 
             return isValid;
         }
@@ -77,14 +77,14 @@ namespace DiverseMarket.UI.Util
             return true;
         }
 
-        internal static bool IsInputAValidDecimal(string input, string hintText, bool? allowSpaces)
+        internal static bool IsInputAValidDecimal(string input, decimal current, bool? allowSpaces)
         {
             decimal decimalValue;
             bool isDecimal = decimal.TryParse(input, out decimalValue) && decimalValue >= 0;
 
             bool isValid = isDecimal;
 
-            if (hintText != null) isValid = isValid && !input.Equals(hintText);
+            if (current != null) isValid = isValid && !input.Equals(current);
 
             if (allowSpaces == false) isValid = isValid && !input.Contains(" ");
 

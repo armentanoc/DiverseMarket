@@ -50,5 +50,10 @@ namespace DiverseMarket.Backend.Services
 
             return productOfferBasicInfoDTOs;
         }
+
+        public static bool UpdateProductOfferByCompleteInfoDTO(ProductOfferCompleteInfoDTO newProductOffer)
+        {
+            return ProductOfferDB.UpdateProductOffer(newProductOffer);
+        }
     }
 }

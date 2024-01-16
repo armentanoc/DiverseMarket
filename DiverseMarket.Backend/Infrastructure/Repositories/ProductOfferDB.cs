@@ -24,7 +24,6 @@ namespace DiverseMarket.Backend.Infrastructure.Repositories
             ";
         }
 
-
         public static double GetLowestPriceByProductId(long producId)
         {
             double price = 0;
@@ -53,9 +52,11 @@ namespace DiverseMarket.Backend.Infrastructure.Repositories
                 return price;
 
             }
-            finally { Close(); }
+            finally
+            {
+                Close();
+            }
         }
-
         internal static List<ProductOffer> GetAllCompanyProductOffers(long userId)
         {
             List<ProductOffer> productOffers = new();
@@ -77,11 +78,11 @@ namespace DiverseMarket.Backend.Infrastructure.Repositories
                 {
                     ProductOffer productOffer = new ProductOffer
                     (
-                        id :  Convert.ToInt32(reader["id"]),
-                        sellerId : Convert.ToInt32(reader["Company_id"]),
+                        id: Convert.ToInt32(reader["id"]),
+                        sellerId: Convert.ToInt32(reader["Company_id"]),
                         productId: Convert.ToInt32(reader["Product_id"]),
-                        price : Convert.ToDecimal(reader["price"]),
-                        quantity : Convert.ToInt32(reader["quantity"])
+                        price: Convert.ToDecimal(reader["price"]),
+                        quantity: Convert.ToInt32(reader["quantity"])
                     );
 
                     productOffers.Add(productOffer);
@@ -91,44 +92,12 @@ namespace DiverseMarket.Backend.Infrastructure.Repositories
             catch (Exception ex)
             {
                 //Console.WriteLine("An error occured: " + ex.Message);
-                LogError("GetAllCompanyProductOffers", ex);
+                LogError($"GetAllCompanyProductOffers {ex}");
                 return productOffers;
             }
-            finally 
-            { 
-                Close(); 
-            }
-        }
-        private static void LogError(string methodName, Exception ex)
-        {
-            string logFilePath = "error_log.txt";
-            try
+            finally
             {
-                using (StreamWriter sw = new StreamWriter(logFilePath, true))
-                {
-                    sw.WriteLine($"{DateTime.Now}: Error in method {methodName}: {ex.Message}");
-                }
-            }
-            catch (IOException)
-            {
-                // Handle exception, e.g., log to console
-                Console.WriteLine($"Failed to write to log file: {ex.Message}");
-            }
-        }
-        private static void LogError(string log)
-        {
-            string logFilePath = "error_log.txt";
-            try
-            {
-                using (StreamWriter sw = new StreamWriter(logFilePath, true))
-                {
-                    sw.WriteLine($"{DateTime.Now}: {log}");
-                }
-            }
-            catch (IOException ex)
-            {
-                // Handle exception, e.g., log to console
-                Console.WriteLine($"Failed to write to log file: {ex.Message}");
+                Close();
             }
         }
         internal static bool RegisterDefaultProductOffer()
@@ -152,9 +121,11 @@ namespace DiverseMarket.Backend.Infrastructure.Repositories
                 return false;
 
             }
-            finally { Close(); }
+            finally
+            {
+                Close();
+            }
         }
-
         internal static List<ProductOfferCompleteInfoDTO> GetAllProductOfferInformation(List<ProductOfferBasicInfoDTO> productOfferBasicInfoDTOs)
         {
             List<long> productIdList = productOfferBasicInfoDTOs
@@ -169,7 +140,7 @@ namespace DiverseMarket.Backend.Infrastructure.Repositories
             List<ProductOfferCompleteInfoDTO> productOffers = new();
             try
             {
-                
+
                 Open();
 
                 string query = @"SELECT *
@@ -189,13 +160,13 @@ namespace DiverseMarket.Backend.Infrastructure.Repositories
                 var reader = _command.ExecuteReader();
 
                 while (reader.Read())
-                    {
+                {
 
                     long thisOfferProductId = Convert.ToInt64(reader["id"]);
 
                     LogError($"This offer product id: {thisOfferProductId}");
 
-                    ProductOfferBasicInfoDTO thisOfferBasicInfo = 
+                    ProductOfferBasicInfoDTO thisOfferBasicInfo =
                         productOfferBasicInfoDTOs.FirstOrDefault(p => p.ProductId == thisOfferProductId);
 
                     LogError($"this product price {thisOfferBasicInfo.Price}");
@@ -212,7 +183,7 @@ namespace DiverseMarket.Backend.Infrastructure.Repositories
                             quantity: thisOfferBasicInfo.Quantity,
                             name: reader["name"].ToString(),
                             description: reader["description"].ToString(),
-                            category: 
+                            category:
                                 Enum.Parse<ProductCategory>(reader["ProductCategory_id"]
                                 .ToString())
                                 .ToString()
@@ -232,6 +203,26 @@ namespace DiverseMarket.Backend.Infrastructure.Repositories
             finally
             {
                 Close();
+            }
+        }
+        internal static bool UpdateProductOffer(ProductOfferCompleteInfoDTO newProductOffer)
+        {
+            return DatabaseConnection.UpdateTable("ProductOffer", newProductOffer);
+        }
+        private static void LogError(string log)
+        {
+            string logFilePath = "error_log.txt";
+            try
+            {
+                using (StreamWriter sw = new StreamWriter(logFilePath, true))
+                {
+                    sw.WriteLine($"{DateTime.Now}: {log}");
+                }
+            }
+            catch (IOException ex)
+            {
+                // Handle exception, e.g., log to console
+                Console.WriteLine($"Failed to write to log file: {ex.Message}");
             }
         }
     }

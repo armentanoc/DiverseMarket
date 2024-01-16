@@ -1,6 +1,5 @@
 ﻿using DiverseMarket.Backend.DTOs;
 using DiverseMarket.Backend.Services;
-using DiverseMarket.UI.Authentication;
 using DiverseMarket.UI.Components;
 using DiverseMarket.UI.Styles;
 using DiverseMarket.UI.Util;
@@ -132,11 +131,13 @@ namespace DiverseMarket.UI.Pages.Company
 
             this.editButton = new RoundedButton("Editar", 150, 57, Colors.SecondaryButton, 32);
             this.editButton.Location = new System.Drawing.Point(475, 552);
-            this.editButton.MouseEnter += new EventHandler((object sender, EventArgs e) =>
+            this.editButton.Cursor = Cursors.Hand;
+            this.editButton.Click += new EventHandler((object sender, EventArgs e) =>
             {
-                this.editButton.Cursor = Cursors.Hand;
+                editButton_Click(sender, e);
             });
 
+            this.Controls.Add(editButton);
 
             this.deleteButton = new RoundedButton("Excluir", 150, 57, Colors.SecondaryButton, 32);
             this.deleteButton.Location = new System.Drawing.Point(655, 552);
@@ -146,8 +147,6 @@ namespace DiverseMarket.UI.Pages.Company
             });
 
             this.Controls.Add(deleteButton);
-
-            this.Controls.Add(editButton);
 
             this.returnButton = new RoundedButton("Voltar", 150, 57, Colors.SecondaryButton, 32);
             this.returnButton.Location = new System.Drawing.Point(1080, 57);
@@ -169,53 +168,65 @@ namespace DiverseMarket.UI.Pages.Company
         {
             try
             {
+                Console.WriteLine("Edit button clicked."); // Add this line for debugging
+
                 if (CheckFields())
                 {
-                    string name = this.nameTextBox.TextBox.Text;
-                    string description = this.descriptionTextBox.TextBox.Text;
-                    string quantity = this.quantityTextBox.TextBox.Text;
-                    //string category = this.categoryTextBox.TextBox.Text;
-                    decimal price = Convert.ToDecimal(this.priceTextBox.TextBox.Text);
+                    Console.WriteLine("CheckFields returned true."); // Add this line for debugging
 
-                    //AddressDTO address = new AddressDTO(this.cepTextBox.TextBox.Text,
-                    //    this.streetTextBox.TextBox.Text,
-                    //    (this.complementTextBox.TextBox.Text.Equals("Complemento") ? null : this.complementTextBox.TextBox.Text),
-                    //    addressNeighborhood,
-                    //    this.cityTextBox.TextBox.Text,
-                    //    this.numberTextBox.TextBox.Text);
-                    //string password = this.passwordTextBox.TextBox.Text;
+                    var offer = _completeProductOffer;
+                    var newName = this.nameTextBox.TextBox.Text;
+                    var newPrice = decimal.Parse(this.priceTextBox.TextBox.Text);
+                    var newQuantity = long.Parse(this.quantityTextBox.TextBox.Text);
+                    var newDescription = this.descriptionTextBox.TextBox.Text;
 
-                    //LoginResponseDTO response = AuthenticationService.RegisterCustomer(
-                    //    new RegisterCustomerDTO(fullName, email, username, telephone, CPF, address, password));
-                    //if (response.Id != null)
-                    //{
-                    //    MessageBox.Show("Conta criada com sucesso.");
-                    //    new LoginPage().Show();
-                    //    this.Hide();
+                    var newProductOffer = new ProductOfferCompleteInfoDTO(
+                        offer.Id,
+                        offer.CompanyId,
+                        offer.ProductId,
+                        newPrice,
+                        newQuantity,
+                        newName,
+                        offer.Category, // Assuming category is not being edited
+                        newDescription
+                    );
 
+                    bool wasUpdateSuccessful = ProductService.UpdateProductOfferByCompleteInfoDTO(newProductOffer);
+                    //preço e quantidade
+
+                    //nome e descrição precisam ser na Product table
+                    if (wasUpdateSuccessful)
+                    {
+                         MessageBox.Show("Produto atualizado com sucesso!", "Sucesso", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    }
+                    else
+                    {
+                        MessageBox.Show("Falha ao atualizar o produto. Tente novamente.", "Erro", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    }
                 }
                 else
-                    MessageBox.Show("Houve um erro, tente novamente.");
+                {
+                    Console.WriteLine("CheckFields returned false."); // Add this line for debugging
+                }
             }
             catch (Exception ex)
             {
                 MessageBox.Show($"Erro: {ex.Message}");
             }
         }
-
         private bool CheckFields()
         {
             List<string> wrongFields = new List<string>();
 
-            string name = this.nameTextBox.TextBox.Text;
+            //string name = this.nameTextBox.TextBox.Text;
 
-            if (!ValidationUtils.IsInputAValidName(name, _completeProductOffer.Name, true))
-                wrongFields.Add("name");
+            //if (!ValidationUtils.IsInputAValidName(name, _completeProductOffer.Name, true))
+            //    wrongFields.Add("name");
 
-            string description = this.descriptionTextBox.TextBox.Text;
+            //string description = this.descriptionTextBox.TextBox.Text;
 
-            if (!ValidationUtils.IsInputAValidName(description, _completeProductOffer.Description, true))
-                wrongFields.Add("description");
+            //if (!ValidationUtils.IsInputAValidName(description, _completeProductOffer.Description, true))
+            //    wrongFields.Add("description");
 
             //string category = this.descriptionTextBox.TextBox.Text;
 
@@ -224,12 +235,12 @@ namespace DiverseMarket.UI.Pages.Company
 
             string quantity = this.quantityTextBox.TextBox.Text;
 
-            if (!ValidationUtils.IsInputAValidLong(quantity, _completeProductOffer.Quantity.ToString(), false))
+            if (!ValidationUtils.IsInputAValidLong(quantity, _completeProductOffer.Quantity, false))
                 wrongFields.Add("quantity");
 
             string price = this.priceTextBox.TextBox.Text;
 
-            if (!ValidationUtils.IsInputAValidDecimal(price, $"R${_completeProductOffer.Price.ToString("N2")}", false))
+            if (!ValidationUtils.IsInputAValidDecimal(price, _completeProductOffer.Price, false))
                 wrongFields.Add("price");
 
             bool validInputs = wrongFields.Count == 0;
@@ -239,7 +250,6 @@ namespace DiverseMarket.UI.Pages.Company
 
             return validInputs;
         }
-
         private void ShowMessageForWrongFields(List<string> wrongFields)
         {
             StringBuilder sb = new StringBuilder();
@@ -259,7 +269,6 @@ namespace DiverseMarket.UI.Pages.Company
 
             MessageBox.Show(message, "Atenção");
         }
-
         private void _FormClosed(object sender, FormClosedEventArgs e)
         {
             Application.Exit();
