@@ -6,15 +6,17 @@ namespace DiverseMarket.UI.Components.Moderator
     {
         public Label name;
         public Label cnpjLabel;
+        public Label tradeName;
 
-        public CompanyCard(string cnpj, string companyName)
+        public CompanyCard(string cnpj, string companyName, string tradeName)
         {
             Width = 203;
             Height = 118;
             BorderStyle = BorderStyle.None;
             Cursor = Cursors.Hand;
-            AddCNPJ(cnpj);
             AddCompanyName(companyName);
+            addTradeName(tradeName);
+            AddCNPJ(cnpj);
         }
 
         private void AddCompanyName(string companyName)
@@ -29,13 +31,25 @@ namespace DiverseMarket.UI.Components.Moderator
             Controls.Add(name);
         }
 
-        private void AddCNPJ(string category)
+        private void addTradeName(string tradeName)
         {
             cnpjLabel = new Label();
-            cnpjLabel.Text = category;
+            cnpjLabel.Text = tradeName;
             cnpjLabel.ForeColor = Colors.LightBlue;
             cnpjLabel.Font = new Font("Ubuntu", 8);
-            cnpjLabel.Location = new Point(12, 33);
+            cnpjLabel.Location = new Point(12, 35);
+            cnpjLabel.AutoSize = true;
+            cnpjLabel.BackColor = Color.Transparent;
+            Controls.Add(cnpjLabel);
+        }
+
+        private void AddCNPJ(string cnpj)
+        {
+            cnpjLabel = new Label();
+            cnpjLabel.Text = cnpj;
+            cnpjLabel.ForeColor = Colors.LightBlue;
+            cnpjLabel.Font = new Font("Ubuntu", 8);
+            cnpjLabel.Location = new Point(12, 55);
             cnpjLabel.AutoSize = true;
             cnpjLabel.BackColor = Color.Transparent;
             Controls.Add(cnpjLabel);

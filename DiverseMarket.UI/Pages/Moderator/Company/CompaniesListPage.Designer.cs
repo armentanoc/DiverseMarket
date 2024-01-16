@@ -156,7 +156,7 @@ namespace DiverseMarket.UI.Pages.Moderator.Company
 
             foreach (var companyBasicInfoDTO in companyBasicInfoDTOs)
             {
-                CompanyCard CompanyCard = new CompanyCard(companyBasicInfoDTO.CNPJ, companyBasicInfoDTO.CorporateName);
+                CompanyCard CompanyCard = new CompanyCard(companyBasicInfoDTO.CNPJ, companyBasicInfoDTO.CorporateName, companyBasicInfoDTO.TradeName);
                 CompanyCard.Location = new Point(x, y);
                 CompanyCard.Click += new EventHandler((object sender, EventArgs e) =>
                 {
