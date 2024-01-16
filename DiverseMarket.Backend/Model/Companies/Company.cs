@@ -27,12 +27,14 @@ namespace DiverseMarket.Backend.Model.Companies
 
             }
         }
+        public long Id { get; private set; }
         public string CorporateName { get; private set; }
         public string TradeName { get; private set; }
         public int? LegalEntityTypeCode { get; private set; }
 
-        public Company(string cnpj, string corporateName, string tradeName, int? legalEntityTypeCode = null, RolesEnum role = RolesEnum.Company)
+        public Company(long id, string cnpj, string corporateName, string tradeName, int? legalEntityTypeCode = null, RolesEnum role = RolesEnum.Company)
         {
+            Id = id;
             _cnpj = cnpj;
             CorporateName = corporateName;
             TradeName = tradeName;

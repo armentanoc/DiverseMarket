@@ -1,4 +1,5 @@
-﻿using System;
+﻿using DiverseMarket.Backend.DTOs.Moderator;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
@@ -10,11 +11,11 @@ using System.Windows.Forms;
 
 namespace DiverseMarket.UI.Pages.Moderator.Company
 {
-    public partial class CompaniesList : Form
+    public partial class SpecificCompanyPage : Form
     {
-        public CompaniesList(long userId)
+        public SpecificCompanyPage(long id, string cnpj, string corporateName)
         {
-            InitializeComponent(userId);
+            InitializeComponent(id, cnpj, corporateName);
         }
     }
 }

@@ -5,16 +5,16 @@ namespace DiverseMarket.UI.Components.Moderator
     internal class CompanyCard : Panel
     {
         public Label name;
-        public Label categoryLabel;
+        public Label cnpjLabel;
 
-        public CompanyCard(string companyName, string category)
+        public CompanyCard(string cnpj, string companyName)
         {
             Width = 203;
             Height = 118;
             BorderStyle = BorderStyle.None;
             Cursor = Cursors.Hand;
+            AddCNPJ(cnpj);
             AddCompanyName(companyName);
-            AddCategory(category);
         }
 
         private void AddCompanyName(string companyName)
@@ -29,16 +29,16 @@ namespace DiverseMarket.UI.Components.Moderator
             Controls.Add(name);
         }
 
-        private void AddCategory(string category)
+        private void AddCNPJ(string category)
         {
-            categoryLabel = new Label();
-            categoryLabel.Text = category;
-            categoryLabel.ForeColor = Colors.LightBlue;
-            categoryLabel.Font = new Font("Ubuntu", 8);
-            categoryLabel.Location = new Point(12, 33);
-            categoryLabel.AutoSize = true;
-            categoryLabel.BackColor = Color.Transparent;
-            Controls.Add(categoryLabel);
+            cnpjLabel = new Label();
+            cnpjLabel.Text = category;
+            cnpjLabel.ForeColor = Colors.LightBlue;
+            cnpjLabel.Font = new Font("Ubuntu", 8);
+            cnpjLabel.Location = new Point(12, 33);
+            cnpjLabel.AutoSize = true;
+            cnpjLabel.BackColor = Color.Transparent;
+            Controls.Add(cnpjLabel);
         }
 
         protected override void OnPaint(PaintEventArgs e)

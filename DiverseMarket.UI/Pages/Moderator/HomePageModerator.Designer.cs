@@ -113,7 +113,7 @@ namespace DiverseMarket.UI.Pages.Moderator
 
         private void companiesList_Click(object sender, EventArgs e)
         {
-            new CompaniesList(this._userId).Show();
+            new CompaniesListPage(this._userId).Show();
             this.Hide();
         }
 
