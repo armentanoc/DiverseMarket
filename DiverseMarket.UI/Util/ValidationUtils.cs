@@ -1,5 +1,4 @@
 ﻿using DiverseMarket.Backend.Services;
-using System.Globalization;
 using System.Text.RegularExpressions;
 
 namespace DiverseMarket.UI.Util
@@ -20,12 +19,12 @@ namespace DiverseMarket.UI.Util
         internal static bool IsInputAValidLong(string input, long current, bool? allowSpaces)
         {
             long longValue;
-            bool isLong = long.TryParse(input, out longValue) && longValue >= 0;
+            bool isValid = long.TryParse(input, out longValue) && longValue >= 0;
 
-            bool isValid = isLong;
-
-            if (current != null) isValid = isValid && !input.Equals(current);
-
+            if(!isValid)
+            {
+                MessageBox.Show($"O valor '{input}' não é válido para quantidade. \nA quantidade deve ser um número maior ou igual a zero.", "Erro", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            }
             if (allowSpaces is false) isValid = isValid && !input.Contains(" ");
 
             return isValid;
@@ -94,12 +93,11 @@ namespace DiverseMarket.UI.Util
             }
             else if (decimalValue <= 0)
             {
-                MessageBox.Show($"{decimalValue} é um valor igual ou inferior a zero. Somente preços positivos são permitidos.", "Erro", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                MessageBox.Show($"{decimalValue} é um valor igual ou inferior a zero. \nSomente preços positivos são permitidos.", "Erro", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 return false;
             }
             else
             {
-                //MessageBox.Show($"{decimalValue} é um preço válido.", "Sucesso", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 return true;
             }
         }
