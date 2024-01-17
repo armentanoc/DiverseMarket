@@ -108,13 +108,13 @@ namespace DiverseMarket.UI.Pages.Moderator.Company
             int x = 8;
             int y = 17;
 
-            foreach (var product in companies)
+            foreach (var company in companies)
             {
-                product.Location = new Point(x, y);
+                company.Location = new Point(x, y);
 
-                product.Visible = true;
-                this.companiesPanel.Controls.Add(product);
-                product.BringToFront();
+                company.Visible = true;
+                this.companiesPanel.Controls.Add(company);
+                company.BringToFront();
 
                 if (x == 713)
                 {
