@@ -8,7 +8,7 @@ namespace DiverseMarket.Backend.Services
     {
         public static List<ProductBasicInfoDTO> GetAllProducstBasicInfo()
         {
-            List<Model.Product> products = ProductDB.GetAllProducst();
+            List<Model.Product> products = ProductDB.GetAllProducts();
 
             List<ProductBasicInfoDTO> productBasicInfoDTOs = new List<ProductBasicInfoDTO>();
 

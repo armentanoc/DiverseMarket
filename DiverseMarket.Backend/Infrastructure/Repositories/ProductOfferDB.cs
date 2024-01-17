@@ -2,10 +2,7 @@
 using DiverseMarket.Backend.Infrastructure.Operations;
 using DiverseMarket.Backend.Model.Enums;
 using DiverseMarket.Backend.Model.Products;
-using System;
-using System.Collections.Generic;
 using System.Data.SQLite;
-using System.Linq;
 
 namespace DiverseMarket.Backend.Infrastructure.Repositories
 {
@@ -14,16 +11,16 @@ namespace DiverseMarket.Backend.Infrastructure.Repositories
         public static string InitializeTable()
         {
             return @"
-            CREATE TABLE IF NOT EXISTS ProductOffer (
-                id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
-                Company_id INTEGER NOT NULL,
-                Product_id INTEGER NOT NULL,
-                price DECIMAL(10,2),
-                quantity INTEGER,
-                FOREIGN KEY (Company_id) REFERENCES Company(id) ON DELETE SET NULL ON UPDATE CASCADE,
-                FOREIGN KEY (Product_id) REFERENCES Product(id) ON DELETE SET NULL ON UPDATE CASCADE
-            );
-            ";
+                CREATE TABLE IF NOT EXISTS ProductOffer (
+                    id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+                    Company_id INTEGER NOT NULL,
+                    Product_id INTEGER NOT NULL,
+                    price DECIMAL(10,2),
+                    quantity INTEGER,
+                    FOREIGN KEY (Company_id) REFERENCES Company(id) ON DELETE SET NULL ON UPDATE CASCADE,
+                    FOREIGN KEY (Product_id) REFERENCES Product(id) ON DELETE SET NULL ON UPDATE CASCADE
+                );
+                ";
         }
 
         public static double GetLowestPriceByProductId(long productId)
@@ -32,20 +29,21 @@ namespace DiverseMarket.Backend.Infrastructure.Repositories
             try
             {
                 Open();
-                string query = @"SELECT MIN(price) AS lowest_price
-                                FROM ProductOffer
-                                WHERE Product_id = @ProductId;";
-                _command = new SQLiteCommand(query, _connection);
-
-                _command.Parameters.AddWithValue("@ProductId", productId);
-
-                var reader = _command.ExecuteReader();
-
-                if (reader.Read())
+                using (var command = new SQLiteCommand(_connection))
                 {
-                    price = (double)reader[0];
+                    command.CommandText = @"SELECT MIN(price) AS lowest_price
+                                                    FROM ProductOffer
+                                                    WHERE Product_id = @ProductId;";
+                    command.Parameters.AddWithValue("@ProductId", productId);
+
+                    using (var reader = command.ExecuteReader())
+                    {
+                        if (reader.Read())
+                        {
+                            price = (double)reader[0];
+                        }
+                    }
                 }
-                reader.Close();
                 return price;
             }
             catch (Exception ex)
@@ -65,30 +63,30 @@ namespace DiverseMarket.Backend.Infrastructure.Repositories
             try
             {
                 Open();
-                string query = @"SELECT *
-                                FROM ProductOffer
-                                WHERE Company_id = @CompanyId;";
-
-                _command = new SQLiteCommand(query, _connection);
-
-                _command.Parameters.AddWithValue("@CompanyId", userId);
-
-                var reader = _command.ExecuteReader();
-
-                while (reader.Read())
+                using (var command = new SQLiteCommand(_connection))
                 {
-                    ProductOffer productOffer = new ProductOffer
-                    (
-                        id: Convert.ToInt32(reader["id"]),
-                        sellerId: Convert.ToInt32(reader["Company_id"]),
-                        productId: Convert.ToInt32(reader["Product_id"]),
-                        price: Convert.ToDecimal(reader["price"]),
-                        quantity: Convert.ToInt32(reader["quantity"])
-                    );
-                    productOffers.Add(productOffer);
+                    command.CommandText = @"SELECT *
+                                                    FROM ProductOffer
+                                                    WHERE Company_id = @CompanyId;";
+                    command.Parameters.AddWithValue("@CompanyId", userId);
+
+                    using (var reader = command.ExecuteReader())
+                    {
+                        while (reader.Read())
+                        {
+                            ProductOffer productOffer = new ProductOffer
+                            (
+                                id: Convert.ToInt32(reader["id"]),
+                                sellerId: Convert.ToInt32(reader["Company_id"]),
+                                productId: Convert.ToInt32(reader["Product_id"]),
+                                price: Convert.ToDecimal(reader["price"]),
+                                quantity: Convert.ToInt32(reader["quantity"])
+                            );
+                            productOffers.Add(productOffer);
+                        }
+                    }
                 }
 
-                reader.Close();
                 return productOffers;
             }
             catch (Exception ex)
@@ -107,14 +105,14 @@ namespace DiverseMarket.Backend.Infrastructure.Repositories
             try
             {
                 Open();
-                string query = @"INSERT INTO ProductOffer(Company_id, Product_id, price, quantity)
-                VALUES(2, 1, 99, 5);";
+                using (var command = new SQLiteCommand(_connection))
+                {
+                    command.CommandText = @"INSERT INTO ProductOffer(Company_id, Product_id, price, quantity)
+                                                    VALUES(2, 1, 99, 5);";
 
-                _command = new SQLiteCommand(query, _connection);
+                    return command.ExecuteNonQuery() > 0;
+                }
 
-                bool registered = _command.ExecuteNonQuery() > 0;
-
-                return registered;
             }
             catch (Exception ex)
             {
@@ -139,40 +137,40 @@ namespace DiverseMarket.Backend.Infrastructure.Repositories
             try
             {
                 Open();
-                string query = @"SELECT *
-                                FROM Product
-                                WHERE id IN (@formattedIdList);";
-
-                _command = new SQLiteCommand(query, _connection);
-
-                _command.Parameters.AddWithValue("@formattedIdList", formattedIdList);
-
-                var reader = _command.ExecuteReader();
-
-                while (reader.Read())
+                using (var command = new SQLiteCommand(_connection))
                 {
-                    long thisOfferProductId = Convert.ToInt64(reader["id"]);
-                    ProductOfferBasicInfoDTO thisOfferBasicInfo = productOfferBasicInfoDTOs.FirstOrDefault(p => p.ProductId == thisOfferProductId);
+                    command.CommandText = @"SELECT *
+                                                    FROM Product
+                                                    WHERE id IN (@formattedIdList);";
+                    command.Parameters.AddWithValue("@formattedIdList", formattedIdList);
 
-                    if (thisOfferBasicInfo != null)
+                    using (var reader = command.ExecuteReader())
                     {
-                        ProductOfferCompleteInfoDTO productOfferCompleteDTO = new ProductOfferCompleteInfoDTO
-                        (
-                            id: thisOfferBasicInfo.Id,
-                            companyId: thisOfferBasicInfo.CompanyId,
-                            productId: thisOfferBasicInfo.ProductId,
-                            price: thisOfferBasicInfo.Price,
-                            quantity: thisOfferBasicInfo.Quantity,
-                            name: reader["name"].ToString(),
-                            description: reader["description"].ToString(),
-                            category: Enum.Parse<ProductCategory>(reader["ProductCategory_id"].ToString()).ToString()
-                        );
+                        while (reader.Read())
+                        {
+                            long thisOfferProductId = Convert.ToInt64(reader["id"]);
+                            ProductOfferBasicInfoDTO thisOfferBasicInfo = productOfferBasicInfoDTOs.FirstOrDefault(p => p.ProductId == thisOfferProductId);
 
-                        productOffers.Add(productOfferCompleteDTO);
+                            if (thisOfferBasicInfo != null)
+                            {
+                                ProductOfferCompleteInfoDTO productOfferCompleteDTO = new ProductOfferCompleteInfoDTO
+                                (
+                                    id: thisOfferBasicInfo.Id,
+                                    companyId: thisOfferBasicInfo.CompanyId,
+                                    productId: thisOfferBasicInfo.ProductId,
+                                    price: thisOfferBasicInfo.Price,
+                                    quantity: thisOfferBasicInfo.Quantity,
+                                    name: reader["name"].ToString(),
+                                    description: reader["description"].ToString(),
+                                    category: Enum.Parse<ProductCategory>(reader["ProductCategory_id"].ToString()).ToString()
+                                );
+
+                                productOffers.Add(productOfferCompleteDTO);
+                            }
+                        }
                     }
                 }
 
-                reader.Close();
                 return productOffers;
             }
             catch (Exception ex)
@@ -191,20 +189,20 @@ namespace DiverseMarket.Backend.Infrastructure.Repositories
             try
             {
                 Open();
-                string query = @"UPDATE ProductOffer
-                        SET price = @Price,
-                            quantity = @Quantity
-                        WHERE id = @Id;";
+                using (var command = new SQLiteCommand(_connection))
+                {
+                    command.CommandText = @"UPDATE ProductOffer
+                                                    SET price = @Price,
+                                                        quantity = @Quantity
+                                                    WHERE id = @Id;";
 
-                _command = new SQLiteCommand(query, _connection);
+                    command.Parameters.AddWithValue("@Price", newProductOffer.Price);
+                    command.Parameters.AddWithValue("@Quantity", newProductOffer.Quantity);
+                    command.Parameters.AddWithValue("@Id", newProductOffer.Id);
 
-                _command.Parameters.AddWithValue("@Price", newProductOffer.Price);
-                _command.Parameters.AddWithValue("@Quantity", newProductOffer.Quantity);
-                _command.Parameters.AddWithValue("@Id", newProductOffer.Id);
+                    return command.ExecuteNonQuery() > 0;
+                }
 
-                bool updated = _command.ExecuteNonQuery() > 0;
-
-                return updated;
             }
             catch (Exception ex)
             {

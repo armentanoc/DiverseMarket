@@ -30,18 +30,19 @@ namespace DiverseMarket.Backend.Infrastructure.Operations
         }
 
         internal static bool Close()
-{
-    try
-    {
-        _connection.Close();
-        return true;
-    }
-    catch (SQLiteException e)
-    {
-        MyLogger.Log.Error($"Erro ao fechar a conexão com o banco de dados: {e.Message}");
-        return false;
-    }
-}
+        {
+            try
+            {
+                _command?.Dispose();
+                _connection?.Dispose();
+                return true;
+            }
+            catch (SQLiteException e)
+            {
+                MyLogger.Log.Error($"Erro ao fechar a conexão com o banco de dados: {e.Message}");
+                return false;
+            }
+        }
 
         #endregion
 
@@ -77,10 +78,11 @@ namespace DiverseMarket.Backend.Infrastructure.Operations
         {
             try
             {
-                if (!File.Exists($"{_databaseName}.db"))
+                string databaseFilePath = $"{_databaseName}.db";
+                if (!File.Exists(databaseFilePath))
                 {
                     MyLogger.Log.Error("Criando um novo arquivo de banco.");
-                    SQLiteConnection.CreateFile($"{_databaseName}.db");
+                    SQLiteConnection.CreateFile(databaseFilePath);
                     CreateTables();
                 }
                 else
@@ -167,24 +169,24 @@ namespace DiverseMarket.Backend.Infrastructure.Operations
             "Aa12345@" //senha
             );
         }
-            private static void RegisterDefaultModerator()
-            {
-                UserDB.RegisterModerator
-                (
-                "Paula Andrezza",
-                "paula@gmail.com",
-                "paula",
-                "123456789",
-                "89403309008",
-                "53620819",
-                "Rua Senhor do Bonfim",
-                "Cond. Delta, Ap. 202",
-                "12",
-                "Santa Rita",
-                "Igarassu",
-                "Aa12345@" //senha
-                );
-            }
+        private static void RegisterDefaultModerator()
+        {
+            UserDB.RegisterModerator
+            (
+            "Paula Andrezza",
+            "paula@gmail.com",
+            "paula",
+            "123456789",
+            "89403309008",
+            "53620819",
+            "Rua Senhor do Bonfim",
+            "Cond. Delta, Ap. 202",
+            "12",
+            "Santa Rita",
+            "Igarassu",
+            "Aa12345@" //senha
+            );
+        }
         #endregion
 
         #region Helper Methods
