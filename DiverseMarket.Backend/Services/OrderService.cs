@@ -1,5 +1,6 @@
 ﻿using DiverseMarket.Backend.DTOs;
 using DiverseMarket.Backend.Infrastructure.Repositories;
+using DiverseMarket.Backend.Model.Enums;
 using DiverseMarket.Backend.Model.Transactions;
 using System;
 using System.Collections.Generic;
@@ -50,9 +51,14 @@ namespace DiverseMarket.Backend.Services
             return order;
         }
 
+        public static OrderStatus GetOrderItemStatusById(long orderItemId)
+        {
+            return SellingItemDB.GetOrderItemStatusById(orderItemId);
+        }
+
         public static void SetOrderItemAsRecieved(long orderId, long itemId)
         {
-            
+            SellingItemDB.SetOrdemItemAsRecieved(itemId);
         }
     }
 }

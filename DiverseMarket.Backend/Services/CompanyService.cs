@@ -7,9 +7,9 @@ using System.Threading.Tasks;
 
 namespace DiverseMarket.Backend.Services
 {
-    internal class CompanyService
+    public class CompanyService
     {
-        internal static string GetCompanyNameBySellingItemId(long sellingItemId)
+        public static string GetCompanyNameBySellingItemId(long sellingItemId)
         {
             long companyId = SellingItemDB.GetCompanyIdBySellingItemId(sellingItemId);
 
