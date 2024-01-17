@@ -1,5 +1,6 @@
 ﻿using DiverseMarket.Backend.DTOs;
 using DiverseMarket.Backend.Services;
+using DiverseMarket.Logger;
 using DiverseMarket.UI.Components;
 using DiverseMarket.UI.Styles;
 using DiverseMarket.UI.Util;
@@ -286,12 +287,12 @@ namespace DiverseMarket.UI.Pages.Company
                 }
                 else
                 {
-                    Backend.MyLogger.Log.Error("CheckFields retornou falso.");
+                    new LogMessage("CheckFields retornou falso.");
                 }
             }
             catch (Exception ex)
             {
-                MessageBox.Show($"Erro: {ex.Message}");
+                new LogMessage($"Erro: {ex.Message}");
             }
         }
         #endregion

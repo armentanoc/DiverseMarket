@@ -2,6 +2,7 @@
 using DiverseMarket.Backend.Infrastructure.Operations;
 using DiverseMarket.Backend.Model.Enums;
 using DiverseMarket.Backend.Model.Products;
+using DiverseMarket.Logger;
 using System.Data.SQLite;
 
 namespace DiverseMarket.Backend.Infrastructure.Repositories
@@ -48,7 +49,7 @@ namespace DiverseMarket.Backend.Infrastructure.Repositories
             }
             catch (Exception ex)
             {
-                MyLogger.Log.Error("An error occurred in GetLowestPriceByProductId: " + ex.Message + ex.StackTrace);
+                new LogMessage("An error occurred in GetLowestPriceByProductId: " + ex.Message + ex.StackTrace);
                 return price;
             }
             finally
@@ -91,7 +92,7 @@ namespace DiverseMarket.Backend.Infrastructure.Repositories
             }
             catch (Exception ex)
             {
-                MyLogger.Log.Error("An error occurred in GetAllCompanyProductOffers: " + ex.Message + ex.StackTrace);
+                new LogMessage("An error occurred in GetAllCompanyProductOffers: " + ex.Message + ex.StackTrace);
                 return productOffers;
             }
             finally
@@ -116,7 +117,7 @@ namespace DiverseMarket.Backend.Infrastructure.Repositories
             }
             catch (Exception ex)
             {
-                MyLogger.Log.Error("An error occurred in RegisterDefaultProductOffer: " + ex.Message + ex.StackTrace);
+                new LogMessage("An error occurred in RegisterDefaultProductOffer: " + ex.Message + ex.StackTrace);
                 return false;
             }
             finally
@@ -175,7 +176,7 @@ namespace DiverseMarket.Backend.Infrastructure.Repositories
             }
             catch (Exception ex)
             {
-                MyLogger.Log.Error("GetAllProductOfferInformation: " + ex.Message + ex.StackTrace);
+                new LogMessage("GetAllProductOfferInformation: " + ex.Message + ex.StackTrace);
                 return productOffers;
             }
             finally
@@ -206,7 +207,7 @@ namespace DiverseMarket.Backend.Infrastructure.Repositories
             }
             catch (Exception ex)
             {
-                MyLogger.Log.Error("An error occurred in UpdateProductOffer: " + ex.Message + ex.StackTrace);
+                new LogMessage("An error occurred in UpdateProductOffer: " + ex.Message + ex.StackTrace);
                 return false;
             }
             finally

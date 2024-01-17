@@ -1,10 +1,7 @@
 ﻿using DiverseMarket.Backend.Infrastructure.Operations;
 using DiverseMarket.Backend.DTOs;
-using DiverseMarket.Backend.Model.Enums;
-using DiverseMarket.Backend.Model;
 using System.Data.SQLite;
-using DiverseMarket.Backend.Model.Transactions;
-using System.Collections.Generic;
+using DiverseMarket.Logger;
 
 namespace DiverseMarket.Backend.Infrastructure.Repositories
 {
@@ -26,12 +23,6 @@ namespace DiverseMarket.Backend.Infrastructure.Repositories
 
         public static List<OrderBasicInfoDTO> GetAllOrdersByCompanyUserId(long userId)
         {
-            //testing
-            //INSERT INTO Selling(date_sale, amount, Customer_id, Company_id)
-            //VALUES("14/01/2024", 100, 1, 1);
-            //INSERT INTO Selling(date_sale, amount, Customer_id, Company_id)
-            //VALUES("13/01/2024", 50, 2, 1);
-
             List<OrderBasicInfoDTO> orderList = new List<OrderBasicInfoDTO>();
 
             try
@@ -58,7 +49,7 @@ namespace DiverseMarket.Backend.Infrastructure.Repositories
             }
             catch (Exception ex)
             {
-                Console.WriteLine("An error occurred: " + ex.Message);
+                new LogMessage($"An error occurred in {nameof(GetAllOrdersByCompanyUserId)} {ex.Message}");
                 return null;
             }
             finally

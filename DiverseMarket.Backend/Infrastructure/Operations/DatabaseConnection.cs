@@ -1,4 +1,5 @@
-﻿using DiverseMarket.Backend.Infrastructure.Repositories;
+﻿using DiverseMarket.Logger;
+using DiverseMarket.Backend.Infrastructure.Repositories;
 using DiverseMarket.Backend.Model;
 using DiverseMarket.Backend.Model.Companies;
 using System.Data.SQLite;
@@ -24,7 +25,7 @@ namespace DiverseMarket.Backend.Infrastructure.Operations
             }
             catch (Exception ex)
             {
-                MyLogger.Log.Error($"Erro ao abrir o banco de dados: {ex.Message}\n");
+                new LogMessage($"Erro ao abrir o banco de dados: {ex.Message}\n");
                 return false;
             }
         }
@@ -39,7 +40,7 @@ namespace DiverseMarket.Backend.Infrastructure.Operations
             }
             catch (SQLiteException e)
             {
-                MyLogger.Log.Error($"Erro ao fechar a conexão com o banco de dados: {e.Message}");
+                new LogMessage($"Erro ao fechar a conexão com o banco de dados: {e.Message}");
                 return false;
             }
         }
@@ -81,18 +82,18 @@ namespace DiverseMarket.Backend.Infrastructure.Operations
                 string databaseFilePath = $"{_databaseName}.db";
                 if (!File.Exists(databaseFilePath))
                 {
-                    MyLogger.Log.Error("Criando um novo arquivo de banco.");
+                    new LogMessage("Criando um novo arquivo de banco.");
                     SQLiteConnection.CreateFile(databaseFilePath);
                     CreateTables();
                 }
                 else
                 {
-                    MyLogger.Log.Error("Arquivo de banco de dados já existe.");
+                    new LogMessage("Arquivo de banco de dados já existe.");
                 }
             }
             catch (Exception ex)
             {
-                MyLogger.Log.Error($"Erro ao criar o banco de dados: {ex.Message}");
+                new LogMessage($"Erro ao criar o banco de dados: {ex.Message}");
                 Console.ReadKey();
             }
         }
@@ -109,16 +110,16 @@ namespace DiverseMarket.Backend.Infrastructure.Operations
                         command.CommandText = createTableSql;
                         command.ExecuteNonQuery();
 
-                        MyLogger.Log.Error($"Tabela {tableName} criada.");
+                        new LogMessage($"Tabela {tableName} criada.");
                     }
                     else
                     {
-                        MyLogger.Log.Error($"Tabela {tableName} já existe.");
+                        new LogMessage($"Tabela {tableName} já existe.");
                     }
                 }
                 catch (Exception ex)
                 {
-                    MyLogger.Log.Error($"Erro ao criar a tabela {tableName}: {ex.Message}");
+                    new LogMessage($"Erro ao criar a tabela {tableName}: {ex.Message}");
                 }
             }
         }
@@ -206,9 +207,9 @@ namespace DiverseMarket.Backend.Infrastructure.Operations
                     _command.CommandText = $"PRAGMA table_info({tableName})";
                     using (var reader = _command.ExecuteReader())
                     {
-                        MyLogger.Log.Error($"\nEsquema da Tabela {tableName}:\n");
-                        MyLogger.Log.Error("Nome da Coluna".PadRight(25) + "Tipo".PadRight(15) + "NotNull".PadRight(10) + "PrimaryKey");
-                        MyLogger.Log.Error("------------------------------------------------------------");
+                        new LogMessage($"\nEsquema da Tabela {tableName}:\n" +
+                            $"Nome da Coluna".PadRight(25) + "Tipo".PadRight(15) + "NotNull".PadRight(10) + "PrimaryKey" +
+                            "------------------------------------------------------------");
 
                         while (reader.Read())
                         {
@@ -217,18 +218,18 @@ namespace DiverseMarket.Backend.Infrastructure.Operations
                             bool notNull = Convert.ToBoolean(reader["notnull"]);
                             bool isPrimaryKey = Convert.ToBoolean(reader["pk"]);
 
-                            MyLogger.Log.Error($"{columnName.PadRight(25)}{columnType.PadRight(15)}{notNull.ToString().PadRight(10)}{isPrimaryKey}");
+                            new LogMessage($"{columnName.PadRight(25)}{columnType.PadRight(15)}{notNull.ToString().PadRight(10)}{isPrimaryKey}");
                         }
                     }
                 }
                 else
                 {
-                    MyLogger.Log.Error("_command é nulo. Certifique-se de que está devidamente inicializado.");
+                    new LogMessage("_command é nulo. Certifique-se de que está devidamente inicializado.");
                 }
             }
             catch (Exception ex)
             {
-                MyLogger.Log.Error($"Erro ao exibir o esquema da tabela: {ex.Message}");
+                new LogMessage($"Erro ao exibir o esquema da tabela: {ex.Message}");
             }
         }
 

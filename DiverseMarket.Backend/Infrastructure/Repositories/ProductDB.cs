@@ -1,11 +1,24 @@
 ﻿using DiverseMarket.Backend.Infrastructure.Operations;
 using DiverseMarket.Backend.Model;
+using DiverseMarket.Logger;
 using System.Data.SQLite;
 
 namespace DiverseMarket.Backend.Infrastructure.Repositories
 {
     public class ProductDB : DatabaseConnection
     {
+
+        internal static string InitializeTable()
+        {
+            return @"
+                CREATE TABLE IF NOT EXISTS Product (
+                    id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+                    name VARCHAR(45) NOT NULL,
+                    description VARCHAR(45) NOT NULL,
+                    ProductCategory_id INTEGER NOT NULL,  
+                    FOREIGN KEY (ProductCategory_id) REFERENCES ProductCategory(id) ON DELETE NO ACTION ON UPDATE NO ACTION
+                ); insert into Product (name, description, ProductCategory_id) values ('Camiseta', 'camiseta nike', 1);";
+        }
         public static List<Product> GetAllProducts()
         {
             List<Product> products = new List<Product>();
@@ -31,25 +44,13 @@ namespace DiverseMarket.Backend.Infrastructure.Repositories
             }
             catch (Exception ex)
             {
-                Console.WriteLine("An error occurred: " + ex.Message);
+                new LogMessage($"An error occurred in {nameof(GetAllProducts)} - Message: {ex.Message} - StackTrace: {ex.StackTrace}");
                 return products;
             }
             finally
             {
                 Close();
             }
-        }
-
-        internal static string InitializeTable()
-        {
-            return @"
-                CREATE TABLE IF NOT EXISTS Product (
-                    id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
-                    name VARCHAR(45) NOT NULL,
-                    description VARCHAR(45) NOT NULL,
-                    ProductCategory_id INTEGER NOT NULL,  
-                    FOREIGN KEY (ProductCategory_id) REFERENCES ProductCategory(id) ON DELETE NO ACTION ON UPDATE NO ACTION
-                ); insert into Product (name, description, ProductCategory_id) values ('Camiseta', 'camiseta nike', 1);";
         }
     }
 }
