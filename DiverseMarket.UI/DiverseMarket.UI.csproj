@@ -18,6 +18,15 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Compile Update="Components\ProductDetailsCard.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Update="Components\ProductOfferCard.cs">
+      <SubType>Component</SubType>
+    </Compile>
+  </ItemGroup>
+
+  <ItemGroup>
     <None Update="Resources\atualizar-meus-dados.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
