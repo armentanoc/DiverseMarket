@@ -1,11 +1,6 @@
 ﻿using DiverseMarket.Backend.DTOs;
 using DiverseMarket.Backend.Infrastructure.Repositories;
-using DiverseMarket.Backend.Model;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using DiverseMarket.Backend.Model.Products;
 
 namespace DiverseMarket.Backend.Services
 {
@@ -13,7 +8,7 @@ namespace DiverseMarket.Backend.Services
     {
         public static List<ProductBasicInfoDTO> GetAllProducstBasicInfo()
         {
-            List<Product> products = ProductDB.GetAllProducst();
+            List<Model.Product> products = ProductDB.GetAllProducst();
 
             List<ProductBasicInfoDTO> productBasicInfoDTOs = new List<ProductBasicInfoDTO>();
 
@@ -27,6 +22,33 @@ namespace DiverseMarket.Backend.Services
             }
 
             return productBasicInfoDTOs;
+        }
+
+        public static List<ProductOfferCompleteInfoDTO> GetAllProductOfferInfo(List<ProductOfferBasicInfoDTO> productOfferBasicInfoDTOs)
+        {
+            return ProductOfferDB.GetAllProductOfferInformation(productOfferBasicInfoDTOs);
+        }
+
+        public static List<ProductOfferBasicInfoDTO> GetAllProductOffersByCompanyUserId(long userId)
+        {
+            List<ProductOffer> productOffers = ProductOfferDB.GetAllCompanyProductOffers(userId);
+            
+            List<ProductOfferBasicInfoDTO> productOfferBasicInfoDTOs = new();
+            
+            foreach (var productOffer in productOffers)
+            {
+                productOfferBasicInfoDTOs.Add(
+                    new ProductOfferBasicInfoDTO(
+                        productOffer.Id,
+                        productOffer.SellerId,
+                        productOffer.ProductId,
+                        productOffer.Price,
+                        productOffer.Quantity
+                        )
+                    );
+            }
+
+            return productOfferBasicInfoDTOs;
         }
     }
 }

@@ -63,7 +63,13 @@ namespace DiverseMarket.Backend.Infrastructure.Operations
             }
 
             InitializeDefaultUsers();
+            InsertDefaultCompanyRelatedData();
             _connection.Close();
+        }
+
+        private static void InsertDefaultCompanyRelatedData()
+        {
+            ProductOfferDB.RegisterDefaultProductOffer();
         }
 
         private static void InitializeDefaultUsers()
