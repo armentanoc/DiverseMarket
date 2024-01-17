@@ -30,20 +30,23 @@ namespace DiverseMarket.Backend.Infrastructure.Operations
             }
         }
 
-        internal static bool Close()
-        {
-            try
+            internal static bool Close()
             {
-                _command?.Dispose();
-                _connection?.Dispose();
-                return true;
+                try
+                {
+                    _command?.Dispose();
+                    _connection?.Close();
+                    _connection?.Dispose();
+
+                    return true;
+                }
+                catch (SQLiteException ex)
+                {
+                    new LogMessage(ex);
+                    return false;
+                }
             }
-            catch (SQLiteException ex)
-            {
-                new LogMessage(ex);
-                return false;
-            }
-        }
+
 
         #endregion
 
