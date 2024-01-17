@@ -261,7 +261,7 @@ namespace DiverseMarket.UI.Pages.Company
 
                     var newProductOffer = new ProductOfferCompleteInfoDTO(
                         offer.Id,
-                        offer.CompanyId,
+                        offer.CompanyUserId,
                         offer.ProductId,
                         newPrice,
                         newQuantity,

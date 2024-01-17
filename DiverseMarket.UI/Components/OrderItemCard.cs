@@ -99,7 +99,7 @@ namespace DiverseMarket.UI.Components
 
         private void AddButtons(DateTime date)
         {
-            bool recieved = item.Status == OrderStatus.Recieved;
+            bool recieved = item.Status == OrderStatus.Received;
 
             Color recieveButtonColor = ColorTranslator.FromHtml(recieved ? "#D2D2D2" : "#72B4DB");
             recievedButton = new RoundedButton("RECEBI ESTE ITEM", 265, 57, recieveButtonColor, 32);
@@ -112,8 +112,8 @@ namespace DiverseMarket.UI.Components
 
             Controls.Add(recievedButton);
 
-            bool refundEnabled = item.Status != OrderStatus.Recieved && date > DateTime.Today
-                || item.Status == OrderStatus.Recieved && date.AddDays(7).Date >= DateTime.Today;
+            bool refundEnabled = item.Status != OrderStatus.Received && date > DateTime.Today
+                || item.Status == OrderStatus.Received && date.AddDays(7).Date >= DateTime.Today;
             Color refundButtonColor = ColorTranslator.FromHtml(refundEnabled ? "#72B4DB" : "#D2D2D2");
             refundButton = new RoundedButton("SOLICITAR REEMBOLSO", 265, 57, refundButtonColor, 32);
             if (!refundEnabled)

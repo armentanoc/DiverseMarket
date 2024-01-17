@@ -137,7 +137,7 @@ namespace DiverseMarket.Backend.Infrastructure.Operations
         {
             ProductCategoryDB.RegisterDefaultProductCategories();
             ProductDB.RegisterDefaultProducts();
-            ProductOfferDB.RegisterDefaultProductOffer();
+            ProductOfferDB.RegisterDefaultProductOffers();
 
         }
 
