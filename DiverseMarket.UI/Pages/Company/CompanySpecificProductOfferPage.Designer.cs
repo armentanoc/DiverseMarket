@@ -253,12 +253,7 @@ namespace DiverseMarket.UI.Pages.Company
                 {
                     var offer = _completeProductOffer;
                     var newName = this.nameTextBox.TextBox.Text;
-
-                    string cleanedPrice = new string(this.priceTextBox.TextBox.Text
-                     .Where(c => char.IsDigit(c) || c == '.' || c == ',')
-                     .ToArray())
-                     .Replace(',', '.');
-
+                    string cleanedPrice = ValidationUtils.CleanMonetaryInput(this.priceTextBox.TextBox.Text);
                     var newPrice = decimal.Parse(cleanedPrice);
                     var newQuantity = long.Parse(this.quantityTextBox.TextBox.Text);
                     var newDescription = this.descriptionTextBox.TextBox.Text;
