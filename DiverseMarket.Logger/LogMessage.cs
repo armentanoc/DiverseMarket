@@ -11,17 +11,20 @@ namespace DiverseMarket.Logger
             WriteInLog(logMessage);
         }
 
-        public LogMessage(string methodName, Exception ex)
+        public LogMessage(Exception ex)
         {
-            ErrorLog(methodName, ex);
+            ErrorLog(ex);
         }
 
         #endregion
 
         #region ErrorLog
-        private void ErrorLog(string methodName, Exception ex)
+        private void ErrorLog(Exception ex)
         {
-            string log = $"An error occurred in {methodName} - Message: {ex.Message} - StackTrace: {ex.StackTrace}";
+            string log = $"An error occurred." +
+                $"\nMessage: {ex.Message}" +
+                $"\nStackTrace: {ex.StackTrace}";
+
             WriteInLog(log);
         }
         #endregion

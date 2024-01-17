@@ -6,6 +6,12 @@ namespace DiverseMarket.Backend.Services
 {
     public static class ProductService
     {
+        public static bool DeleteRecord()
+        {
+            //TODO: implement
+            return false;
+        }
+
         public static List<ProductBasicInfoDTO> GetAllProducstBasicInfo()
         {
             List<Model.Product> products = ProductDB.GetAllProducts();
