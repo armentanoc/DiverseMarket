@@ -1,10 +1,8 @@
 ﻿using DiverseMarket.Backend.Infrastructure.Operations;
+using DiverseMarket.Logger;
 using System;
 using System.Collections.Generic;
 using System.Data.SQLite;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace DiverseMarket.Backend.Infrastructure.Repositories
 {
@@ -31,11 +29,13 @@ namespace DiverseMarket.Backend.Infrastructure.Repositories
             }
             catch (Exception ex)
             {
-                Console.WriteLine("An error occured: " + ex.Message);
+                new LogMessage(ex);
                 return "";
 
             }
-            finally { Close(); }
+            finally { 
+                Close(); 
+            }
         }
 
         internal static string InitializeTable()

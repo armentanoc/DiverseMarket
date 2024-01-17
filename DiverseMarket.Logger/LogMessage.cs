@@ -1,4 +1,6 @@
 ﻿
+using System.Diagnostics;
+
 namespace DiverseMarket.Logger
 {
     public class LogMessage

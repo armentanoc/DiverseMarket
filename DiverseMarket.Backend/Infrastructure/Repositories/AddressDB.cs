@@ -1,6 +1,7 @@
 ﻿using DiverseMarket.Backend.DTOs;
 using DiverseMarket.Backend.Infrastructure.Operations;
 using DiverseMarket.Backend.Model;
+using DiverseMarket.Logger;
 using System.Data.SQLite;
 
 namespace DiverseMarket.Backend.Infrastructure.Repositories
@@ -48,7 +49,7 @@ namespace DiverseMarket.Backend.Infrastructure.Repositories
             }
             catch (Exception ex)
             {
-                Console.WriteLine("An error occured: " + ex.Message);
+                new LogMessage(ex);
                 id = -1;
             }
             finally
@@ -81,7 +82,7 @@ namespace DiverseMarket.Backend.Infrastructure.Repositories
             }
             catch (Exception ex)
             {
-                Console.WriteLine("An error occured: " + ex.Message);
+                new LogMessage(ex);
                 return null;
 
             }
@@ -117,7 +118,7 @@ namespace DiverseMarket.Backend.Infrastructure.Repositories
             }
             catch (Exception ex)
             {
-                Console.WriteLine("An error occured: " + ex.Message);
+                new LogMessage(ex);
                 return false;
 
             }

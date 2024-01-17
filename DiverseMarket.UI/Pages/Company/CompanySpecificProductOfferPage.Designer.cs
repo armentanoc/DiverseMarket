@@ -281,10 +281,6 @@ namespace DiverseMarket.UI.Pages.Company
                         MessageBoxUtils.ShowMessageBox("Falha ao atualizar o produto. Tente novamente.", MessageBoxIcon.Error);
                     }
                 }
-                else
-                {
-                    new LogMessage("CheckFields retornou falso.");
-                }
             }
             catch (Exception ex)
             {
@@ -325,7 +321,7 @@ namespace DiverseMarket.UI.Pages.Company
         #region Validations
         private bool AreFieldsValid()
         {
-            List<string> wrongFields = new List<string>();
+            var wrongFields = new List<string>();
 
             #region Other Checks to Implement
             //string name = this.nameTextBox.TextBox.Text;
@@ -347,40 +343,24 @@ namespace DiverseMarket.UI.Pages.Company
             string quantity = this.quantityTextBox.TextBox.Text;
 
             if (!ValidationUtils.IsInputAValidLong(quantity, _completeProductOffer.Quantity, false))
-                wrongFields.Add("quantity");
+                wrongFields.Add($"quantidade - {quantity}");
 
             string priceInput = this.priceTextBox.TextBox.Text;
 
             if (!ValidationUtils.IsInputAValidDecimal(priceInput, _completeProductOffer.Price, false))
-                wrongFields.Add("price");
+                wrongFields.Add($"preço - {priceInput}");
 
             bool validInputs = wrongFields.Count == 0;
 
             if (!validInputs)
-                ShowMessageForWrongFields(wrongFields);
-
+            {
+                string wrongFieldsStr = $"{string.Join(", ", wrongFields)}";
+                MessageBox.Show("Falha ao atualizar o produto. Tente novamente.", "Erro", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                throw new ArgumentException($"CheckFields retornou falso: ({wrongFieldsStr})");
+            }
+               
             return validInputs;
         }
-        private void ShowMessageForWrongFields(List<string> wrongFields)
-        {
-            StringBuilder sb = new StringBuilder();
-            sb.Append("Você digitou os seguintes campos errados: ");
-
-            foreach (var field in wrongFields)
-            {
-                sb.Append(field + ", ");
-            }
-
-            string message = sb.ToString();
-
-            if (message[message.Length - 2] == ',')
-            {
-                message = message.Substring(0, message.Length - 2);
-            }
-
-            MessageBox.Show(message, "Atenção");
-        }
-
         #endregion
 
         #region Form Closed

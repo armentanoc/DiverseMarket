@@ -14,7 +14,7 @@ namespace DiverseMarket.Backend
             }
             catch (Exception ex)
             {
-                new LogMessage($"An error occurred: {ex.Message}");
+                new LogMessage(ex);
             }   
         }
     }

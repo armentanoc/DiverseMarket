@@ -25,7 +25,7 @@ namespace DiverseMarket.Backend.Infrastructure.Operations
             }
             catch (Exception ex)
             {
-                new LogMessage($"Erro ao abrir o banco de dados: {ex.Message}\n");
+                new LogMessage(ex);
                 return false;
             }
         }
@@ -38,9 +38,9 @@ namespace DiverseMarket.Backend.Infrastructure.Operations
                 _connection?.Dispose();
                 return true;
             }
-            catch (SQLiteException e)
+            catch (SQLiteException ex)
             {
-                new LogMessage($"Erro ao fechar a conexão com o banco de dados: {e.Message}");
+                new LogMessage(ex);
                 return false;
             }
         }
@@ -93,8 +93,7 @@ namespace DiverseMarket.Backend.Infrastructure.Operations
             }
             catch (Exception ex)
             {
-                new LogMessage($"Erro ao criar o banco de dados: {ex.Message}");
-                Console.ReadKey();
+                new LogMessage(ex);
             }
         }
 
@@ -119,7 +118,7 @@ namespace DiverseMarket.Backend.Infrastructure.Operations
                 }
                 catch (Exception ex)
                 {
-                    new LogMessage($"Erro ao criar a tabela {tableName}: {ex.Message}");
+                    new LogMessage(ex);
                 }
             }
         }
@@ -229,7 +228,7 @@ namespace DiverseMarket.Backend.Infrastructure.Operations
             }
             catch (Exception ex)
             {
-                new LogMessage($"Erro ao exibir o esquema da tabela: {ex.Message}");
+                new LogMessage(ex);
             }
         }
 
