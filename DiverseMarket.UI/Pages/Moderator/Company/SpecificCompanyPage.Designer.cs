@@ -58,6 +58,8 @@ namespace DiverseMarket.UI.Pages.Moderator.Company
 
         private void InitTextBoxes()
         {
+            this.Select(false, false);
+
             nameTextBox = new RoundedTextBox(this.companyDetails?.CorporateName ?? "Razão social*", 572, 60);
             nameTextBox.Location = new Point(354, 166);
             nameTextBox.TextBox.Font = new Font("Ubuntu", 10);
