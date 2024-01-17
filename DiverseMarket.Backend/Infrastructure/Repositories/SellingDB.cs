@@ -111,10 +111,11 @@ namespace DiverseMarket.Backend.Infrastructure.Repositories
                 date_sale DATE NOT NULL,
                 amount DECIMAL(10,2) NOT NULL,
                 Customer_id INTEGER NOT NULL,
-                status INTEGER NOT NULL CHECK(Status IN (1, 2, 3, 4)),
+                status INTEGER NOT NULL CHECK(Status IN (1, 2, 3, 4, 5)),
                 FOREIGN KEY (Customer_id) REFERENCES User(id) ON DELETE NO ACTION ON UPDATE NO ACTION
             );";
 
         }
+
     }
 }

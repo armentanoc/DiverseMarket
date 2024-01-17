@@ -8,6 +8,7 @@ using System.Data.SQLite;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using static System.Data.Entity.Infrastructure.Design.Executor;
 
 namespace DiverseMarket.Backend.Infrastructure.Repositories
 {
@@ -74,6 +75,33 @@ namespace DiverseMarket.Backend.Infrastructure.Repositories
             finally { Close(); }
         }
 
+        internal static OrderStatus GetOrderItemStatusById(long orderItemId)
+        {
+            try
+            {
+                Open();
+                string query = @"SELECT status FROM SellingItem
+                                WHERE id = @id;";
+                _command = new SQLiteCommand(query, _connection);
+
+                _command.Parameters.AddWithValue("@id", orderItemId);
+
+                var reader = _command.ExecuteReader();
+
+                if(reader.Read())
+                    return (OrderStatus) (long) reader[0];
+                return OrderStatus.Preparation;
+
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("An error occured: " + ex.Message);
+                return OrderStatus.Preparation;
+
+            }
+            finally { Close(); }
+        }
+
         internal static string InitializeTable()
         {
             return @"
@@ -87,6 +115,30 @@ namespace DiverseMarket.Backend.Infrastructure.Repositories
                 FOREIGN KEY (selling_id) REFERENCES Selling(id) ON DELETE NO ACTION ON UPDATE NO ACTION,
                 FOREIGN KEY (product_id) REFERENCES Product(id) ON DELETE NO ACTION ON UPDATE NO ACTION
             );";
+        }
+
+        internal static bool SetOrdemItemAsRecieved(long itemId)
+        {
+            try
+            {
+                Open();
+                string query = @"UPDATE SellingItem
+                            SET status = ?
+                            WHERE id = @id;";
+                _command = new SQLiteCommand(query, _connection);
+
+                _command.Parameters.AddWithValue("@id", itemId);
+
+                return _command.ExecuteNonQuery() > 0;
+
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("An error occured: " + ex.Message);
+                return false;
+
+            }
+            finally { Close(); }
         }
     }
 }
