@@ -17,7 +17,7 @@ namespace DiverseMarket.Backend.Infrastructure.Repositories
                     description VARCHAR(45) NOT NULL,
                     ProductCategory_id INTEGER NOT NULL,  
                     FOREIGN KEY (ProductCategory_id) REFERENCES ProductCategory(id) ON DELETE NO ACTION ON UPDATE NO ACTION
-                ); insert into Product (name, description, ProductCategory_id) values ('Camiseta', 'camiseta nike', 1);";
+                );";
         }
         public static List<Product> GetAllProducts()
         {
@@ -44,8 +44,39 @@ namespace DiverseMarket.Backend.Infrastructure.Repositories
             }
             catch (Exception ex)
             {
-                new LogMessage($"An error occurred in {nameof(GetAllProducts)} - Message: {ex.Message} - StackTrace: {ex.StackTrace}");
+                new LogMessage(ex);
                 return products;
+            }
+            finally
+            {
+                Close();
+            }
+        }
+
+        public static bool InsertProduct(Product product)
+        {
+            try
+            {
+                Open();
+
+                using (var command = new SQLiteCommand(_connection))
+                {
+                    command.CommandText = @"INSERT INTO Product (name, description, ProductCategory_id) 
+                                       VALUES (@Name, @Description, @ProductCategory_id)";
+
+                    command.Parameters.AddWithValue("@Name", product.Name);
+                    command.Parameters.AddWithValue("@Description", product.Description);
+                    command.Parameters.AddWithValue("@ProductCategory_id", product.CategoryId);
+
+                    int rowsAffected = command.ExecuteNonQuery();
+
+                    return rowsAffected > 0;
+                }
+            }
+            catch (Exception ex)
+            {
+                new LogMessage(ex);
+                return false;
             }
             finally
             {
