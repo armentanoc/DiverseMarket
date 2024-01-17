@@ -2,12 +2,13 @@
 using DiverseMarket.Backend.Infrastructure.Operations;
 using DiverseMarket.Backend.Model.Enums;
 using DiverseMarket.Backend.Model.Products;
+using System;
+using System.Collections.Generic;
 using System.Data.SQLite;
-using System.Reflection.PortableExecutable;
+using System.Linq;
 
 namespace DiverseMarket.Backend.Infrastructure.Repositories
 {
-
     public class ProductOfferDB : DatabaseConnection
     {
         public static string InitializeTable()
@@ -25,7 +26,7 @@ namespace DiverseMarket.Backend.Infrastructure.Repositories
             ";
         }
 
-        public static double GetLowestPriceByProductId(long producId)
+        public static double GetLowestPriceByProductId(long productId)
         {
             double price = 0;
             try
@@ -36,7 +37,7 @@ namespace DiverseMarket.Backend.Infrastructure.Repositories
                                 WHERE Product_id = @ProductId;";
                 _command = new SQLiteCommand(query, _connection);
 
-                _command.Parameters.AddWithValue("@ProductId", producId);
+                _command.Parameters.AddWithValue("@ProductId", productId);
 
                 var reader = _command.ExecuteReader();
 
@@ -49,22 +50,21 @@ namespace DiverseMarket.Backend.Infrastructure.Repositories
             }
             catch (Exception ex)
             {
-                MyLogger.Log.Error("An error occured in GetLowestPriceByProductId: " + ex.Message + ex.StackTrace);
+                MyLogger.Log.Error("An error occurred in GetLowestPriceByProductId: " + ex.Message + ex.StackTrace);
                 return price;
-
             }
             finally
             {
                 Close();
             }
         }
+
         internal static List<ProductOffer> GetAllCompanyProductOffers(long userId)
         {
             List<ProductOffer> productOffers = new();
             try
             {
                 Open();
-
                 string query = @"SELECT *
                                 FROM ProductOffer
                                 WHERE Company_id = @CompanyId;";
@@ -85,14 +85,15 @@ namespace DiverseMarket.Backend.Infrastructure.Repositories
                         price: Convert.ToDecimal(reader["price"]),
                         quantity: Convert.ToInt32(reader["quantity"])
                     );
-                    reader.Close();
                     productOffers.Add(productOffer);
                 }
+
+                reader.Close();
                 return productOffers;
             }
             catch (Exception ex)
             {
-                MyLogger.Log.Error("An error occured in GetAllCompanyProductOffers: " + ex.Message + ex.StackTrace);
+                MyLogger.Log.Error("An error occurred in GetAllCompanyProductOffers: " + ex.Message + ex.StackTrace);
                 return productOffers;
             }
             finally
@@ -100,12 +101,12 @@ namespace DiverseMarket.Backend.Infrastructure.Repositories
                 Close();
             }
         }
+
         internal static bool RegisterDefaultProductOffer()
         {
             try
             {
                 Open();
-
                 string query = @"INSERT INTO ProductOffer(Company_id, Product_id, price, quantity)
                 VALUES(2, 1, 99, 5);";
 
@@ -117,30 +118,26 @@ namespace DiverseMarket.Backend.Infrastructure.Repositories
             }
             catch (Exception ex)
             {
-                MyLogger.Log.Error("An error occured in RegisterDefaultProductOffer: " + ex.Message + ex.StackTrace);
+                MyLogger.Log.Error("An error occurred in RegisterDefaultProductOffer: " + ex.Message + ex.StackTrace);
                 return false;
-
             }
             finally
             {
                 Close();
             }
         }
+
         internal static List<ProductOfferCompleteInfoDTO> GetAllProductOfferInformation(List<ProductOfferBasicInfoDTO> productOfferBasicInfoDTOs)
         {
             List<long> productIdList = productOfferBasicInfoDTOs
                 .Select(productOffer => productOffer.ProductId)
                 .ToList();
 
-            string formattedIdList =
-                string
-                .Join(", ", productOfferBasicInfoDTOs
-                .Select(productOffer => productOffer.ProductId));
+            string formattedIdList = string.Join(", ", productOfferBasicInfoDTOs.Select(productOffer => productOffer.ProductId));
 
             List<ProductOfferCompleteInfoDTO> productOffers = new();
             try
             {
-
                 Open();
                 string query = @"SELECT *
                                 FROM Product
@@ -148,26 +145,18 @@ namespace DiverseMarket.Backend.Infrastructure.Repositories
 
                 _command = new SQLiteCommand(query, _connection);
 
-                _command.Parameters.AddWithValue
-                    (
-                    "@formattedIdList",
-                    formattedIdList
-                    );
+                _command.Parameters.AddWithValue("@formattedIdList", formattedIdList);
 
                 var reader = _command.ExecuteReader();
 
                 while (reader.Read())
                 {
-
                     long thisOfferProductId = Convert.ToInt64(reader["id"]);
-
-                    ProductOfferBasicInfoDTO thisOfferBasicInfo =
-                        productOfferBasicInfoDTOs.FirstOrDefault(p => p.ProductId == thisOfferProductId);
+                    ProductOfferBasicInfoDTO thisOfferBasicInfo = productOfferBasicInfoDTOs.FirstOrDefault(p => p.ProductId == thisOfferProductId);
 
                     if (thisOfferBasicInfo != null)
                     {
-
-                        ProductOfferCompleteInfoDTO productOfferCompleteDTO = new
+                        ProductOfferCompleteInfoDTO productOfferCompleteDTO = new ProductOfferCompleteInfoDTO
                         (
                             id: thisOfferBasicInfo.Id,
                             companyId: thisOfferBasicInfo.CompanyId,
@@ -176,10 +165,7 @@ namespace DiverseMarket.Backend.Infrastructure.Repositories
                             quantity: thisOfferBasicInfo.Quantity,
                             name: reader["name"].ToString(),
                             description: reader["description"].ToString(),
-                            category:
-                                Enum.Parse<ProductCategory>(reader["ProductCategory_id"]
-                                .ToString())
-                                .ToString()
+                            category: Enum.Parse<ProductCategory>(reader["ProductCategory_id"].ToString()).ToString()
                         );
 
                         productOffers.Add(productOfferCompleteDTO);
@@ -199,12 +185,12 @@ namespace DiverseMarket.Backend.Infrastructure.Repositories
                 Close();
             }
         }
+
         internal static bool UpdateProductOffer(ProductOfferCompleteInfoDTO newProductOffer)
         {
             try
             {
                 Open();
-
                 string query = @"UPDATE ProductOffer
                         SET price = @Price,
                             quantity = @Quantity
