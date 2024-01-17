@@ -1,11 +1,6 @@
 ﻿using DiverseMarket.Backend.Infrastructure.Operations;
 using DiverseMarket.Backend.Model;
-using System;
-using System.Collections.Generic;
 using System.Data.SQLite;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace DiverseMarket.Backend.Infrastructure.Repositories
 {
@@ -29,7 +24,7 @@ namespace DiverseMarket.Backend.Infrastructure.Repositories
                     products.Add(new Product((long)reader["id"], reader["name"].ToString(),
                         reader["description"].ToString(), reader["category_name"].ToString()));
                 }
-
+                _command.Dispose();
                 return products;
             }
             catch (Exception ex)
@@ -38,7 +33,9 @@ namespace DiverseMarket.Backend.Infrastructure.Repositories
                 return products;
 
             }
-            finally { Close(); }
+            finally { 
+                Close(); 
+            }
         }
 
 

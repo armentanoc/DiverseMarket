@@ -3,6 +3,7 @@ using DiverseMarket.Backend.Infrastructure.Operations;
 using DiverseMarket.Backend.Model.Enums;
 using DiverseMarket.Backend.Model.Products;
 using System.Data.SQLite;
+using System.Reflection.PortableExecutable;
 
 namespace DiverseMarket.Backend.Infrastructure.Repositories
 {
@@ -43,12 +44,12 @@ namespace DiverseMarket.Backend.Infrastructure.Repositories
                 {
                     price = (double)reader[0];
                 }
-
+                reader.Close();
                 return price;
             }
             catch (Exception ex)
             {
-                Console.WriteLine("An error occured: " + ex.Message);
+                MyLogger.Log.Error("An error occured in GetLowestPriceByProductId: " + ex.Message + ex.StackTrace);
                 return price;
 
             }
@@ -84,15 +85,14 @@ namespace DiverseMarket.Backend.Infrastructure.Repositories
                         price: Convert.ToDecimal(reader["price"]),
                         quantity: Convert.ToInt32(reader["quantity"])
                     );
-
+                    reader.Close();
                     productOffers.Add(productOffer);
                 }
                 return productOffers;
             }
             catch (Exception ex)
             {
-                //Console.WriteLine("An error occured: " + ex.Message);
-                LogError($"GetAllCompanyProductOffers {ex}");
+                MyLogger.Log.Error("An error occured in GetAllCompanyProductOffers: " + ex.Message + ex.StackTrace);
                 return productOffers;
             }
             finally
@@ -117,7 +117,7 @@ namespace DiverseMarket.Backend.Infrastructure.Repositories
             }
             catch (Exception ex)
             {
-                Console.WriteLine("An error occured: " + ex.Message);
+                MyLogger.Log.Error("An error occured in RegisterDefaultProductOffer: " + ex.Message + ex.StackTrace);
                 return false;
 
             }
@@ -142,7 +142,6 @@ namespace DiverseMarket.Backend.Infrastructure.Repositories
             {
 
                 Open();
-
                 string query = @"SELECT *
                                 FROM Product
                                 WHERE id IN (@formattedIdList);";
@@ -155,8 +154,6 @@ namespace DiverseMarket.Backend.Infrastructure.Repositories
                     formattedIdList
                     );
 
-                LogError(formattedIdList);
-
                 var reader = _command.ExecuteReader();
 
                 while (reader.Read())
@@ -164,12 +161,8 @@ namespace DiverseMarket.Backend.Infrastructure.Repositories
 
                     long thisOfferProductId = Convert.ToInt64(reader["id"]);
 
-                    LogError($"This offer product id: {thisOfferProductId}");
-
                     ProductOfferBasicInfoDTO thisOfferBasicInfo =
                         productOfferBasicInfoDTOs.FirstOrDefault(p => p.ProductId == thisOfferProductId);
-
-                    LogError($"this product price {thisOfferBasicInfo.Price}");
 
                     if (thisOfferBasicInfo != null)
                     {
@@ -188,16 +181,17 @@ namespace DiverseMarket.Backend.Infrastructure.Repositories
                                 .ToString())
                                 .ToString()
                         );
+
                         productOffers.Add(productOfferCompleteDTO);
                     }
                 }
 
+                reader.Close();
                 return productOffers;
             }
             catch (Exception ex)
             {
-                //Console.WriteLine("An error occured: " + ex.Message);
-                LogError($"GetAllProductOfferInformation {ex.Message}");
+                MyLogger.Log.Error("GetAllProductOfferInformation: " + ex.Message + ex.StackTrace);
                 return productOffers;
             }
             finally
@@ -207,22 +201,33 @@ namespace DiverseMarket.Backend.Infrastructure.Repositories
         }
         internal static bool UpdateProductOffer(ProductOfferCompleteInfoDTO newProductOffer)
         {
-            return DatabaseConnection.UpdateTable("ProductOffer", newProductOffer);
-        }
-        private static void LogError(string log)
-        {
-            string logFilePath = "error_log.txt";
             try
             {
-                using (StreamWriter sw = new StreamWriter(logFilePath, true))
-                {
-                    sw.WriteLine($"{DateTime.Now}: {log}");
-                }
+                Open();
+
+                string query = @"UPDATE ProductOffer
+                        SET price = @Price,
+                            quantity = @Quantity
+                        WHERE id = @Id;";
+
+                _command = new SQLiteCommand(query, _connection);
+
+                _command.Parameters.AddWithValue("@Price", newProductOffer.Price);
+                _command.Parameters.AddWithValue("@Quantity", newProductOffer.Quantity);
+                _command.Parameters.AddWithValue("@Id", newProductOffer.Id);
+
+                bool updated = _command.ExecuteNonQuery() > 0;
+
+                return updated;
             }
-            catch (IOException ex)
+            catch (Exception ex)
             {
-                // Handle exception, e.g., log to console
-                Console.WriteLine($"Failed to write to log file: {ex.Message}");
+                MyLogger.Log.Error("An error occurred in UpdateProductOffer: " + ex.Message + ex.StackTrace);
+                return false;
+            }
+            finally
+            {
+                Close();
             }
         }
     }

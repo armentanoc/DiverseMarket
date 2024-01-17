@@ -1,4 +1,5 @@
 ﻿using DiverseMarket.Backend.Services;
+using System.Globalization;
 using System.Text.RegularExpressions;
 
 namespace DiverseMarket.UI.Util
@@ -79,16 +80,28 @@ namespace DiverseMarket.UI.Util
 
         internal static bool IsInputAValidDecimal(string input, decimal current, bool? allowSpaces)
         {
-            decimal decimalValue;
-            bool isDecimal = decimal.TryParse(input, out decimalValue) && decimalValue >= 0;
+            string inputWithoutPriceLabel = input.Replace("R$", "");
 
-            bool isValid = isDecimal;
+            string cleanedInput = new string(inputWithoutPriceLabel
+             .Where(c => char.IsDigit(c) || c == '.' || c == ',' || c == '-')
+             .ToArray())
+             .Replace(',', '.');
 
-            if (current != null) isValid = isValid && !input.Equals(current);
-
-            if (allowSpaces == false) isValid = isValid && !input.Contains(" ");
-
-            return isValid;
+            if (!decimal.TryParse(cleanedInput, out decimal decimalValue))
+            {
+                MessageBox.Show($"O valor '{inputWithoutPriceLabel}' não é válido para preço.", "Erro", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                return false;
+            }
+            else if (decimalValue <= 0)
+            {
+                MessageBox.Show($"{decimalValue} é um valor igual ou inferior a zero. Somente preços positivos são permitidos.", "Erro", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                return false;
+            }
+            else
+            {
+                //MessageBox.Show($"{decimalValue} é um preço válido.", "Sucesso", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                return true;
+            }
         }
     }
 }

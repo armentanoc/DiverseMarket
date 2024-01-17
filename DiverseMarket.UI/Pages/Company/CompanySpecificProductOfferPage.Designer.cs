@@ -3,6 +3,7 @@ using DiverseMarket.Backend.Services;
 using DiverseMarket.UI.Components;
 using DiverseMarket.UI.Styles;
 using DiverseMarket.UI.Util;
+using System.Globalization;
 using System.Text;
 
 namespace DiverseMarket.UI.Pages.Company
@@ -12,17 +13,33 @@ namespace DiverseMarket.UI.Pages.Company
         private System.ComponentModel.IContainer components = null;
         private ProductOfferCompleteInfoDTO _completeProductOffer;
 
+        private long _userId;
+
+        #region Warning Labels
         //private Label nameWarningLabel;
         //private Label descriptionWarningLabel;
         //private Label categoryWarningLabel;
         //private Label quantityWarningLabel;
         //private Label priceWarningLabel;
+        #endregion
 
-        private RoundedTextBox nameTextBox, descriptionTextBox, 
-            categoryTextBox, quantityTextBox, priceTextBox;
+        #region RoundedTextBoxes
+        private RoundedTextBox nameTextBox;
+        private RoundedTextBox descriptionTextBox;
+        private RoundedTextBox categoryTextBox;
+        private RoundedTextBox quantityTextBox;
+        private RoundedTextBox priceTextBox;
 
-        private Button homepageButton, returnButton, editButton, deleteButton;
-        private long _userId;
+        #endregion
+
+        #region Buttons
+        private Button homepageButton;
+        private Button returnButton;
+        private Button editButton;
+        private Button deleteButton;
+        #endregion
+
+        #region Dispose
         protected override void Dispose(bool disposing)
         {
             if (disposing && (components != null))
@@ -31,6 +48,10 @@ namespace DiverseMarket.UI.Pages.Company
             }
             base.Dispose(disposing);
         }
+
+        #endregion
+
+        #region Init Components
         private void InitializeComponent(ProductOfferCompleteInfoDTO completeProductOffer, long userId)
         {
             this._completeProductOffer = completeProductOffer;
@@ -47,49 +68,64 @@ namespace DiverseMarket.UI.Pages.Company
         private void InitScreen()
         {
             InitLogo();
-            InitLabel();
             InitTextBoxes();
+            InitLabel();
             InitButtons();
         }
 
+        #endregion
+
+        #region Text Boxes
         private void InitTextBoxes()
         {
+            int y = 200;
+            int spacing = 50;
+
             this.Select(false, false);
 
-            nameTextBox = new RoundedTextBox(_completeProductOffer.Name, 572, 60);
-            nameTextBox.Location = new Point(354, 200);
+            nameTextBox = new RoundedTextBox(_completeProductOffer.Name, 572, 40);
+            nameTextBox.Location = new Point(354, y);
             nameTextBox.TextBox.Font = new Font("Ubuntu", 10);
             this.Controls.Add(nameTextBox);
 
-            descriptionTextBox = new RoundedTextBox(_completeProductOffer.Description, 572, 60);
-            descriptionTextBox.Location = new Point(354, 288);
+            descriptionTextBox = new RoundedTextBox(_completeProductOffer.Description, 572, 40);
+            descriptionTextBox.Location = new Point(354, nameTextBox.Bottom + spacing);
             descriptionTextBox.TextBox.Font = new Font("Ubuntu", 10);
             this.Controls.Add(descriptionTextBox);
 
+            #region Category Text Box
             //entre 354 e 926
             //242
             //padding 30
             //106
 
-            //categoryTextBox = new RoundedTextBox(_completeProductOffer.Category, 342, 60);
-            //categoryTextBox.Location = new Point(354, 376);
+            //categoryTextBox = new RoundedTextBox(_completeProductOffer.Category, 342, 40);
+            //categoryTextBox.Location = new Point(354, 336);
             //categoryTextBox.TextBox.Font = new Font("Ubuntu", 10);
             //this.Controls.Add(categoryTextBox);
 
-            quantityTextBox = new RoundedTextBox(_completeProductOffer.Quantity.ToString(), 572, 60);
-            quantityTextBox.Location = new Point(354, 376);
+            #endregion
+
+            quantityTextBox = new RoundedTextBox(_completeProductOffer.Quantity.ToString(), 572, 40);
+            quantityTextBox.Location = new Point(354, descriptionTextBox.Bottom + spacing);
             quantityTextBox.TextBox.Font = new Font("Ubuntu", 10);
             this.Controls.Add(quantityTextBox);
 
-            priceTextBox = new RoundedTextBox($"R${_completeProductOffer.Price.ToString("N2")}", 572, 60);
-            priceTextBox.Location = new Point(354, 464);
+            string formattedPrice = _completeProductOffer.Price.ToString("C", CultureInfo.GetCultureInfo("pt-BR"));
+            priceTextBox = new RoundedTextBox(formattedPrice, 572, 40); ;
+            priceTextBox.Location = new Point(354, quantityTextBox.Bottom + spacing);
             priceTextBox.TextBox.Font = new Font("Ubuntu", 10);
             this.Controls.Add(priceTextBox);
 
         }
 
+        #endregion
+
+        #region Labels
         private void InitLabel()
         {
+            int spacing = 35;
+
             Label pageTitle = new Label();
             pageTitle.Text = "Detalhes do pedido";
             pageTitle.Location = new Point(140, 67);
@@ -97,8 +133,39 @@ namespace DiverseMarket.UI.Pages.Company
             pageTitle.ForeColor = Color.White;
             pageTitle.Font = new Font("Ubuntu", 32);
             this.Controls.Add(pageTitle);
+
+            Label nameLabel = new Label();
+            nameLabel.Text = "Nome";
+            nameLabel.Location = new Point(354, nameTextBox.Top - spacing);
+            nameLabel.ForeColor = Color.White;
+            nameLabel.Font = new Font("Ubuntu", 12);
+            this.Controls.Add(nameLabel);
+
+            Label descriptionLabel = new Label();
+            descriptionLabel.Text = "Descrição";
+            descriptionLabel.Location = new Point(354, descriptionTextBox.Top - spacing);
+            descriptionLabel.ForeColor = Color.White;
+            descriptionLabel.Font = new Font("Ubuntu", 12);
+            this.Controls.Add(descriptionLabel);
+
+            Label quantityLabel = new Label();
+            quantityLabel.Text = "Quantidade";
+            quantityLabel.Location = new Point(354, quantityTextBox.Top - spacing);
+            quantityLabel.ForeColor = Color.White;
+            quantityLabel.Font = new Font("Ubuntu", 12);
+            this.Controls.Add(quantityLabel);
+
+            Label priceLabel = new Label();
+            priceLabel.Text = "Preço";
+            priceLabel.Location = new Point(354, priceTextBox.Top - spacing);
+            priceLabel.ForeColor = Color.White;
+            priceLabel.Font = new Font("Ubuntu", 12);
+            this.Controls.Add(priceLabel);
         }
 
+        #endregion
+
+        #region Logo
         private void InitLogo()
         {
             this.Icon = new Icon(@"Resources\icon.ico");
@@ -110,9 +177,15 @@ namespace DiverseMarket.UI.Pages.Company
 
             this.Controls.Add(logo);
         }
+        #endregion
 
+        #region Buttons
         private void InitButtons()
         {
+
+            int spacing = 50;
+
+            #region HomePage Button
             this.homepageButton = new System.Windows.Forms.Button();
             this.homepageButton.Location = new Point(37, 67);
             this.homepageButton.Size = new Size(79, 71);
@@ -129,8 +202,10 @@ namespace DiverseMarket.UI.Pages.Company
 
             this.Controls.Add(homepageButton);
 
-            this.editButton = new RoundedButton("Editar", 150, 57, Colors.SecondaryButton, 32);
-            this.editButton.Location = new System.Drawing.Point(475, 552);
+            #endregion
+
+            this.editButton = new RoundedButton("Editar", 150, 40, Colors.CallToActionButton, 32);
+            this.editButton.Location = new System.Drawing.Point(475, priceTextBox.Bottom + spacing);
             this.editButton.Cursor = Cursors.Hand;
             this.editButton.Click += new EventHandler((object sender, EventArgs e) =>
             {
@@ -139,13 +214,14 @@ namespace DiverseMarket.UI.Pages.Company
 
             this.Controls.Add(editButton);
 
-            this.deleteButton = new RoundedButton("Excluir", 150, 57, Colors.SecondaryButton, 32);
-            this.deleteButton.Location = new System.Drawing.Point(655, 552);
+            this.deleteButton = new RoundedButton("Excluir", 150, 40, Colors.CallToActionButton, 32);
+            this.deleteButton.Location = new System.Drawing.Point(655, priceTextBox.Bottom + spacing);
             this.deleteButton.MouseEnter += new EventHandler((object sender, EventArgs e) =>
             {
                 this.deleteButton.Cursor = Cursors.Hand;
             });
 
+            #region Return Button
             this.Controls.Add(deleteButton);
 
             this.returnButton = new RoundedButton("Voltar", 150, 57, Colors.SecondaryButton, 32);
@@ -162,21 +238,27 @@ namespace DiverseMarket.UI.Pages.Company
 
             this.Controls.Add(returnButton);
 
+            #endregion
         }
 
+        #endregion
+
+        #region Clicks
         private void editButton_Click(object sender, EventArgs e)
         {
             try
             {
-                Console.WriteLine("Edit button clicked."); // Add this line for debugging
-
-                if (CheckFields())
+                if (AreFieldsValid())
                 {
-                    Console.WriteLine("CheckFields returned true."); // Add this line for debugging
-
                     var offer = _completeProductOffer;
                     var newName = this.nameTextBox.TextBox.Text;
-                    var newPrice = decimal.Parse(this.priceTextBox.TextBox.Text);
+
+                    string cleanedPrice = new string(this.priceTextBox.TextBox.Text
+                     .Where(c => char.IsDigit(c) || c == '.' || c == ',')
+                     .ToArray())
+                     .Replace(',', '.');
+
+                    var newPrice = decimal.Parse(cleanedPrice);
                     var newQuantity = long.Parse(this.quantityTextBox.TextBox.Text);
                     var newDescription = this.descriptionTextBox.TextBox.Text;
 
@@ -187,14 +269,12 @@ namespace DiverseMarket.UI.Pages.Company
                         newPrice,
                         newQuantity,
                         newName,
-                        offer.Category, // Assuming category is not being edited
+                        offer.Category, 
                         newDescription
                     );
 
                     bool wasUpdateSuccessful = ProductService.UpdateProductOfferByCompleteInfoDTO(newProductOffer);
-                    //preço e quantidade
 
-                    //nome e descrição precisam ser na Product table
                     if (wasUpdateSuccessful)
                     {
                          MessageBox.Show("Produto atualizado com sucesso!", "Sucesso", MessageBoxButtons.OK, MessageBoxIcon.Information);
@@ -206,7 +286,7 @@ namespace DiverseMarket.UI.Pages.Company
                 }
                 else
                 {
-                    Console.WriteLine("CheckFields returned false."); // Add this line for debugging
+                    Backend.MyLogger.Log.Error("CheckFields retornou falso.");
                 }
             }
             catch (Exception ex)
@@ -214,10 +294,14 @@ namespace DiverseMarket.UI.Pages.Company
                 MessageBox.Show($"Erro: {ex.Message}");
             }
         }
-        private bool CheckFields()
+        #endregion
+
+        #region Validations
+        private bool AreFieldsValid()
         {
             List<string> wrongFields = new List<string>();
 
+            #region Other Checks to Implement
             //string name = this.nameTextBox.TextBox.Text;
 
             //if (!ValidationUtils.IsInputAValidName(name, _completeProductOffer.Name, true))
@@ -232,15 +316,16 @@ namespace DiverseMarket.UI.Pages.Company
 
             //if (!ValidationUtils.IsInputAValidName(description, _completeProductOffer.Category, false))
             //    wrongFields.Add("category");
+            #endregion
 
             string quantity = this.quantityTextBox.TextBox.Text;
 
             if (!ValidationUtils.IsInputAValidLong(quantity, _completeProductOffer.Quantity, false))
                 wrongFields.Add("quantity");
 
-            string price = this.priceTextBox.TextBox.Text;
+            string priceInput = this.priceTextBox.TextBox.Text;
 
-            if (!ValidationUtils.IsInputAValidDecimal(price, _completeProductOffer.Price, false))
+            if (!ValidationUtils.IsInputAValidDecimal(priceInput, _completeProductOffer.Price, false))
                 wrongFields.Add("price");
 
             bool validInputs = wrongFields.Count == 0;
@@ -269,10 +354,14 @@ namespace DiverseMarket.UI.Pages.Company
 
             MessageBox.Show(message, "Atenção");
         }
+
+        #endregion
+
+        #region Form Closed
         private void _FormClosed(object sender, FormClosedEventArgs e)
         {
             Application.Exit();
         }
-
+        #endregion
     }
 }

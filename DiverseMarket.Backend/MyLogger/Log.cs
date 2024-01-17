@@ -1,7 +1,7 @@
 ﻿
 namespace DiverseMarket.Backend.MyLogger
 {
-    internal class Log
+    public class Log
     {
         public static void Error(string log)
         {

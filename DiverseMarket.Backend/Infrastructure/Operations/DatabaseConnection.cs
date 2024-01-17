@@ -18,17 +18,6 @@ namespace DiverseMarket.Backend.Infrastructure.Operations
             try
             {
                 _connection = new SQLiteConnection(_connectionString);
-
-                if (!File.Exists($"{_databaseName}.db"))
-                {
-                    MyLogger.Log.Error("Criando um novo arquivo de banco.\n");
-                    CreateDB();
-                }
-                else
-                {
-                    MyLogger.Log.Error("Arquivo de banco de dados já existe.\n");
-                }
-
                 _connection.Open();
 
                 return true;
@@ -41,18 +30,18 @@ namespace DiverseMarket.Backend.Infrastructure.Operations
         }
 
         internal static bool Close()
-        {
-            try
-            {
-                _connection.Close();
-                return true;
-            }
-            catch (SQLiteException e)
-            {
-                MyLogger.Log.Error($"Erro ao fechar a conexão com o banco de dados: {e.Message}");
-                return false;
-            }
-        }
+{
+    try
+    {
+        _connection.Close();
+        return true;
+    }
+    catch (SQLiteException e)
+    {
+        MyLogger.Log.Error($"Erro ao fechar a conexão com o banco de dados: {e.Message}");
+        return false;
+    }
+}
 
         #endregion
 
@@ -88,8 +77,16 @@ namespace DiverseMarket.Backend.Infrastructure.Operations
         {
             try
             {
-                SQLiteConnection.CreateFile($"{_databaseName}.db");
-                CreateTables();
+                if (!File.Exists($"{_databaseName}.db"))
+                {
+                    MyLogger.Log.Error("Criando um novo arquivo de banco.");
+                    SQLiteConnection.CreateFile($"{_databaseName}.db");
+                    CreateTables();
+                }
+                else
+                {
+                    MyLogger.Log.Error("Arquivo de banco de dados já existe.");
+                }
             }
             catch (Exception ex)
             {

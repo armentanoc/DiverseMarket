@@ -10,18 +10,11 @@ namespace DiverseMarket.Backend
         {
             try
             {
-                if (DatabaseConnection.Open())
-                {
-                    DatabaseConnection.CreateTables();
-                }
-                else
-                {
-                    Console.WriteLine("Failed to open the database connection.");
-                }
+                DatabaseConnection.CreateDB();
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"An error occurred: {ex.Message}");
+                MyLogger.Log.Error($"An error occurred: {ex.Message}");
             }
         }
     }

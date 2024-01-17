@@ -1,7 +1,6 @@
 ﻿
 using DiverseMarket.Backend.DTOs;
 using DiverseMarket.Backend.Services;
-using DiverseMarket.UI.Authentication;
 using DiverseMarket.UI.Components;
 using DiverseMarket.UI.Styles;
 
@@ -17,6 +16,7 @@ namespace DiverseMarket.UI.Pages.Company
         private Panel productsPanel;
         private SearchBar searchBar;
 
+        #region Dispose
         protected override void Dispose(bool disposing)
         {
             if (disposing && (components != null))
@@ -25,6 +25,8 @@ namespace DiverseMarket.UI.Pages.Company
             }
             base.Dispose(disposing);
         }
+        #endregion
+
 
         private void InitializeComponent(long userId)
         {
@@ -45,6 +47,8 @@ namespace DiverseMarket.UI.Pages.Company
             InitButtons();
             InitProducts();
         }
+
+        #region Search Bar
         private void InitSearchBar()
         {
             searchBar = new SearchBar();
@@ -55,6 +59,11 @@ namespace DiverseMarket.UI.Pages.Company
             this.Controls.Add(searchBar);
         }
         private void searchButton_Click(object sender, EventArgs e)
+        {
+            SearchBarWorks();
+        }
+
+        private void SearchBarWorks()
         {
             if (this.searchBar.Text() != "Pesquisar")
             {
@@ -74,6 +83,7 @@ namespace DiverseMarket.UI.Pages.Company
             else
                 ReloadProducts(this.productOfferCards);
         }
+
         private void ReloadProducts(List<ProductOfferCard> products)
         {
             ClearProducts();
@@ -109,6 +119,10 @@ namespace DiverseMarket.UI.Pages.Company
             }
 
         }
+
+        #endregion
+
+        #region Products
         private void InitProducts()
         {
             this.productsPanel = new Panel();
@@ -118,11 +132,12 @@ namespace DiverseMarket.UI.Pages.Company
             this.productsPanel.AutoScroll = true;
             this.Controls.Add(productsPanel);
 
-            List<ProductOfferBasicInfoDTO> productOfferBasicInfoDTOs = 
-                ProductService.GetAllProductOffersByCompanyUserId(_userId);
-
-            List<ProductOfferCompleteInfoDTO> productOfferCompleteInfoDTOs =
-            ProductService.GetAllProductOfferInfo(productOfferBasicInfoDTOs);
+            var productOfferCompleteInfoDTOs =
+            ProductService.GetAllProductOfferInfo(_userId);
+            CreateOfferCards(productOfferCompleteInfoDTOs);
+        }
+        private void CreateOfferCards(List<ProductOfferCompleteInfoDTO> productOfferCompleteInfoDTOs)
+        {
 
             int x = 8;
             int y = 17;
@@ -147,10 +162,9 @@ namespace DiverseMarket.UI.Pages.Company
                 });
 
                 this.productOfferCards.Add(productOfferCard);
-
                 this.productsPanel.Controls.Add(productOfferCard);
 
-                if (x == 713)
+                if (x is 713)
                 {
                     x = 8;
                     y += 150;
@@ -159,7 +173,11 @@ namespace DiverseMarket.UI.Pages.Company
                     x += 235;
             }
         }
+        //maybe revisit here with more offer cards
 
+        #endregion
+
+        #region Labels
         private void InitLabel()
         {
             Label pageTitle = new Label();
@@ -172,6 +190,9 @@ namespace DiverseMarket.UI.Pages.Company
             this.Controls.Add(pageTitle);
         }
 
+        #endregion
+
+        #region Buttons
         private void InitButtons()
         {
             this.homepageButton = new System.Windows.Forms.Button();
@@ -205,6 +226,9 @@ namespace DiverseMarket.UI.Pages.Company
             this.Controls.Add(returnButton);
         }
 
+        #endregion
+
+        #region Logo
         private void InitLogo()
         {
             this.Icon = new Icon(@"Resources\icon.ico");
@@ -216,9 +240,14 @@ namespace DiverseMarket.UI.Pages.Company
 
             this.Controls.Add(logo);
         }
+
+        #endregion
+
+        #region Form Closed
         private void HomePage_FormClosed(object sender, FormClosedEventArgs e)
         {
             Application.Exit();
         }
+        #endregion
     }
 }
