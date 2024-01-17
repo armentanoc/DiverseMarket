@@ -1,12 +1,6 @@
-﻿using DiverseMarket.Backend.DTOs;
-using DiverseMarket.Backend.DTOs.Moderator;
+﻿using DiverseMarket.Backend.DTOs.Moderator;
 using DiverseMarket.Backend.Infrastructure.Repositories;
 using DiverseMarket.Backend.Model.Companies;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace DiverseMarket.Backend.Services.Moderator
 {
@@ -26,6 +20,11 @@ namespace DiverseMarket.Backend.Services.Moderator
             }
 
             return companiesBasicInfoDTOs;
+        }
+
+        public static CompanyBasicInfoDTO GetCompanyDetailsById(long companyId)
+        {
+            return CompanyDB.GetCompanyById(companyId);
         }
     }
 }

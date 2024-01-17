@@ -1,5 +1,5 @@
-﻿using DiverseMarket.Backend.Infrastructure.Operations;
-using DiverseMarket.Backend.Infrastructure.Util;
+﻿using DiverseMarket.Backend.DTOs.Moderator;
+using DiverseMarket.Backend.Infrastructure.Operations;
 using DiverseMarket.Backend.Model.Companies;
 using System.Data.SQLite;
 
@@ -34,6 +34,39 @@ namespace DiverseMarket.Backend.Infrastructure.Repositories
             }
             finally { Close(); }
         }
+
+        public static CompanyBasicInfoDTO GetCompanyById(long companyId)
+        {
+            try
+            {
+                Open();
+                string query = "SELECT * FROM Company WHERE id = @companyId;";
+                _command = new SQLiteCommand(query, _connection);
+                _command.Parameters.AddWithValue("@companyId", companyId);
+
+                var reader = _command.ExecuteReader();
+
+                if (reader.Read())
+                {
+                    return new CompanyBasicInfoDTO(
+                        (long)reader["id"],
+                        reader["cnpj"].ToString(),
+                        reader["corporate_name"].ToString(),
+                        reader["trade_name"].ToString());
+                }
+                else
+                {
+                    return null;
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("An error occured: " + ex.Message);
+                return null;
+            }
+            finally { Close(); }
+        }
+
         internal static string InitializeTable()
         {
             return @"

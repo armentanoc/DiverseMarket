@@ -1,5 +1,11 @@
-﻿using DiverseMarket.UI.Components;
+﻿using DiverseMarket.Backend.DTOs;
+using DiverseMarket.Backend.DTOs.Moderator;
+using DiverseMarket.Backend.Services;
+using DiverseMarket.Backend.Services.Moderator;
+using DiverseMarket.UI.Components;
+using DiverseMarket.UI.Pages.Customer;
 using DiverseMarket.UI.Styles;
+using static System.Windows.Forms.VisualStyles.VisualStyleElement.StartPanel;
 
 namespace DiverseMarket.UI.Pages.Moderator.Company
 {
@@ -7,6 +13,8 @@ namespace DiverseMarket.UI.Pages.Moderator.Company
     {
         private System.ComponentModel.IContainer components = null;
 
+        private long companyId;
+        private CompanyBasicInfoDTO companyDetails;
         private Label emailWarningLabel;
         private Label cepWarningLabel;
         private Label cnpjWarningLabel;
@@ -28,6 +36,8 @@ namespace DiverseMarket.UI.Pages.Moderator.Company
 
         private void InitializeComponent(long id, string cnpj, string corporateName)
         {
+            this.companyId = id;
+            this.companyDetails = CompanyService.GetCompanyDetailsById(id);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(1280, 832);
             StartPosition = FormStartPosition.CenterScreen;
@@ -45,9 +55,10 @@ namespace DiverseMarket.UI.Pages.Moderator.Company
             InitButtons();
         }
 
+
         private void InitTextBoxes()
         {
-            nameTextBox = new RoundedTextBox("Razão social*", 572, 60);
+            nameTextBox = new RoundedTextBox(this.companyDetails.CorporateName, 572, 60);
             nameTextBox.Location = new Point(354, 166);
             nameTextBox.TextBox.Font = new Font("Ubuntu", 10);
             this.Controls.Add(nameTextBox);
@@ -57,7 +68,7 @@ namespace DiverseMarket.UI.Pages.Moderator.Company
             emailTextBox.TextBox.Font = new Font("Ubuntu", 10);
             this.Controls.Add(emailTextBox);
 
-            tradeNameTextBox = new RoundedTextBox("Nome fantasia*", 342, 60);
+            tradeNameTextBox = new RoundedTextBox(this.companyDetails?.TradeName ?? "Nome fantasia*", 342, 60);
             tradeNameTextBox.Location = new Point(354, 342);
             tradeNameTextBox.TextBox.Font = new Font("Ubuntu", 10);
             this.Controls.Add(tradeNameTextBox);
@@ -67,7 +78,7 @@ namespace DiverseMarket.UI.Pages.Moderator.Company
             telephoneTextBox.TextBox.Font = new Font("Ubuntu", 10);
             this.Controls.Add(telephoneTextBox);
 
-            cnpjTextBox = new RoundedTextBox("CNPJ*", 342, 60);
+            cnpjTextBox = new RoundedTextBox(this.companyDetails?.CNPJ ?? "CNPJ*", 342, 60);
             cnpjTextBox.Location = new Point(354, 430);
             cnpjTextBox.TextBox.Font = new Font("Ubuntu", 10);
             this.Controls.Add(cnpjTextBox);
