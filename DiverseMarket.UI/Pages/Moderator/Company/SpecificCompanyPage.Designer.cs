@@ -58,12 +58,12 @@ namespace DiverseMarket.UI.Pages.Moderator.Company
 
         private void InitTextBoxes()
         {
-            nameTextBox = new RoundedTextBox(this.companyDetails.CorporateName, 572, 60);
+            nameTextBox = new RoundedTextBox(this.companyDetails?.CorporateName ?? "Razão social*", 572, 60);
             nameTextBox.Location = new Point(354, 166);
             nameTextBox.TextBox.Font = new Font("Ubuntu", 10);
             this.Controls.Add(nameTextBox);
 
-            emailTextBox = new RoundedTextBox("E-mail*", 572, 60);
+            emailTextBox = new RoundedTextBox(this.companyDetails?.User.Email ?? "E-mail*", 572, 60);
             emailTextBox.Location = new Point(354, 254);
             emailTextBox.TextBox.Font = new Font("Ubuntu", 10);
             this.Controls.Add(emailTextBox);
@@ -73,7 +73,7 @@ namespace DiverseMarket.UI.Pages.Moderator.Company
             tradeNameTextBox.TextBox.Font = new Font("Ubuntu", 10);
             this.Controls.Add(tradeNameTextBox);
 
-            telephoneTextBox = new RoundedTextBox("Telefone", 205, 60);
+            telephoneTextBox = new RoundedTextBox(this.companyDetails?.User.Telephone ??  "Telefone", 205, 60);
             telephoneTextBox.Location = new Point(721, 342);
             telephoneTextBox.TextBox.Font = new Font("Ubuntu", 10);
             this.Controls.Add(telephoneTextBox);

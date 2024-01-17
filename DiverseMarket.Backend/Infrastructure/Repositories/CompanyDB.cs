@@ -40,7 +40,15 @@ namespace DiverseMarket.Backend.Infrastructure.Repositories
             try
             {
                 Open();
-                string query = "SELECT * FROM Company WHERE id = @companyId;";
+                string query = @"
+                                SELECT 
+                                    c.id AS CompanyId, c.cnpj, c.corporate_name, c.trade_name,
+                                    u.id AS UserId, u.name, u.username, u.password, u.email, u.telephone, u.role,
+                                    a.id AS AddressId, a.street, a.number, a.complement, a.zipcode, a.neighborhood, a.city
+                                FROM Company c
+                                LEFT JOIN User u ON c.User_id = u.id
+                                LEFT JOIN Address a ON u.id = a.User_id
+                                WHERE c.id = @companyId;";
                 _command = new SQLiteCommand(query, _connection);
                 _command.Parameters.AddWithValue("@companyId", companyId);
 
@@ -49,10 +57,32 @@ namespace DiverseMarket.Backend.Infrastructure.Repositories
                 if (reader.Read())
                 {
                     return new CompanyBasicInfoDTO(
-                        (long)reader["id"],
+                        (long)reader["CompanyId"],
                         reader["cnpj"].ToString(),
                         reader["corporate_name"].ToString(),
-                        reader["trade_name"].ToString());
+                        reader["trade_name"].ToString(),
+                        new UserDTO(
+                            (long)reader["UserId"],
+                            reader["name"].ToString(),
+                            reader["username"].ToString(),
+                            reader["password"].ToString(),
+                            reader["email"].ToString(),
+                            reader["telephone"].ToString(),
+                            reader["role"].ToString()
+                        )
+                    // TODO: Descobrir o pq o AddresDTO não está funcionando
+                    //,
+                    //new AddressDTO(
+                    //    (long)reader["AddressId"],
+                    //    reader["zipcode"].ToString(),
+                    //    reader["street"].ToString(),
+                    //    reader["complement"].ToString(),
+                    //    reader["neighborhood"].ToString(),
+                    //    reader["city"].ToString(),
+                    //    reader["state"].ToString(),
+                    //    reader["number"].ToString()
+                    //)
+                    );
                 }
                 else
                 {
