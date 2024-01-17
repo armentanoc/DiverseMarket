@@ -294,7 +294,7 @@ namespace DiverseMarket.UI.Pages.Company
             {
                 if (MessageBoxUtils.ConfirmAction("Você tem certeza que deseja excluir essa oferta de produto?"))
                 {
-                    if (ProductService.DeleteRecord())
+                    if (ProductService.DeleteCompanyProductOfferByCompleteInfoDTO(_completeProductOffer))
                     {
                         MessageBoxUtils.ShowMessageBox("Oferta de produto excluída com sucesso.", MessageBoxIcon.Information);
                         this.Hide();
