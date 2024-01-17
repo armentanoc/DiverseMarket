@@ -7,7 +7,6 @@ namespace DiverseMarket.Backend.Infrastructure.Repositories
 {
     public class ProductDB : DatabaseConnection
     {
-
         internal static string InitializeTable()
         {
             return @"
@@ -25,12 +24,12 @@ namespace DiverseMarket.Backend.Infrastructure.Repositories
             try
             {
                 Open();
-                    string query = @"SELECT p.id, p.name, p.description, pc.name AS category_name
+                string query = @"SELECT p.id, p.name, p.description, pc.name AS category_name
                                          FROM Product p
                                          JOIN ProductCategory pc ON p.ProductCategory_id = pc.id;";
 
-                    using (var command = new SQLiteCommand(query, _connection))
-                    {
+                using (var command = new SQLiteCommand(query, _connection))
+                {
                     using (var reader = command.ExecuteReader())
                     {
                         while (reader.Read())
@@ -52,7 +51,6 @@ namespace DiverseMarket.Backend.Infrastructure.Repositories
                 Close();
             }
         }
-
         public static bool InsertProduct(Product product)
         {
             try
@@ -82,6 +80,29 @@ namespace DiverseMarket.Backend.Infrastructure.Repositories
             {
                 Close();
             }
+        }
+
+        public static void RegisterDefaultProducts()
+        {
+            try
+            {
+                Product product;
+
+                product = new Product("Camisa Nike", "Preta", 1);
+                InsertProduct(product);
+                product = new Product("Tênis Olympikus", "Preto", 2);
+                InsertProduct(product);
+                product = new Product("Macbook Air", "Prata", 3);
+                InsertProduct(product);
+                product = new Product("Clean Code", "Robert C. Martin", 4);
+                InsertProduct(product);
+                product = new Product("Colar Lua", "Prata 925", 5);
+                InsertProduct(product);
+            }
+            catch (Exception ex)
+            {
+                new LogMessage(ex);
+            }   
         }
     }
 }

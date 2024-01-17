@@ -136,7 +136,7 @@ namespace DiverseMarket.Backend.Infrastructure.Operations
         private static void InsertDefaultCompanyRelatedData()
         {
             ProductCategoryDB.RegisterDefaultProductCategories();
-            //ProductDB.RegisterDefaultProducts;
+            ProductDB.RegisterDefaultProducts();
             ProductOfferDB.RegisterDefaultProductOffer();
 
         }
