@@ -1,11 +1,7 @@
-﻿using DiverseMarket.Backend.Infrastructure.Operations;
+﻿using DiverseMarket.Backend.DTOs;
+using DiverseMarket.Backend.Infrastructure.Operations;
 using DiverseMarket.Backend.Model;
-using System;
-using System.Collections.Generic;
 using System.Data.SQLite;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace DiverseMarket.Backend.Infrastructure.Repositories
 {
@@ -21,20 +17,21 @@ namespace DiverseMarket.Backend.Infrastructure.Repositories
                         number VARCHAR(10) NOT NULL,
                         complement VARCHAR(45),
                         zipcode VARCHAR(45) NOT NULL,
+                        neighborhood VARCHAR(45) NOT NULL,
                         city VARCHAR(45) NOT NULL,
                         FOREIGN KEY (User_id) REFERENCES User(id) ON DELETE NO ACTION ON UPDATE NO ACTION
                     );";
         }
 
 
-        public static long RegisterAddress(long userId, string cep, string street, string? complement, string number, string city)
+        public static long RegisterAddress(long userId, string cep, string street, string number, string? complement, string neighborhood, string city)
         {
             long id = 0;
             try
             {
                 Open();
-                string query = @"INSERT INTO Address (User_id, street, number, complement, zipcode, city) 
-                         VALUES (@userId, @street, @number, @complement, @zipcode, @city);";
+                string query = @"INSERT INTO Address (User_id, street, number, complement, zipcode, neighborhood, city) 
+                         VALUES (@userId, @street, @number, @complement, @zipcode, @neighborhood, @city);";
                 _command = new SQLiteCommand(query, _connection);
 
                 _command.Parameters.AddWithValue("@userId", userId);
@@ -42,6 +39,7 @@ namespace DiverseMarket.Backend.Infrastructure.Repositories
                 _command.Parameters.AddWithValue("@number", number);
                 _command.Parameters.AddWithValue("@complement", (object)complement ?? DBNull.Value);
                 _command.Parameters.AddWithValue("@zipcode", cep);
+                _command.Parameters.AddWithValue("@neighborhood", neighborhood);
                 _command.Parameters.AddWithValue("@city", city);
                 _command.ExecuteNonQuery();
 
@@ -85,6 +83,42 @@ namespace DiverseMarket.Backend.Infrastructure.Repositories
             {
                 Console.WriteLine("An error occured: " + ex.Message);
                 return null;
+
+            }
+            finally { Close(); }
+        }
+
+        internal static bool UpdateAddressByUserId(long userId, AddressDTO address)
+        {
+            try
+            {
+                Open();
+                string query = @"UPDATE Address
+                        SET
+                            street = @street,
+                            number = @number,
+                            complement = @complement,
+                            zipcode = @zipcode,
+                            neighborhood = @neighborhood,
+                            city = @city
+                        WHERE User_id = @userId";
+                _command = new SQLiteCommand(query, _connection);
+
+                _command.Parameters.AddWithValue("@userId", userId);
+                _command.Parameters.AddWithValue("@street", address.Street);
+                _command.Parameters.AddWithValue("@number", address.Number);
+                _command.Parameters.AddWithValue("@zipcode", address.ZipCode);
+                _command.Parameters.AddWithValue("@city", address.City);
+                _command.Parameters.AddWithValue("@neighborhood", address.Neighborhood);
+                _command.Parameters.AddWithValue("@complement", (object)address.Complement ?? DBNull.Value);
+
+                return _command.ExecuteNonQuery() > 0;
+
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("An error occured: " + ex.Message);
+                return false;
 
             }
             finally { Close(); }

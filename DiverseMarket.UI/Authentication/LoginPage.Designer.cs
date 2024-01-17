@@ -151,8 +151,8 @@ namespace DiverseMarket.UI.Authentication
 
         private void PerformLogin()
         {
-            LoginResponseDTO response = AuthenticationService.Login(new LoginRequestDTO(this.usernameTextBox.TextBox.Text.ToLower(),
-                this.passwordTextBox.TextBox.Text));
+            LoginResponseDTO response = AuthenticationService.Login(new LoginRequestDTO(this.usernameTextBox.TextBox.Text.ToLower(), 
+            this.passwordTextBox.TextBox.Text));
 
             switch (response.UserRole)
             {

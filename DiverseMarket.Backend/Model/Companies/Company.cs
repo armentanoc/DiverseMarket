@@ -31,7 +31,7 @@ namespace DiverseMarket.Backend.Model.Companies
         public string TradeName { get; private set; }
         public int? LegalEntityTypeCode { get; private set; }
 
-        public Company(string username, string name, string email, string password, int phone, string cnpj, string corporateName, string tradeName, int? legalEntityTypeCode = null, RolesEnum role = RolesEnum.Company)
+        public Company(string cnpj, string corporateName, string tradeName, int? legalEntityTypeCode = null, RolesEnum role = RolesEnum.Company)
         {
             _cnpj = cnpj;
             CorporateName = corporateName;

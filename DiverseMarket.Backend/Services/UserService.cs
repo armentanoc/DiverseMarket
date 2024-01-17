@@ -23,7 +23,32 @@ namespace DiverseMarket.Backend.Services
             Address address = AddressDB.GetAddressByUserId(user.Id);
 
             return new CustomerDTO(user.Id, user.Name, user.Email, user.Username, user.Phone, cpf,
-                new AddressDTO(address.ZipCode, address.Street, address.Complement, address.City, address.Number));
+                new AddressDTO(address.ZipCode, address.Street, address.Complement, address.Neighborhood, address.City, address.Number));
+        }
+
+        public static bool UpdateUser(CustomerDTO updatedCustomer)
+        {
+            User savedUser = UserDB.GetUserById(updatedCustomer.Id);
+
+            if (UserDB.UpdateUser(
+                    updatedCustomer.Id,
+                    updatedCustomer.Email,
+                    updatedCustomer.Telephone))
+                {
+                    if(AddressDB.UpdateAddressByUserId(updatedCustomer.Id, updatedCustomer.Address))
+                    {
+                        return true;
+                    }
+                    else
+                    {
+                        UserDB.UpdateUser(savedUser.Id,
+                                savedUser.Email,
+                                savedUser.Phone);
+                        return false; //undoing changes
+                    }
+                }
+            return false;
+                
         }
     }
 }

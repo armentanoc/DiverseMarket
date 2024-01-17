@@ -24,12 +24,16 @@ namespace DiverseMarket.Backend.Services
 
         public static LoginResponseDTO RegisterCustomer(RegisterCustomerDTO registerCustomerDTO)
         {
-            if (UserDB.RegisterCustomer(registerCustomerDTO.FullName, registerCustomerDTO.Email, registerCustomerDTO.Username,
-                registerCustomerDTO.Telephone, registerCustomerDTO.CPF,
-            registerCustomerDTO.Address.ZipCode,
-                    registerCustomerDTO.Address.Street,
-                    registerCustomerDTO.Address.Complement,
-                    registerCustomerDTO.Address.Number, registerCustomerDTO.Address.City, registerCustomerDTO.Password))
+            if (UserDB.RegisterCustomer(
+                registerCustomerDTO.FullName, 
+                registerCustomerDTO.Email, 
+                registerCustomerDTO.Username,
+                registerCustomerDTO.Telephone, 
+                registerCustomerDTO.CPF,
+                registerCustomerDTO.Address.ZipCode,
+                registerCustomerDTO.Address.Street,
+                registerCustomerDTO.Address.Complement,
+                registerCustomerDTO.Address.Number, registerCustomerDTO.Address.Neighborhood, registerCustomerDTO.Address.City, registerCustomerDTO.Password))
             {
                 return Login(new LoginRequestDTO(registerCustomerDTO.Username, registerCustomerDTO.Password));
             }
