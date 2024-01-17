@@ -2,11 +2,13 @@
 using DiverseMarket.Backend.Infrastructure.Operations;
 using DiverseMarket.Backend.Model.Enums;
 using DiverseMarket.Backend.Model.Products;
+using System;
+using System.Collections.Generic;
 using System.Data.SQLite;
+using System.Linq;
 
 namespace DiverseMarket.Backend.Infrastructure.Repositories
 {
-
     public class ProductOfferDB : DatabaseConnection
     {
         public static string InitializeTable()
@@ -24,8 +26,7 @@ namespace DiverseMarket.Backend.Infrastructure.Repositories
             ";
         }
 
-
-        public static double GetLowestPriceByProductId(long producId)
+        public static double GetLowestPriceByProductId(long productId)
         {
             double price = 0;
             try
@@ -36,7 +37,7 @@ namespace DiverseMarket.Backend.Infrastructure.Repositories
                                 WHERE Product_id = @ProductId;";
                 _command = new SQLiteCommand(query, _connection);
 
-                _command.Parameters.AddWithValue("@ProductId", producId);
+                _command.Parameters.AddWithValue("@ProductId", productId);
 
                 var reader = _command.ExecuteReader();
 
@@ -44,16 +45,18 @@ namespace DiverseMarket.Backend.Infrastructure.Repositories
                 {
                     price = (double)reader[0];
                 }
-
+                reader.Close();
                 return price;
             }
             catch (Exception ex)
             {
-                Console.WriteLine("An error occured: " + ex.Message);
+                MyLogger.Log.Error("An error occurred in GetLowestPriceByProductId: " + ex.Message + ex.StackTrace);
                 return price;
-
             }
-            finally { Close(); }
+            finally
+            {
+                Close();
+            }
         }
 
         internal static List<ProductOffer> GetAllCompanyProductOffers(long userId)
@@ -62,7 +65,6 @@ namespace DiverseMarket.Backend.Infrastructure.Repositories
             try
             {
                 Open();
-
                 string query = @"SELECT *
                                 FROM ProductOffer
                                 WHERE Company_id = @CompanyId;";
@@ -77,66 +79,34 @@ namespace DiverseMarket.Backend.Infrastructure.Repositories
                 {
                     ProductOffer productOffer = new ProductOffer
                     (
-                        id :  Convert.ToInt32(reader["id"]),
-                        sellerId : Convert.ToInt32(reader["Company_id"]),
+                        id: Convert.ToInt32(reader["id"]),
+                        sellerId: Convert.ToInt32(reader["Company_id"]),
                         productId: Convert.ToInt32(reader["Product_id"]),
-                        price : Convert.ToDecimal(reader["price"]),
-                        quantity : Convert.ToInt32(reader["quantity"])
+                        price: Convert.ToDecimal(reader["price"]),
+                        quantity: Convert.ToInt32(reader["quantity"])
                     );
-
                     productOffers.Add(productOffer);
                 }
+
+                reader.Close();
                 return productOffers;
             }
             catch (Exception ex)
             {
-                //Console.WriteLine("An error occured: " + ex.Message);
-                LogError("GetAllCompanyProductOffers", ex);
+                MyLogger.Log.Error("An error occurred in GetAllCompanyProductOffers: " + ex.Message + ex.StackTrace);
                 return productOffers;
             }
-            finally 
-            { 
-                Close(); 
+            finally
+            {
+                Close();
             }
         }
-        private static void LogError(string methodName, Exception ex)
-        {
-            string logFilePath = "error_log.txt";
-            try
-            {
-                using (StreamWriter sw = new StreamWriter(logFilePath, true))
-                {
-                    sw.WriteLine($"{DateTime.Now}: Error in method {methodName}: {ex.Message}");
-                }
-            }
-            catch (IOException)
-            {
-                // Handle exception, e.g., log to console
-                Console.WriteLine($"Failed to write to log file: {ex.Message}");
-            }
-        }
-        private static void LogError(string log)
-        {
-            string logFilePath = "error_log.txt";
-            try
-            {
-                using (StreamWriter sw = new StreamWriter(logFilePath, true))
-                {
-                    sw.WriteLine($"{DateTime.Now}: {log}");
-                }
-            }
-            catch (IOException ex)
-            {
-                // Handle exception, e.g., log to console
-                Console.WriteLine($"Failed to write to log file: {ex.Message}");
-            }
-        }
+
         internal static bool RegisterDefaultProductOffer()
         {
             try
             {
                 Open();
-
                 string query = @"INSERT INTO ProductOffer(Company_id, Product_id, price, quantity)
                 VALUES(2, 1, 99, 5);";
 
@@ -148,11 +118,13 @@ namespace DiverseMarket.Backend.Infrastructure.Repositories
             }
             catch (Exception ex)
             {
-                Console.WriteLine("An error occured: " + ex.Message);
+                MyLogger.Log.Error("An error occurred in RegisterDefaultProductOffer: " + ex.Message + ex.StackTrace);
                 return false;
-
             }
-            finally { Close(); }
+            finally
+            {
+                Close();
+            }
         }
 
         internal static List<ProductOfferCompleteInfoDTO> GetAllProductOfferInformation(List<ProductOfferBasicInfoDTO> productOfferBasicInfoDTOs)
@@ -161,49 +133,30 @@ namespace DiverseMarket.Backend.Infrastructure.Repositories
                 .Select(productOffer => productOffer.ProductId)
                 .ToList();
 
-            string formattedIdList =
-                string
-                .Join(", ", productOfferBasicInfoDTOs
-                .Select(productOffer => productOffer.ProductId));
+            string formattedIdList = string.Join(", ", productOfferBasicInfoDTOs.Select(productOffer => productOffer.ProductId));
 
             List<ProductOfferCompleteInfoDTO> productOffers = new();
             try
             {
-                
                 Open();
-
                 string query = @"SELECT *
                                 FROM Product
                                 WHERE id IN (@formattedIdList);";
 
                 _command = new SQLiteCommand(query, _connection);
 
-                _command.Parameters.AddWithValue
-                    (
-                    "@formattedIdList",
-                    formattedIdList
-                    );
-
-                LogError(formattedIdList);
+                _command.Parameters.AddWithValue("@formattedIdList", formattedIdList);
 
                 var reader = _command.ExecuteReader();
 
                 while (reader.Read())
-                    {
-
+                {
                     long thisOfferProductId = Convert.ToInt64(reader["id"]);
-
-                    LogError($"This offer product id: {thisOfferProductId}");
-
-                    ProductOfferBasicInfoDTO thisOfferBasicInfo = 
-                        productOfferBasicInfoDTOs.FirstOrDefault(p => p.ProductId == thisOfferProductId);
-
-                    LogError($"this product price {thisOfferBasicInfo.Price}");
+                    ProductOfferBasicInfoDTO thisOfferBasicInfo = productOfferBasicInfoDTOs.FirstOrDefault(p => p.ProductId == thisOfferProductId);
 
                     if (thisOfferBasicInfo != null)
                     {
-
-                        ProductOfferCompleteInfoDTO productOfferCompleteDTO = new
+                        ProductOfferCompleteInfoDTO productOfferCompleteDTO = new ProductOfferCompleteInfoDTO
                         (
                             id: thisOfferBasicInfo.Id,
                             companyId: thisOfferBasicInfo.CompanyId,
@@ -212,22 +165,51 @@ namespace DiverseMarket.Backend.Infrastructure.Repositories
                             quantity: thisOfferBasicInfo.Quantity,
                             name: reader["name"].ToString(),
                             description: reader["description"].ToString(),
-                            category: 
-                                Enum.Parse<ProductCategory>(reader["ProductCategory_id"]
-                                .ToString())
-                                .ToString()
+                            category: Enum.Parse<ProductCategory>(reader["ProductCategory_id"].ToString()).ToString()
                         );
+
                         productOffers.Add(productOfferCompleteDTO);
                     }
                 }
 
+                reader.Close();
                 return productOffers;
             }
             catch (Exception ex)
             {
-                //Console.WriteLine("An error occured: " + ex.Message);
-                LogError($"GetAllProductOfferInformation {ex.Message}");
+                MyLogger.Log.Error("GetAllProductOfferInformation: " + ex.Message + ex.StackTrace);
                 return productOffers;
+            }
+            finally
+            {
+                Close();
+            }
+        }
+
+        internal static bool UpdateProductOffer(ProductOfferCompleteInfoDTO newProductOffer)
+        {
+            try
+            {
+                Open();
+                string query = @"UPDATE ProductOffer
+                        SET price = @Price,
+                            quantity = @Quantity
+                        WHERE id = @Id;";
+
+                _command = new SQLiteCommand(query, _connection);
+
+                _command.Parameters.AddWithValue("@Price", newProductOffer.Price);
+                _command.Parameters.AddWithValue("@Quantity", newProductOffer.Quantity);
+                _command.Parameters.AddWithValue("@Id", newProductOffer.Id);
+
+                bool updated = _command.ExecuteNonQuery() > 0;
+
+                return updated;
+            }
+            catch (Exception ex)
+            {
+                MyLogger.Log.Error("An error occurred in UpdateProductOffer: " + ex.Message + ex.StackTrace);
+                return false;
             }
             finally
             {

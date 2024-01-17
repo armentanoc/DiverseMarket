@@ -24,9 +24,15 @@ namespace DiverseMarket.Backend.Services
             return productBasicInfoDTOs;
         }
 
-        public static List<ProductOfferCompleteInfoDTO> GetAllProductOfferInfo(List<ProductOfferBasicInfoDTO> productOfferBasicInfoDTOs)
+        public static List<ProductOfferCompleteInfoDTO> GetAllProductOfferInfo(long userId)
         {
-            return ProductOfferDB.GetAllProductOfferInformation(productOfferBasicInfoDTOs);
+
+            List<ProductOfferBasicInfoDTO> productOfferData =
+                GetAllProductOffersByCompanyUserId(userId);
+            //searchs ProductOffer table
+
+            return ProductOfferDB.GetAllProductOfferInformation(productOfferData);
+            //returns data with both ProductOffer and Product tables
         }
 
         public static List<ProductOfferBasicInfoDTO> GetAllProductOffersByCompanyUserId(long userId)
@@ -49,6 +55,11 @@ namespace DiverseMarket.Backend.Services
             }
 
             return productOfferBasicInfoDTOs;
+        }
+
+        public static bool UpdateProductOfferByCompleteInfoDTO(ProductOfferCompleteInfoDTO newProductOffer)
+        {
+            return ProductOfferDB.UpdateProductOffer(newProductOffer);
         }
     }
 }
