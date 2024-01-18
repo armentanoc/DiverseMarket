@@ -33,6 +33,7 @@ namespace DiverseMarket.UI.Pages.Company
         private RoundedTextBox categoryTextBox;
         private RoundedTextBox quantityTextBox;
         private RoundedTextBox priceTextBox;
+        private ComboBox categoryComboBox = new ComboBox();
 
         #endregion
 
@@ -92,6 +93,14 @@ namespace DiverseMarket.UI.Pages.Company
             descriptionTextBox.Location = new Point(354, nameTextBox.Bottom + spacing);
             descriptionTextBox.TextBox.Font = new Font("Ubuntu", 10);
             this.Controls.Add(descriptionTextBox);
+
+           /*categoryComboBox.Font = new Font("Ubuntu", 10);
+            categoryComboBox.Size = new Size(572, 40);
+            categoryComboBox.Location = new Point(354, descriptionTextBox.Bottom + spacing);
+            List<string> itemsFromService = ProductService.GetAllProductCategories();
+            categoryComboBox.Items.AddRange(itemsFromService.ToArray());
+            this.Controls.Add(categoryComboBox);*/
+          
 
             categoryTextBox = new RoundedTextBox(string.Empty, 572, 40);
             categoryTextBox.Location = new Point(354, descriptionTextBox.Bottom + spacing);
@@ -253,6 +262,8 @@ namespace DiverseMarket.UI.Pages.Company
                     var newPrice = decimal.Parse(cleanedPrice);
                     var newQuantity = long.Parse(this.quantityTextBox.TextBox.Text);
                     var newCategory = "teste";
+
+                    //var newCategory = this.categoryComboBox.SelectedItem?.ToString();
 
                     //var newProductOffer = new ProductOfferCompleteInfoDTO(
                     //    this._userId,
