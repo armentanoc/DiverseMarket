@@ -20,10 +20,16 @@ namespace DiverseMarket.Backend.Services
 
             foreach(Selling order in allOrdersByUserId)
             {
-                allOrdersBasicInfo.Add(new OrderBasicInfoDTO(order.Id, order.Date, order.Status, order.TotalAmount));
+                allOrdersBasicInfo.Add(new OrderBasicInfoDTO(order.Id, order.Date, order.Status, (decimal)order.TotalAmount, customerId));
             }
             return allOrdersBasicInfo;
         }
+
+        public static List<OrderBasicInfoDTO> GetAllOrdersByCompanyUserId(long userId)
+        {
+            return SellingDB.GetAllOrdersByCompanyUserId(userId);
+        }
+
 
         public static DateTime GetOrderDateById(long orderId)
         {
