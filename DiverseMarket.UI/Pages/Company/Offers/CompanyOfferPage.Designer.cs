@@ -249,7 +249,7 @@ namespace DiverseMarket.UI.Pages.Company
             this.Icon = new Icon(@"Resources\icon.ico");
 
             Logo logo = new Logo();
-            logo.Location = new Point(640, 77);
+            logo.Location = new Point(820, 77);
             logo.Width = 192;
             logo.Height = 22;
 
