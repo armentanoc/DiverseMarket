@@ -87,16 +87,22 @@ namespace DiverseMarket.UI.Pages.Company
             nameTextBox = new RoundedTextBox(_basicProduct.Name, 572, 40);
             nameTextBox.Location = new Point(354, y);
             nameTextBox.TextBox.Font = new Font("Ubuntu", 10);
+            nameTextBox.TextBox.Enabled = false;
+            nameTextBox.TextBox.ReadOnly = true;
             this.Controls.Add(nameTextBox);
 
             descriptionTextBox = new RoundedTextBox(_basicProduct.Description, 572, 40);
             descriptionTextBox.Location = new Point(354, nameTextBox.Bottom + spacing);
             descriptionTextBox.TextBox.Font = new Font("Ubuntu", 10);
+            descriptionTextBox.TextBox.Enabled = false;
+            descriptionTextBox.TextBox.ReadOnly = true;
             this.Controls.Add(descriptionTextBox);
 
             categoryTextBox = new RoundedTextBox(_basicProduct.Category, 572, 40);
             categoryTextBox.Location = new Point(354, descriptionTextBox.Bottom + spacing);
             categoryTextBox.TextBox.Font = new Font("Ubuntu", 10);
+            categoryTextBox.TextBox.Enabled = false;
+            categoryTextBox.TextBox.ReadOnly = true;
             this.Controls.Add(categoryTextBox);
 
             quantityTextBox = new RoundedTextBox(string.Empty.ToString(), 572, 40);
