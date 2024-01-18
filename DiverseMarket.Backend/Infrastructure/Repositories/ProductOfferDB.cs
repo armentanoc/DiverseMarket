@@ -1,5 +1,6 @@
 ﻿using DiverseMarket.Backend.Infrastructure.Operations;
 using DiverseMarket.Backend.Model.Products;
+using DiverseMarket.Logger;
 using System;
 using System.Collections.Generic;
 using System.Data.SQLite;
@@ -27,7 +28,30 @@ namespace DiverseMarket.Backend.Infrastructure.Repositories
             ";
         }
 
+        internal static bool RegisterDefaultProductOffer()
+        {
+            try
+            {
+                Open();
+                using (var command = new SQLiteCommand(_connection))
+                {
+                    command.CommandText = @"INSERT INTO ProductOffer(Company_id, Product_id, price, quantity)
+                                                    VALUES(2, 1, 99, 5);";
 
+                    return command.ExecuteNonQuery() > 0;
+                }
+
+            }
+            catch (Exception ex)
+            {
+                new LogMessage("An error occurred in RegisterDefaultProductOffer: " + ex.Message + ex.StackTrace);
+                return false;
+            }
+            finally
+            {
+                Close();
+            }
+        }
         public static double GetLowestPriceByProductId(long producId)
         {
             double price = 0;
