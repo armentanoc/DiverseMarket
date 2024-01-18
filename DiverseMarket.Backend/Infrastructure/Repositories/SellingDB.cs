@@ -1,8 +1,10 @@
-﻿using DiverseMarket.Backend.Infrastructure.Operations;
+﻿using DiverseMarket.Backend.DTOs;
+using DiverseMarket.Backend.Infrastructure.Operations;
 using DiverseMarket.Backend.Model;
 using DiverseMarket.Backend.Model.Enums;
 using DiverseMarket.Backend.Model.Products;
 using DiverseMarket.Backend.Model.Transactions;
+using DiverseMarket.Logger;
 using System;
 using System.Collections.Generic;
 using System.Data.Common;
