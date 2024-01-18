@@ -99,7 +99,7 @@ namespace DiverseMarket.UI.Pages.Company
             descriptionTextBox.TextBox.ReadOnly = true;
             this.Controls.Add(descriptionTextBox);
 
-            categoryTextBox = new RoundedTextBox(_completeProductOffer.Category, 342, 40);
+            categoryTextBox = new RoundedTextBox(_completeProductOffer.Category, 572, 40);
             categoryTextBox.Location = new Point(354, descriptionTextBox.Bottom + spacing);
             categoryTextBox.TextBox.Font = new Font("Ubuntu", 10);
             categoryTextBox.TextBox.Enabled = false;
