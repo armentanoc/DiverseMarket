@@ -3,27 +3,21 @@ namespace DiverseMarket.Backend.Model.Products
 
     public class ProductOffer
     {
-        public int Id { get; private set; }
-        public int ProductId { get; private set; }
-        public int SellerId { get; private set; }
+        public long Id { get; private set; }
+        public long SellerId { get; private set; }
+        public long ProductId { get; private set; }
         public decimal Price { get; private set; }
-        public int Quantity { get; private set; }
+        public long Quantity { get; private set; }
         //implementar imagem?
 
-        internal ProductOffer(int productId, int sellerId, decimal price, int quantity)
+        internal ProductOffer(long id, long productId, long sellerId, decimal price, long quantity)
         {
-            Id = SetId();
+            Id = id;
             ProductId = productId;
             SellerId = sellerId;
             Price = price;
             Quantity = quantity;
         }
-
-        private int SetId()
-        {
-            return Math.Abs(Guid.NewGuid().GetHashCode());
-        }
-
 
         internal bool ChangePrice(decimal newPrice)
         {

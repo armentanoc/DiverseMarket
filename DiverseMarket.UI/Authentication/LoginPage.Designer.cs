@@ -40,6 +40,8 @@ namespace DiverseMarket.UI.Authentication
             Name = "LoginPage";
             StartPosition = FormStartPosition.CenterScreen;
             Text = "DiverseMarket";
+            KeyPreview = true;
+            AcceptButton = loginButton;
             this.BackColor = Colors.MainBackgroundColor;
             FormClosed += LoginPage_FormClosed;
             InitScreen();
@@ -57,8 +59,6 @@ namespace DiverseMarket.UI.Authentication
             InitLogo();
             InitComponents();
         }
-
-        
 
         private void InitLogo()
         {
@@ -104,10 +104,10 @@ namespace DiverseMarket.UI.Authentication
             this.forgotPasswordLabel.ForeColor = Colors.SecondaryButton;
             this.forgotPasswordLabel.Font = new Font("Ubuntu", 8, FontStyle.Italic | FontStyle.Underline);
             this.forgotPasswordLabel.Location = new Point(323, 499);
-            this.forgotPasswordLabel.Size = new Size(140,20);
+            this.forgotPasswordLabel.Size = new Size(140, 20);
             this.forgotPasswordLabel.Click += new EventHandler(forgotPasswordLabel_Click);
-            this.forgotPasswordLabel.MouseEnter += new EventHandler((object sender, EventArgs e) => 
-                                                    { this.forgotPasswordLabel.Cursor = Cursors.Hand; });
+            this.forgotPasswordLabel.MouseEnter += new EventHandler((object sender, EventArgs e) =>
+            { this.forgotPasswordLabel.Cursor = Cursors.Hand; });
             this.Controls.Add(forgotPasswordLabel);
 
             this.orLabel = new Label();
@@ -134,13 +134,28 @@ namespace DiverseMarket.UI.Authentication
             new FlowSelectionPage().Show();
             this.Hide();
         }
-
         private void loginButton_Click(object sender, EventArgs e)
         {
-            LoginResponseDTO response = AuthenticationService.Login(new LoginRequestDTO(this.usernameTextBox.TextBox.Text.ToLower(), 
-                this.passwordTextBox.TextBox.Text));
+            PerformLogin();
+        }
 
-            switch(response.UserRole){
+        protected override void OnKeyPress(KeyPressEventArgs e)
+        {
+            if (e.KeyChar == (char)Keys.Enter)
+            {
+                e.Handled = true;
+                PerformLogin();
+            }
+            base.OnKeyPress(e);
+        }
+
+        private void PerformLogin()
+        {
+            LoginResponseDTO response = AuthenticationService.Login(new LoginRequestDTO(this.usernameTextBox.TextBox.Text.ToLower(), 
+            this.passwordTextBox.TextBox.Text));
+
+            switch (response.UserRole)
+            {
                 case "Client":
                     new HomePageCustomer(response.Id!.Value).Show();
                     this.Hide();

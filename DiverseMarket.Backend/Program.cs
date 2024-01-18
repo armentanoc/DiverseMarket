@@ -1,5 +1,5 @@
 ﻿using DiverseMarket.Backend.Infrastructure.Operations;
-using System.Runtime.CompilerServices;
+using DiverseMarket.Logger;
 
 namespace DiverseMarket.Backend
 
@@ -10,19 +10,12 @@ namespace DiverseMarket.Backend
         {
             try
             {
-                if (DatabaseConnection.Open())
-                {
-                    DatabaseConnection.CreateTables();
-                }
-                else
-                {
-                    Console.WriteLine("Failed to open the database connection.");
-                }
+                DatabaseConnection.CreateDB();
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"An error occurred: {ex.Message}");
-            }
+                new LogMessage(ex);
+            }   
         }
     }
 }

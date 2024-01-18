@@ -16,6 +16,20 @@ namespace DiverseMarket.UI.Util
             return isValid;
         }
 
+        internal static bool IsInputAValidLong(string input, long current, bool? allowSpaces)
+        {
+            long longValue;
+            bool isValid = long.TryParse(input, out longValue) && longValue >= 0;
+
+            if(!isValid)
+            {
+                MessageBox.Show($"O valor '{input}' não é válido para quantidade. \nA quantidade deve ser um número maior ou igual a zero.", "Erro", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            }
+            if (allowSpaces is false) isValid = isValid && !input.Contains(" ");
+
+            return isValid;
+        }
+
         internal static bool IsEmailValid(string input)
         {
             string regex = @"^[a-zA-Z0-9]+[a-zA-Z0-9_.-]*@[a-zA-Z]+\.[a-zA-Z]+(\.[a-zA-Z]+)?$";
@@ -61,6 +75,31 @@ namespace DiverseMarket.UI.Util
                 return false;
 
             return true;
+        }
+
+        internal static bool IsInputAValidDecimal(string input, decimal current, bool? allowSpaces)
+        {
+            string inputWithoutPriceLabel = input.Replace("R$", "");
+
+            string cleanedInput = new string(inputWithoutPriceLabel
+             .Where(c => char.IsDigit(c) || c == '.' || c == ',' || c == '-')
+             .ToArray())
+             .Replace(',', '.');
+
+            if (!decimal.TryParse(cleanedInput, out decimal decimalValue))
+            {
+                MessageBox.Show($"O valor '{inputWithoutPriceLabel}' não é válido para preço.", "Erro", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                return false;
+            }
+            else if (decimalValue <= 0)
+            {
+                MessageBox.Show($"{decimalValue} é um valor igual ou inferior a zero. \nSomente preços positivos são permitidos.", "Erro", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                return false;
+            }
+            else
+            {
+                return true;
+            }
         }
     }
 }

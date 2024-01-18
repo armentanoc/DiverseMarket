@@ -15,6 +15,16 @@
 
   <ItemGroup>
     <ProjectReference Include="..\DiverseMarket.Backend\DiverseMarket.Backend.csproj" />
+    <ProjectReference Include="..\DiverseMarket.Logger\DiverseMarket.Logger.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Update="Components\ProductDetailsCard.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Update="Components\ProductOfferCard.cs">
+      <SubType>Component</SubType>
+    </Compile>
   </ItemGroup>
 
   <ItemGroup>

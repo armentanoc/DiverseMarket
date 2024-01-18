@@ -13,21 +13,21 @@ namespace DiverseMarket.Backend.Infrastructure.Repositories
         internal static string InitializeTable()
         {
             return @"
-                    CREATE TABLE IF NOT EXISTS User (
-                        id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
-                        name VARCHAR(45) NOT NULL,
-                        username VARCHAR(45) NOT NULL,
-                        password VARCHAR(45) NOT NULL,
-                        email VARCHAR(60),
-                        telephone CHAR(11),
-                        role TEXT NOT NULL CHECK(role IN ('Seller', 'Client', 'Moderator'))
-                    );" +
+                        CREATE TABLE IF NOT EXISTS User (
+                            id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+                            name VARCHAR(45) NOT NULL,
+                            username VARCHAR(45) NOT NULL,
+                            password VARCHAR(45) NOT NULL,
+                            email VARCHAR(60),
+                            telephone CHAR(11),
+                            role TEXT NOT NULL CHECK(role IN ('Seller', 'Client', 'Moderator'))
+                        );" +
                     @"
-                    CREATE TABLE IF NOT EXISTS User_Salt (
-                        User_id INTEGER NOT NULL PRIMARY KEY,
-                        salt VARCHAR(45) NOT NULL,
-                        FOREIGN KEY (User_id) REFERENCES User(id) ON DELETE NO ACTION ON UPDATE NO ACTION
-                    );"
+                        CREATE TABLE IF NOT EXISTS User_Salt (
+                            User_id INTEGER NOT NULL PRIMARY KEY,
+                            salt VARCHAR(45) NOT NULL,
+                            FOREIGN KEY (User_id) REFERENCES User(id) ON DELETE NO ACTION ON UPDATE NO ACTION
+                        );"
                     ;
         }
 
@@ -41,30 +41,31 @@ namespace DiverseMarket.Backend.Infrastructure.Repositories
                 _command = new SQLiteCommand(query, _connection);
                 _command.Parameters.AddWithValue("@username", username);
 
-                var reader = _command.ExecuteReader();
-
-                if (reader.Read())
+                using (var reader = _command.ExecuteReader())
                 {
-                    string salt = reader["salt"].ToString();
-                    string hashedPassword = HashUtil.GetHashedWithGivenSalt(password, salt);
-                    if (hashedPassword == "")
-                        return (null, null);
-
-                    query = @"SELECT id, role
-                     FROM User 
-                     WHERE username=@username AND password=@password;";
-                    _command = new SQLiteCommand(query, _connection);
-                    _command.Parameters.AddWithValue("@username", username);
-                    _command.Parameters.AddWithValue("@password", hashedPassword);
-
-
-                    reader = _command.ExecuteReader();
-
                     if (reader.Read())
                     {
-                        long id = (long)reader["id"];
-                        string role = reader["role"].ToString();
-                        return (id, role);
+                        string salt = reader["salt"].ToString();
+                        string hashedPassword = HashUtil.GetHashedWithGivenSalt(password, salt);
+                        if (hashedPassword == "")
+                            return (null, null);
+
+                        query = @"SELECT id, role
+                     FROM User 
+                     WHERE username=@username AND password=@password;";
+                        _command = new SQLiteCommand(query, _connection);
+                        _command.Parameters.AddWithValue("@username", username);
+                        _command.Parameters.AddWithValue("@password", hashedPassword);
+
+                        using (var innerReader = _command.ExecuteReader())
+                        {
+                            if (innerReader.Read())
+                            {
+                                long id = (long)innerReader["id"];
+                                string role = innerReader["role"].ToString();
+                                return (id, role);
+                            }
+                        }
                     }
                 }
                 return (null, null);
@@ -110,15 +111,15 @@ namespace DiverseMarket.Backend.Infrastructure.Repositories
         }
 
         public static bool RegisterCustomer(
-            string fullName, 
-            string email, 
-            string username, 
-            string? telephone, 
+            string fullName,
+            string email,
+            string username,
+            string? telephone,
             string CPF,
             string cep,
             string street,
             string? complement,
-            string number, 
+            string number,
             string neighborhood,
             string city,
             string password)
@@ -130,7 +131,7 @@ namespace DiverseMarket.Backend.Infrastructure.Repositories
                 (string password, string salt) obj = HashUtil.GetHashedAndSalt(password);
 
                 string query = @"insert into User(name, username, password, email, telephone, role) 
-                        values (@fullName, @username, '" + $"{obj.password}" + @"', @email, @telephone, 'Client');";
+                            values (@fullName, @username, '" + $"{obj.password}" + @"', @email, @telephone, 'Client');";
 
                 _command = new SQLiteCommand(query, _connection);
 
@@ -168,7 +169,7 @@ namespace DiverseMarket.Backend.Infrastructure.Repositories
             finally { Close(); }
         }
 
-        public static bool RegisterCompany(Company company, Address address, string email, string phone, string username, string password) 
+        public static bool RegisterCompany(Company company, Address address, string email, string phone, string username, string password)
         {
             try
             {
@@ -177,7 +178,7 @@ namespace DiverseMarket.Backend.Infrastructure.Repositories
                 (string password, string salt) obj = HashUtil.GetHashedAndSalt(password);
 
                 string query = @"insert into User(name, username, password, email, telephone, role) 
-                        values (@fullName, @username, '" + $"{obj.password}" + @"', @email, @telephone, 'Seller');";
+                            values (@fullName, @username, '" + $"{obj.password}" + @"', @email, @telephone, 'Seller');";
 
                 _command = new SQLiteCommand(query, _connection);
 
@@ -202,11 +203,11 @@ namespace DiverseMarket.Backend.Infrastructure.Repositories
 
                 AddressDB.RegisterAddress
                     (
-                    userId, 
-                    address.ZipCode, 
+                    userId,
+                    address.ZipCode,
                     address.Street,
                     address.Number,
-                    address.Complement, 
+                    address.Complement,
                     address.Neighborhood,
                     address.City
                     );
@@ -245,7 +246,7 @@ namespace DiverseMarket.Backend.Infrastructure.Repositories
                 (string password, string salt) obj = HashUtil.GetHashedAndSalt(password);
 
                 string query = @"insert into User(name, username, password, email, telephone, role) 
-                        values (@fullName, @username, '" + $"{obj.password}" + @"', @email, @telephone, 'Moderator');";
+                            values (@fullName, @username, '" + $"{obj.password}" + @"', @email, @telephone, 'Moderator');";
 
                 _command = new SQLiteCommand(query, _connection);
 
@@ -353,13 +354,13 @@ namespace DiverseMarket.Backend.Infrastructure.Repositories
 
         internal static bool UpdateUser(long id, string email, string? telephone)
         {
-            
+
             try
             {
                 Open();
                 string query = @"UPDATE User
-                        SET email = @email, telephone = @telephone
-                        WHERE id = @id;";
+                            SET email = @email, telephone = @telephone
+                            WHERE id = @id;";
                 _command = new SQLiteCommand(query, _connection);
 
                 _command.Parameters.AddWithValue("@id", id);
@@ -375,8 +376,9 @@ namespace DiverseMarket.Backend.Infrastructure.Repositories
                 return false;
 
             }
-            finally { Close(); }
-
+            finally { 
+                Close(); 
+            }
         }
     }
 }
