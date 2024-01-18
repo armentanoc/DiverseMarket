@@ -1,7 +1,16 @@
 # DiverseMarket 🛒
 
 ## Descrição 
-- ...
+Bem-vindo ao DiverseMarket, sua plataforma única de comércio B2C em Windows Forms! 🚀 Conectando Clientes, Empresas e Moderadores em uma experiência incrível alimentada por uma base de dados SQLite.
+
+### Cliente 👤
+Explore ofertas incríveis, gerencie seu saldo na Carteira 💰, faça compras, avalie produtos e compartilhe suas experiências através de reclamações.
+
+### Moderador 🛡️
+Como guardião da comunidade, aprove novas Empresas, selecione avaliações para publicação e atue como intermediador nas reclamações entre Clientes e Empresas.
+
+### Empresas 🏢
+Empresas, cadastrem-se e sejam aprovadas pelos Moderadores! Adicionem, editem e removam ofertas de produtos. Visualizem informações detalhadas sobre as vendas realizadas e ofereçam o melhor para os Clientes. 🌟
 
 ## Utilização 
 1. Clone esse repositório na sua máquina local:
