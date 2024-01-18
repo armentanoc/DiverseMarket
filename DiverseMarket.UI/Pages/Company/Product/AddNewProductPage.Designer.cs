@@ -203,7 +203,7 @@ namespace DiverseMarket.UI.Pages.Company
             #endregion
 
             this.addNewOfferButton = new RoundedButton("Adicionar Oferta", 150, 57, Colors.SecondaryButton, 32);
-            this.addNewOfferButton.Location = new System.Drawing.Point(475, priceTextBox.Bottom + spacing);
+            this.addNewOfferButton.Location = new System.Drawing.Point(557, priceTextBox.Bottom + spacing);
             this.addNewOfferButton.MouseEnter += new EventHandler((object sender, EventArgs e) =>
             {
                 this.addNewOfferButton.Cursor = Cursors.Hand;
