@@ -3,6 +3,8 @@ using DiverseMarket.Backend.Infrastructure.Repositories;
 using DiverseMarket.Backend.Model;
 using DiverseMarket.Backend.Model.Companies;
 using System.Data.SQLite;
+using System.Transactions;
+using System.IO;
 
 namespace DiverseMarket.Backend.Infrastructure.Operations
 {
@@ -37,8 +39,8 @@ namespace DiverseMarket.Backend.Infrastructure.Operations
                     _command?.Dispose();
                     _connection?.Close();
                     _connection?.Dispose();
-
-                    return true;
+                    _connection = null;
+                return true;
                 }
                 catch (SQLiteException ex)
                 {
@@ -54,30 +56,45 @@ namespace DiverseMarket.Backend.Infrastructure.Operations
         internal static void CreateTables()
         {
             Open();
+
             _command = _connection.CreateCommand();
+
             using (var transaction = _connection.BeginTransaction())
             {
-                CreateAndLogTable("Address", AddressDB.InitializeTable);
-                CreateAndLogTable("User", UserDB.InitializeTable);
-                CreateAndLogTable("Company", CompanyDB.InitializeTable);
-                CreateAndLogTable("Customer", CustomerDB.InitializeTable);
-                CreateAndLogTable("ProductCategory", ProductCategoryDB.InitializeTable);
-                CreateAndLogTable("Product", ProductDB.InitializeTable);
-                CreateAndLogTable("ProductOffer", ProductOfferDB.InitializeTable);
-                CreateAndLogTable("ProductReview", ProductReviewDB.InitializeTable);
-                CreateAndLogTable("ReviewCompany", ReviewCompanyDB.InitializeTable);
-                CreateAndLogTable("ReviewSellingItem", ReviewSellingItemDB.InitializeTable);
-                CreateAndLogTable("Selling", SellingDB.InitializeTable);
-                CreateAndLogTable("WalletTransactions", WalletTransactionsDB.InitializeTable);
+                try
+                {
+                    CreateAndLogTable("Address", AddressDB.InitializeTable);
+                    CreateAndLogTable("User", UserDB.InitializeTable);
+                    CreateAndLogTable("Company", CompanyDB.InitializeTable);
+                    CreateAndLogTable("Customer", CustomerDB.InitializeTable);
+                    CreateAndLogTable("ProductCategory", ProductCategoryDB.InitializeTable);
+                    CreateAndLogTable("Product", ProductDB.InitializeTable);
+                    CreateAndLogTable("ProductOffer", ProductOfferDB.InitializeTable);
+                    CreateAndLogTable("ProductReview", ProductReviewDB.InitializeTable);
+                    CreateAndLogTable("ReviewCompany", ReviewCompanyDB.InitializeTable);
+                    CreateAndLogTable("ReviewSellingItem", ReviewSellingItemDB.InitializeTable);
+                    CreateAndLogTable("Selling", SellingDB.InitializeTable);
+                    CreateAndLogTable("WalletTransactions", WalletTransactionsDB.InitializeTable);
 
-                transaction.Commit();
+                    transaction.Commit();
+                }
+                catch(Exception ex)
+                {
+                    new LogMessage(ex);
+                    transaction.Rollback();
+                }
+                finally
+                {
+                    Close();
+                }
             }
-
-            InitializeDefaultUsers();
-            InsertDefaultCompanyRelatedData();
-            Close();
         }
 
+        internal static void InsertDefaultData()
+        {
+            InitializeDefaultUsers();
+            InsertDefaultCompanyRelatedData();
+        }
         internal static void CreateDB()
         {
             try
@@ -88,6 +105,7 @@ namespace DiverseMarket.Backend.Infrastructure.Operations
                     new LogMessage("Criando um novo arquivo de banco.");
                     SQLiteConnection.CreateFile(databaseFilePath);
                     CreateTables();
+                    InsertDefaultData();
                 }
                 else
                 {
@@ -97,6 +115,9 @@ namespace DiverseMarket.Backend.Infrastructure.Operations
             catch (Exception ex)
             {
                 new LogMessage(ex);
+            } finally
+            {
+                
             }
         }
 
