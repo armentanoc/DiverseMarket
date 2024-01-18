@@ -15,7 +15,7 @@ namespace DiverseMarket.Backend.DTOs
         public long CustomerId { get; private set; }
         public long CompanyId { get; private set; }
 
-        //public OrderStatus Status { get; private set; }
+        public OrderStatus Status { get; private set; }
 
         public OrderBasicInfoDTO(long id, DateTime date, decimal totalAmount, long customerId, long companyId)
         {
@@ -24,7 +24,7 @@ namespace DiverseMarket.Backend.DTOs
             TotalAmount = totalAmount;
             CustomerId = customerId;
             CompanyId = companyId;
-            //Status = status;
+            Status = OrderStatus.Received; 
         }
 
 

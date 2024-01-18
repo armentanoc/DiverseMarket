@@ -2,9 +2,9 @@
 
 namespace DiverseMarket.UI.Pages.Company
 {
-    public partial class CompanySpecificProductOfferPage : Form
+    public partial class CompanySpecificOfferPage : Form
     {
-        public CompanySpecificProductOfferPage(ProductOfferCompleteInfoDTO completeOfferInfo, long userId)
+        public CompanySpecificOfferPage(ProductOfferCompleteInfoDTO completeOfferInfo, long userId)
         {
             InitializeComponent(completeOfferInfo, userId);
         }

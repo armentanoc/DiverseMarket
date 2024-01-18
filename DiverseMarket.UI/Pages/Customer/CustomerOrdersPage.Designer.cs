@@ -43,37 +43,37 @@ namespace DiverseMarket.UI.Pages.Customer
         private void InitOrders()
         {
 
-            ////List<OrderBasicInfoDTO> ordersDTO = OrderService.GetAllOrdersByUserId(this.userId);
+            List<OrderBasicInfoDTO> ordersDTO = OrderService.GetAllOrdersByCustomerUserId(this.userId);
 
-            //Panel container = new Panel();
-            //container.Size = new Size(1188, 568);
-            //container.Location = new Point(178, 188);
-            //container.BackColor = Colors.MainBackgroundColor;
-            //container.AutoScroll = true;
-            //Controls.Add(container);
+            Panel container = new Panel();
+            container.Size = new Size(1188, 568);
+            container.Location = new Point(178, 188);
+            container.BackColor = Colors.MainBackgroundColor;
+            container.AutoScroll = true;
+            Controls.Add(container);
 
-            //int x = 15, y = 12;
+            int x = 15, y = 12;
 
-            //foreach (var order in ordersDTO)
-            //{
-            //    OrderCard orderCard = new OrderCard(order.Id, order.Date, order.Status, order.TotalAmount);
-            //    orderCard.Location = new Point(x, y);
-            //    orderCard.Click += new EventHandler((object sender, EventArgs e) =>
-            //    {
-            //        new CustomerSpecificOrderPage(order.Id).Show();
-            //        this.Hide();
-            //    });
+            foreach (var order in ordersDTO)
+            {
+                OrderCard orderCard = new OrderCard(order.Id, order.Date, order.TotalAmount, this.userId, order.CompanyId);
+                orderCard.Location = new Point(x, y);
+                orderCard.Click += new EventHandler((object sender, EventArgs e) =>
+                {
+                    new CustomerSpecificOrderPage(order.Id).Show();
+                    this.Hide();
+                });
 
-            //    this.Controls.Add(orderCard);
+                this.Controls.Add(orderCard);
 
-            //    if (x == 959)
-            //    {
-            //        x = 15;
-            //        y = 152;
-            //    }
-            //    else
-            //        x += 236;
-            //}
+                if (x == 959)
+                {
+                    x = 15;
+                    y = 152;
+                }
+                else
+                    x += 236;
+            }
         }
 
         private void InitLabel()

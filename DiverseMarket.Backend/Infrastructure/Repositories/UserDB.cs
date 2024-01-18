@@ -107,7 +107,9 @@ namespace DiverseMarket.Backend.Infrastructure.Repositories
                 return id;
 
             }
-            finally { Close(); }
+            finally { 
+                Close(); 
+            }
         }
 
         public static bool RegisterCustomer(
