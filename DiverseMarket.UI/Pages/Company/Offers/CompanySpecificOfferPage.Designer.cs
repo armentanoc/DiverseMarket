@@ -88,28 +88,26 @@ namespace DiverseMarket.UI.Pages.Company
             nameTextBox = new RoundedTextBox(_completeProductOffer.Name, 572, 40);
             nameTextBox.Location = new Point(354, y);
             nameTextBox.TextBox.Font = new Font("Ubuntu", 10);
+            nameTextBox.TextBox.Enabled = false;
+            nameTextBox.TextBox.ReadOnly = true;
             this.Controls.Add(nameTextBox);
 
             descriptionTextBox = new RoundedTextBox(_completeProductOffer.Description, 572, 40);
             descriptionTextBox.Location = new Point(354, nameTextBox.Bottom + spacing);
             descriptionTextBox.TextBox.Font = new Font("Ubuntu", 10);
+            descriptionTextBox.TextBox.Enabled = false;
+            descriptionTextBox.TextBox.ReadOnly = true;
             this.Controls.Add(descriptionTextBox);
 
-            #region Category Text Box
-            //entre 354 e 926
-            //242
-            //padding 30
-            //106
-
-            //categoryTextBox = new RoundedTextBox(_completeProductOffer.Category, 342, 40);
-            //categoryTextBox.Location = new Point(354, 336);
-            //categoryTextBox.TextBox.Font = new Font("Ubuntu", 10);
-            //this.Controls.Add(categoryTextBox);
-
-            #endregion
+            categoryTextBox = new RoundedTextBox(_completeProductOffer.Category, 342, 40);
+            categoryTextBox.Location = new Point(354, descriptionTextBox.Bottom + spacing);
+            categoryTextBox.TextBox.Font = new Font("Ubuntu", 10);
+            categoryTextBox.TextBox.Enabled = false;
+            categoryTextBox.TextBox.ReadOnly = true;
+            this.Controls.Add(categoryTextBox);
 
             quantityTextBox = new RoundedTextBox(_completeProductOffer.Quantity.ToString(), 572, 40);
-            quantityTextBox.Location = new Point(354, descriptionTextBox.Bottom + spacing);
+            quantityTextBox.Location = new Point(354, categoryTextBox.Bottom + spacing);
             quantityTextBox.TextBox.Font = new Font("Ubuntu", 10);
             this.Controls.Add(quantityTextBox);
 
@@ -149,6 +147,13 @@ namespace DiverseMarket.UI.Pages.Company
             descriptionLabel.ForeColor = Color.White;
             descriptionLabel.Font = new Font("Ubuntu", 12);
             this.Controls.Add(descriptionLabel);
+
+            Label categoryLabel = new Label();
+            categoryLabel.Text = "Categoria";
+            categoryLabel.Location = new Point(354, categoryTextBox.Top - spacing);
+            categoryLabel.ForeColor = Color.White;
+            categoryLabel.Font = new Font("Ubuntu", 12);
+            this.Controls.Add(categoryLabel);
 
             Label quantityLabel = new Label();
             quantityLabel.Text = "Quantidade";
