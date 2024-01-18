@@ -36,6 +36,7 @@ namespace DiverseMarket.UI.Pages.Company
             ClientSize = new Size(1280, 832);
             StartPosition = FormStartPosition.CenterScreen;
             Text = "DiverseMarket";
+            KeyPreview = true;
             this.BackColor = Colors.MainBackgroundColor;
             FormClosed += HomePage_FormClosed;
             InitScreen();
@@ -55,7 +56,6 @@ namespace DiverseMarket.UI.Pages.Company
             searchBar = new SearchBar();
             searchBar.Location = new Point(210, 162);
             searchBar.SearchButton.Click += new EventHandler(searchButton_Click);
-
             this.Controls.Add(searchBar);
         }
         private void searchButton_Click(object sender, EventArgs e)
@@ -269,6 +269,18 @@ namespace DiverseMarket.UI.Pages.Company
             this.Controls.Add(logo);
         }
 
+        #endregion
+
+        #region Override to Allow Search By Enter
+        protected override bool ProcessCmdKey(ref Message msg, Keys keyData)
+        {
+            if (keyData == Keys.Enter)
+            {
+                SearchBarWorks();
+                return true;
+            }
+            return base.ProcessCmdKey(ref msg, keyData);
+        }
         #endregion
 
         #region Form Closed
