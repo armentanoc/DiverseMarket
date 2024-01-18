@@ -5,14 +5,16 @@ using DiverseMarket.UI.Components;
 using DiverseMarket.UI.Messages;
 using DiverseMarket.UI.Styles;
 using DiverseMarket.UI.Util;
-using System.Globalization;
-using System.Text;
 
 namespace DiverseMarket.UI.Pages.Company
 {
-    partial class CompanySpecificProductOfferPage
+    partial class AddNewProductPage
+
+        //make description a select box
     {
         private System.ComponentModel.IContainer components = null;
+
+        private ProductBasicInfoDTO _basicProduct;
         private ProductOfferCompleteInfoDTO _completeProductOffer;
 
         private long _userId;
@@ -37,8 +39,7 @@ namespace DiverseMarket.UI.Pages.Company
         #region Buttons
         private Button homepageButton;
         private Button returnButton;
-        private Button editButton;
-        private Button deleteButton;
+        private Button addNewOfferButton;
         #endregion
 
         #region Dispose
@@ -54,9 +55,8 @@ namespace DiverseMarket.UI.Pages.Company
         #endregion
 
         #region Init Components
-        private void InitializeComponent(ProductOfferCompleteInfoDTO completeProductOffer, long userId)
+        private void InitializeComponent(long userId)
         {
-            this._completeProductOffer = completeProductOffer;
             this._userId = userId;
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(1280, 832);
@@ -83,38 +83,27 @@ namespace DiverseMarket.UI.Pages.Company
             int y = 200;
             int spacing = 50;
 
-            this.Select(false, false);
-
-            nameTextBox = new RoundedTextBox(_completeProductOffer.Name, 572, 40);
+            nameTextBox = new RoundedTextBox(string.Empty, 572, 40);
             nameTextBox.Location = new Point(354, y);
             nameTextBox.TextBox.Font = new Font("Ubuntu", 10);
             this.Controls.Add(nameTextBox);
 
-            descriptionTextBox = new RoundedTextBox(_completeProductOffer.Description, 572, 40);
+            descriptionTextBox = new RoundedTextBox(string.Empty, 572, 40);
             descriptionTextBox.Location = new Point(354, nameTextBox.Bottom + spacing);
             descriptionTextBox.TextBox.Font = new Font("Ubuntu", 10);
             this.Controls.Add(descriptionTextBox);
 
-            #region Category Text Box
-            //entre 354 e 926
-            //242
-            //padding 30
-            //106
+            categoryTextBox = new RoundedTextBox(string.Empty, 572, 40);
+            categoryTextBox.Location = new Point(354, descriptionTextBox.Bottom + spacing);
+            categoryTextBox.TextBox.Font = new Font("Ubuntu", 10);
+            this.Controls.Add(categoryTextBox);
 
-            //categoryTextBox = new RoundedTextBox(_completeProductOffer.Category, 342, 40);
-            //categoryTextBox.Location = new Point(354, 336);
-            //categoryTextBox.TextBox.Font = new Font("Ubuntu", 10);
-            //this.Controls.Add(categoryTextBox);
-
-            #endregion
-
-            quantityTextBox = new RoundedTextBox(_completeProductOffer.Quantity.ToString(), 572, 40);
-            quantityTextBox.Location = new Point(354, descriptionTextBox.Bottom + spacing);
+            quantityTextBox = new RoundedTextBox(string.Empty, 572, 40);
+            quantityTextBox.Location = new Point(354, categoryTextBox.Bottom + spacing);
             quantityTextBox.TextBox.Font = new Font("Ubuntu", 10);
             this.Controls.Add(quantityTextBox);
 
-            string formattedPrice = _completeProductOffer.Price.ToString("C", CultureInfo.GetCultureInfo("pt-BR"));
-            priceTextBox = new RoundedTextBox(formattedPrice, 572, 40); ;
+            priceTextBox = new RoundedTextBox(string.Empty, 572, 40); ;
             priceTextBox.Location = new Point(354, quantityTextBox.Bottom + spacing);
             priceTextBox.TextBox.Font = new Font("Ubuntu", 10);
             this.Controls.Add(priceTextBox);
@@ -129,7 +118,7 @@ namespace DiverseMarket.UI.Pages.Company
             int spacing = 35;
 
             Label pageTitle = new Label();
-            pageTitle.Text = "Detalhes do pedido";
+            pageTitle.Text = "Detalhes do produto";
             pageTitle.Location = new Point(140, 67);
             pageTitle.AutoSize = true;
             pageTitle.ForeColor = Color.White;
@@ -149,6 +138,13 @@ namespace DiverseMarket.UI.Pages.Company
             descriptionLabel.ForeColor = Color.White;
             descriptionLabel.Font = new Font("Ubuntu", 12);
             this.Controls.Add(descriptionLabel);
+
+            Label categoryLabel = new Label();
+            categoryLabel.Text = "Categoria";
+            categoryLabel.Location = new Point(354, categoryTextBox.Top - spacing);
+            categoryLabel.ForeColor = Color.White;
+            categoryLabel.Font = new Font("Ubuntu", 12);
+            this.Controls.Add(categoryLabel);
 
             Label quantityLabel = new Label();
             quantityLabel.Text = "Quantidade";
@@ -206,26 +202,21 @@ namespace DiverseMarket.UI.Pages.Company
 
             #endregion
 
-            this.editButton = new RoundedButton("Editar", 150, 40, Colors.CallToActionButton, 32);
-            this.editButton.Location = new System.Drawing.Point(475, priceTextBox.Bottom + spacing);
-            this.editButton.Cursor = Cursors.Hand;
-            this.editButton.Click += new EventHandler((object sender, EventArgs e) =>
+            this.addNewOfferButton = new RoundedButton("Adicionar Oferta", 150, 57, Colors.SecondaryButton, 32);
+            this.addNewOfferButton.Location = new System.Drawing.Point(475, priceTextBox.Bottom + spacing);
+            this.addNewOfferButton.MouseEnter += new EventHandler((object sender, EventArgs e) =>
             {
-                editButton_Click(sender, e);
+                this.addNewOfferButton.Cursor = Cursors.Hand;
+            });
+            this.addNewOfferButton.Click += new EventHandler((object sender, EventArgs e) =>
+            {
+                this.Hide();
+                new AddSpecificOfferPage(this._userId).Show();
             });
 
-            this.Controls.Add(editButton);
-
-            this.deleteButton = new RoundedButton("Excluir", 150, 40, Colors.CallToActionButton, 32);
-            this.deleteButton.Location = new System.Drawing.Point(655, priceTextBox.Bottom + spacing);
-            this.deleteButton.Cursor = Cursors.Hand;
-            this.deleteButton.Click += new EventHandler((object sender, EventArgs e) =>
-            {
-                deleteButton_Click(sender, e);
-            });
+            this.Controls.Add(addNewOfferButton);
 
             #region Return Button
-            this.Controls.Add(deleteButton);
 
             this.returnButton = new RoundedButton("Voltar", 150, 57, Colors.SecondaryButton, 32);
             this.returnButton.Location = new System.Drawing.Point(1080, 57);
@@ -236,7 +227,7 @@ namespace DiverseMarket.UI.Pages.Company
             this.returnButton.Click += new EventHandler((object sender, EventArgs e) =>
             {
                 this.Hide();
-                new CompanyProductOfferPage(this._userId).Show();
+                new CompanyProductPage(this._userId).Show();
             });
 
             this.Controls.Add(returnButton);
@@ -247,40 +238,42 @@ namespace DiverseMarket.UI.Pages.Company
         #endregion
 
         #region Clicks
-        private void editButton_Click(object sender, EventArgs e)
+        private void newButton_Click(object sender, EventArgs e)
         {
             try
             {
                 if (AreFieldsValid())
                 {
                     var offer = _completeProductOffer;
-                    var newName = this.nameTextBox.TextBox.Text;
+
                     string cleanedPrice = ValidationUtils.CleanMonetaryInput(this.priceTextBox.TextBox.Text);
+
+                    var newName = this.nameTextBox.TextBox.Text;
+                    var newDescription = this.descriptionTextBox.TextBox.Text;
                     var newPrice = decimal.Parse(cleanedPrice);
                     var newQuantity = long.Parse(this.quantityTextBox.TextBox.Text);
-                    var newDescription = this.descriptionTextBox.TextBox.Text;
+                    var newCategory = "teste";
 
-                    var newProductOffer = new ProductOfferCompleteInfoDTO(
-                        offer.Id,
-                        offer.CompanyUserId,
-                        offer.ProductId,
-                        newPrice,
-                        newQuantity,
-                        newName,
-                        offer.Category, 
-                        newDescription
-                    );
+                    //var newProductOffer = new ProductOfferCompleteInfoDTO(
+                    //    this._userId,
+                    //    offer.ProductId,
+                    //    newPrice,
+                    //    newQuantity,
+                    //    newName,
+                    //    newCategory,
+                    //    newDescription
+                    //);
 
-                    bool wasUpdateSuccessful = ProductService.UpdateProductOfferByCompleteInfoDTO(newProductOffer);
+                    //bool wasUpdateSuccessful = ProductService.UpdateProductOfferByCompleteInfoDTO(newProductOffer);
 
-                    if (wasUpdateSuccessful)
-                    {
-                        MessageBoxUtils.ShowMessageBox("Produto atualizado com sucesso!", MessageBoxIcon.Information);
-                    }
-                    else
-                    {
-                        MessageBoxUtils.ShowMessageBox("Falha ao atualizar o produto. Tente novamente.", MessageBoxIcon.Error);
-                    }
+                    //if (wasUpdateSuccessful)
+                    //{
+                    //    MessageBoxUtils.ShowMessageBox("Produto atualizado com sucesso!", MessageBoxIcon.Information);
+                    //}
+                    //else
+                    //{
+                    //    MessageBoxUtils.ShowMessageBox("Falha ao atualizar o produto. Tente novamente.", MessageBoxIcon.Error);
+                    //}
                 }
             }
             catch (Exception ex)
@@ -299,13 +292,14 @@ namespace DiverseMarket.UI.Pages.Company
                     {
                         MessageBoxUtils.ShowMessageBox("Oferta de produto excluída com sucesso.", MessageBoxIcon.Information);
                         this.Hide();
-                        new CompanyProductOfferPage(this._userId).Show();
+                        new CompanyOfferPage(this._userId).Show();
                     }
                     else
                     {
                         MessageBoxUtils.ShowMessageBox("Falha em excluir a oferta de produto. \nPor favor, tente novamente.", MessageBoxIcon.Error);
                     }
-                } else
+                }
+                else
                 {
                     MessageBoxUtils.ShowMessageBox("Operação cancelada. O produto não será excluído", MessageBoxIcon.Information);
                 }
@@ -359,7 +353,7 @@ namespace DiverseMarket.UI.Pages.Company
                 MessageBox.Show("Falha ao atualizar o produto. Tente novamente.", "Erro", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 throw new ArgumentException($"CheckFields retornou falso: ({wrongFieldsStr})");
             }
-               
+
             return validInputs;
         }
         #endregion
