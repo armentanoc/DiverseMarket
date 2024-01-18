@@ -1,5 +1,4 @@
-﻿
-namespace DiverseMarket.UI.Components
+﻿namespace DiverseMarket.UI.Messages
 {
     internal class MessageBoxUtils
     {
