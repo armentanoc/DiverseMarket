@@ -94,13 +94,19 @@ namespace DiverseMarket.UI.Pages.Company
             descriptionTextBox.TextBox.Font = new Font("Ubuntu", 10);
             this.Controls.Add(descriptionTextBox);
 
-           /*categoryComboBox.Font = new Font("Ubuntu", 10);
+
+
+            /*categoryComboBox.Font = new Font("Ubuntu", 10);
             categoryComboBox.Size = new Size(572, 40);
             categoryComboBox.Location = new Point(354, descriptionTextBox.Bottom + spacing);
-            List<string> itemsFromService = ProductService.GetAllProductCategories();
-            categoryComboBox.Items.AddRange(itemsFromService.ToArray());
-            this.Controls.Add(categoryComboBox);*/
-          
+            List<string> productsFromService = ProductService.GetAllProductCategories();
+            categoryComboBox.DataSource = productsFromService;
+
+            quantityTextBox = new RoundedTextBox(string.Empty, 572, 40);
+            quantityTextBox.Location = new Point(354, categoryComboBox.Bottom + spacing);
+            quantityTextBox.TextBox.Font = new Font("Ubuntu", 10);
+            this.Controls.Add(quantityTextBox);*/
+
 
             categoryTextBox = new RoundedTextBox(string.Empty, 572, 40);
             categoryTextBox.Location = new Point(354, descriptionTextBox.Bottom + spacing);
@@ -150,6 +156,7 @@ namespace DiverseMarket.UI.Pages.Company
 
             Label categoryLabel = new Label();
             categoryLabel.Text = "Categoria";
+            //categoryLabel.Location = new Point(354, categoryComboBox.Top - spacing);
             categoryLabel.Location = new Point(354, categoryTextBox.Top - spacing);
             categoryLabel.ForeColor = Color.White;
             categoryLabel.Font = new Font("Ubuntu", 12);
@@ -263,7 +270,8 @@ namespace DiverseMarket.UI.Pages.Company
                     var newQuantity = long.Parse(this.quantityTextBox.TextBox.Text);
                     var newCategory = "teste";
 
-                    //var newCategory = this.categoryComboBox.SelectedItem?.ToString();
+                    //var newCategory1 = this.categoryComboBox.SelectedItem.ToString();
+                    
 
                     //var newProductOffer = new ProductOfferCompleteInfoDTO(
                     //    this._userId,

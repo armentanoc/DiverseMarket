@@ -52,7 +52,7 @@ namespace DiverseMarket.Backend.Infrastructure.Repositories
                 Close();
             }
         }
-        public static bool InsertProduct(Product product)
+        public static int InsertProduct(Product product)
         {
             try
             {
@@ -67,15 +67,15 @@ namespace DiverseMarket.Backend.Infrastructure.Repositories
                     command.Parameters.AddWithValue("@Description", product.Description);
                     command.Parameters.AddWithValue("@ProductCategory_id", product.CategoryId);
 
-                    int rowsAffected = command.ExecuteNonQuery();
+                    int id = Convert.ToInt32(command.ExecuteScalar());
 
-                    return rowsAffected > 0;
+                    return id;
                 }
             }
             catch (Exception ex)
             {
                 new LogMessage(ex);
-                return false;
+                return 0;
             }
             finally
             {
