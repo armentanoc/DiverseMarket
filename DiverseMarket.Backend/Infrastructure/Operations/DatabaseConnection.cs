@@ -1,4 +1,5 @@
-﻿using DiverseMarket.Backend.Infrastructure.Repositories;
+﻿using DiverseMarket.Logger;
+using DiverseMarket.Backend.Infrastructure.Repositories;
 using DiverseMarket.Backend.Model;
 using DiverseMarket.Backend.Model.Companies;
 using DiverseMarket.Backend.Model.Transactions;
@@ -25,24 +26,25 @@ namespace DiverseMarket.Backend.Infrastructure.Operations
             }
             catch (Exception ex)
             {
-                MyLogger.Log.Error($"Erro ao abrir o banco de dados: {ex.Message}\n");
+                new LogMessage(ex);
                 return false;
             }
         }
 
         internal static bool Close()
-{
-    try
-    {
-        _connection.Close();
-        return true;
-    }
-    catch (SQLiteException e)
-    {
-        MyLogger.Log.Error($"Erro ao fechar a conexão com o banco de dados: {e.Message}");
-        return false;
-    }
-}
+        {
+            try
+            {
+                _command?.Dispose();
+                _connection?.Dispose();
+                return true;
+            }
+            catch (SQLiteException ex)
+            {
+                new LogMessage(ex);
+                return false;
+            }
+        }
 
         #endregion
 
@@ -78,21 +80,21 @@ namespace DiverseMarket.Backend.Infrastructure.Operations
         {
             try
             {
-                if (!File.Exists($"{_databaseName}.db"))
+                string databaseFilePath = $"{_databaseName}.db";
+                if (!File.Exists(databaseFilePath))
                 {
-                    MyLogger.Log.Error("Criando um novo arquivo de banco.");
-                    SQLiteConnection.CreateFile($"{_databaseName}.db");
+                    new LogMessage("Criando um novo arquivo de banco.");
+                    SQLiteConnection.CreateFile(databaseFilePath);
                     CreateTables();
                 }
                 else
                 {
-                    MyLogger.Log.Error("Arquivo de banco de dados já existe.");
+                    new LogMessage("Arquivo de banco de dados já existe.");
                 }
             }
             catch (Exception ex)
             {
-                MyLogger.Log.Error($"Erro ao criar o banco de dados: {ex.Message}");
-                Console.ReadKey();
+                new LogMessage(ex);
             }
         }
 
@@ -108,16 +110,16 @@ namespace DiverseMarket.Backend.Infrastructure.Operations
                         command.CommandText = createTableSql;
                         command.ExecuteNonQuery();
 
-                        MyLogger.Log.Error($"Tabela {tableName} criada.");
+                        new LogMessage($"Tabela {tableName} criada.");
                     }
                     else
                     {
-                        MyLogger.Log.Error($"Tabela {tableName} já existe.");
+                        new LogMessage($"Tabela {tableName} já existe.");
                     }
                 }
                 catch (Exception ex)
                 {
-                    MyLogger.Log.Error($"Erro ao criar a tabela {tableName}: {ex.Message}");
+                    new LogMessage(ex);
                 }
             }
         }
@@ -167,103 +169,25 @@ namespace DiverseMarket.Backend.Infrastructure.Operations
             "Niterói",
             "Aa12345@" //senha
             );
-
-            UserDB.RegisterCustomer
-            (
-                "João Silva",
-                "joao@silva.com",
-                "joao",
-                "987654321",
-                "12345678901",
-                "34567890",
-                "Rua XYZ",
-                "Cond. Beta, Ap. 202",
-                "45",
-                "Centro",
-                "Rio de Janeiro",
-                "Bb67890@" //senha
-            );
-
-            UserDB.RegisterCustomer
-            (
-                "Maria Oliveira",
-                "maria@oliveira.com",
-                "maria",
-                "567890123",
-                "98765432109",
-                "87654321",
-                "Avenida ABC",
-                "Cond. Alfa, Ap. 303",
-                "78",
-                "Barra",
-                "Salvador",
-                "Cc90123@" //senha
-            );
-
         }
-        private static void RegisterDefaultModerator()
-        {
-            UserDB.RegisterModerator
-            (
-            "Paula Andrezza",
-            "paula@gmail.com",
-            "paula",
-            "123456789",
-            "89403309008",
-            "53620819",
-            "Rua Senhor do Bonfim",
-            "Cond. Delta, Ap. 202",
-            "12",
-            "Santa Rita",
-            "Igarassu",
-            "Aa12345@" //senha
-            );
-        }
-
-        //private static void InsertSampleSellingData()
-        //{
-        //    Open();
-
-        //    try
-        //    {
-        //        // Vamos criar uma instância de Product para representar um produto na venda
-        //        Product product = new Product("Nome do Produto", "Descrição do Produto", 29.99m);
-
-        //        // Vamos criar uma instância de Customer para representar o cliente que está realizando a compra
-        //        Customer customer = new Customer("Nome do Cliente", "cliente@email.com", "username", "123456789", "12345678901", "12345678", "Rua ABC", "Apto 101", "10", "Bairro", "Cidade", "SenhaDoCliente");
-
-        //        // Vamos criar uma instância de Selling para representar a venda
-        //        Selling selling = new Selling(DateTime.Now, customer);
-
-        //        // Adicionando itens à venda
-        //        selling.AddItem(product, 2); // 2 unidades do produto
-
-        //        // Vamos inserir a venda no banco de dados
-        //        InsertSelling(selling);
-
-        //        MyLogger.Log.Error("Dados de venda de exemplo inseridos com sucesso.");
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        MyLogger.Log.Error($"Erro ao inserir dados de venda de exemplo: {ex.Message}");
-        //    }
-        //    finally
-        //    {
-        //        Close();
-        //    }
-        //}
-
-        //private static void InsertSelling(Selling selling)
-        //{
-        //    // Use a lógica apropriada para inserir os dados da venda no banco de dados
-        //    // Por exemplo, você pode usar comandos SQL ou algum método de um repositório
-
-        //    // Exemplo usando um repositório fictício (ajuste conforme necessário)
-        //    SellingRepository sellingRepository = new SellingRepository();
-        //    sellingRepository.Insert(selling);
-        //}
-
-
+            private static void RegisterDefaultModerator()
+            {
+                UserDB.RegisterModerator
+                (
+                "Paula Andrezza",
+                "paula@gmail.com",
+                "paula",
+                "123456789",
+                "89403309008",
+                "53620819",
+                "Rua Senhor do Bonfim",
+                "Cond. Delta, Ap. 202",
+                "12",
+                "Santa Rita",
+                "Igarassu",
+                "Aa12345@" //senha
+                );
+            }
         #endregion
 
         #region Helper Methods
@@ -283,9 +207,9 @@ namespace DiverseMarket.Backend.Infrastructure.Operations
                     _command.CommandText = $"PRAGMA table_info({tableName})";
                     using (var reader = _command.ExecuteReader())
                     {
-                        MyLogger.Log.Error($"\nEsquema da Tabela {tableName}:\n");
-                        MyLogger.Log.Error("Nome da Coluna".PadRight(25) + "Tipo".PadRight(15) + "NotNull".PadRight(10) + "PrimaryKey");
-                        MyLogger.Log.Error("------------------------------------------------------------");
+                        new LogMessage($"\nEsquema da Tabela {tableName}:\n" +
+                            $"Nome da Coluna".PadRight(25) + "Tipo".PadRight(15) + "NotNull".PadRight(10) + "PrimaryKey" +
+                            "------------------------------------------------------------");
 
                         while (reader.Read())
                         {
@@ -294,18 +218,18 @@ namespace DiverseMarket.Backend.Infrastructure.Operations
                             bool notNull = Convert.ToBoolean(reader["notnull"]);
                             bool isPrimaryKey = Convert.ToBoolean(reader["pk"]);
 
-                            MyLogger.Log.Error($"{columnName.PadRight(25)}{columnType.PadRight(15)}{notNull.ToString().PadRight(10)}{isPrimaryKey}");
+                            new LogMessage($"{columnName.PadRight(25)}{columnType.PadRight(15)}{notNull.ToString().PadRight(10)}{isPrimaryKey}");
                         }
                     }
                 }
                 else
                 {
-                    MyLogger.Log.Error("_command é nulo. Certifique-se de que está devidamente inicializado.");
+                    new LogMessage("_command é nulo. Certifique-se de que está devidamente inicializado.");
                 }
             }
             catch (Exception ex)
             {
-                MyLogger.Log.Error($"Erro ao exibir o esquema da tabela: {ex.Message}");
+                new LogMessage(ex);
             }
         }
 

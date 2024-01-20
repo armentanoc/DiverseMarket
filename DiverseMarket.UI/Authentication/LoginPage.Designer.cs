@@ -104,10 +104,10 @@ namespace DiverseMarket.UI.Authentication
             this.forgotPasswordLabel.ForeColor = Colors.SecondaryButton;
             this.forgotPasswordLabel.Font = new Font("Ubuntu", 8, FontStyle.Italic | FontStyle.Underline);
             this.forgotPasswordLabel.Location = new Point(323, 499);
-            this.forgotPasswordLabel.Size = new Size(140,20);
+            this.forgotPasswordLabel.Size = new Size(140, 20);
             this.forgotPasswordLabel.Click += new EventHandler(forgotPasswordLabel_Click);
-            this.forgotPasswordLabel.MouseEnter += new EventHandler((object sender, EventArgs e) => 
-                                                    { this.forgotPasswordLabel.Cursor = Cursors.Hand; });
+            this.forgotPasswordLabel.MouseEnter += new EventHandler((object sender, EventArgs e) =>
+            { this.forgotPasswordLabel.Cursor = Cursors.Hand; });
             this.Controls.Add(forgotPasswordLabel);
 
             this.orLabel = new Label();
@@ -152,9 +152,10 @@ namespace DiverseMarket.UI.Authentication
         private void PerformLogin()
         {
             LoginResponseDTO response = AuthenticationService.Login(new LoginRequestDTO(this.usernameTextBox.TextBox.Text.ToLower(), 
-                this.passwordTextBox.TextBox.Text));
+            this.passwordTextBox.TextBox.Text));
 
-            switch(response.UserRole){
+            switch (response.UserRole)
+            {
                 case "Client":
                     new HomePageCustomer(response.Id!.Value).Show();
                     this.Hide();

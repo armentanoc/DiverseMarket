@@ -1,5 +1,5 @@
 ﻿using DiverseMarket.Backend.Infrastructure.Operations;
-using System.Runtime.CompilerServices;
+using DiverseMarket.Logger;
 
 namespace DiverseMarket.Backend
 
@@ -14,8 +14,8 @@ namespace DiverseMarket.Backend
             }
             catch (Exception ex)
             {
-                MyLogger.Log.Error($"An error occurred: {ex.Message}");
-            }
+                new LogMessage(ex);
+            }   
         }
     }
 }

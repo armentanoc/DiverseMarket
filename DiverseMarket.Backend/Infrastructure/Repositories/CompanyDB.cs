@@ -1,6 +1,6 @@
 ﻿using DiverseMarket.Backend.Infrastructure.Operations;
-using DiverseMarket.Backend.Infrastructure.Util;
 using DiverseMarket.Backend.Model.Companies;
+using DiverseMarket.Logger;
 using System.Data.SQLite;
 
 namespace DiverseMarket.Backend.Infrastructure.Repositories
@@ -43,11 +43,13 @@ namespace DiverseMarket.Backend.Infrastructure.Repositories
             }
             catch (Exception ex)
             {
-                Console.WriteLine("An error occured: " + ex.Message);
+                new LogMessage(ex);
                 return false;
 
             }
-            finally { Close(); }
+            finally { 
+                Close(); 
+            }
         }
 
         public static long GetUserIdByCompanyId(long companyId)

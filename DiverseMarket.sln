@@ -7,6 +7,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DiverseMarket.UI", "Diverse
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DiverseMarket.Backend", "DiverseMarket.Backend\DiverseMarket.Backend.csproj", "{F491E094-B98C-40F8-9F64-B28C01F4F816}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DiverseMarket.Logger", "DiverseMarket.Logger\DiverseMarket.Logger.csproj", "{7789B5A8-3A8D-4B01-843F-4683F7B711E4}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -21,6 +23,10 @@ Global
 		{F491E094-B98C-40F8-9F64-B28C01F4F816}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{F491E094-B98C-40F8-9F64-B28C01F4F816}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{F491E094-B98C-40F8-9F64-B28C01F4F816}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7789B5A8-3A8D-4B01-843F-4683F7B711E4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7789B5A8-3A8D-4B01-843F-4683F7B711E4}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7789B5A8-3A8D-4B01-843F-4683F7B711E4}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7789B5A8-3A8D-4B01-843F-4683F7B711E4}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
