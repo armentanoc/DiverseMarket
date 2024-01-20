@@ -11,6 +11,7 @@ namespace DiverseMarket.UI.Pages.Company
         private System.ComponentModel.IContainer components = null;
         private long userId;
         private Button homepageButton, returnButton;
+        //private Label? orderInfoLabel;
         protected override void Dispose(bool disposing)
         {
             if (disposing && (components != null))
@@ -37,44 +38,78 @@ namespace DiverseMarket.UI.Pages.Company
             InitLogo();
             InitLabel();
             InitButtons();
+ 
+            //orderInfoLabel = new Label();
+            //orderInfoLabel.Location = new Point(10, 800);
+            //orderInfoLabel.AutoSize = true;
+            //orderInfoLabel.ForeColor = Color.White;
+            //this.Controls.Add(orderInfoLabel);
+
+
             InitOrders();
         }
 
         private void InitOrders()
         {
-
-            List<OrderBasicInfoDTO> ordersDTO = OrderService.GetAllOrdersByCompanyUserId(this.userId);
-
-            Panel container = new Panel();
-            container.Size = new Size(1188, 568);
-            container.Location = new Point(178, 188);
-            container.BackColor = Colors.MainBackgroundColor;
-            container.AutoScroll = true;
-            Controls.Add(container);
-
-            int x = 15, y = 12;
-
-            foreach (var order in ordersDTO)
+            try
             {
-                OrderCard orderCard = new OrderCard(order.Id, order.Date, order.TotalAmount, order.CustomerId, order.CompanyId);
-                orderCard.Location = new Point(x, y);
-                orderCard.Click += new EventHandler((object sender, EventArgs e) =>
-                {
-                    new CompanySpecificOrderPage(order.Id).Show();
-                    this.Hide();
-                });
+                List<OrderBasicInfoDTO> ordersDTO = OrderService.GetAllOrdersByCompanyUserId(this.userId);
 
-                this.Controls.Add(orderCard);
+                Panel container = new Panel();
+                container.Size = new Size(1188, 568);
+                container.Location = new Point(178, 188);
+                container.BackColor = Colors.MainBackgroundColor;
+                container.AutoScroll = true;
+                Controls.Add(container);
 
-                if (x == 959)
+                int cardsPerRow = 4; 
+                int cardWidth = 236;
+                int cardHeight = 106;
+                int spacingX = 15;
+                int spacingY = 20;
+
+                int totalWidth = cardsPerRow * cardWidth + (cardsPerRow - 1) * spacingX;
+                int initialX = (container.Width - totalWidth) / 2;
+
+                int x = initialX, y = spacingY;
+
+                if (ordersDTO != null)
                 {
-                    x = 15;
-                    y = 152;
+                    foreach (var order in ordersDTO)
+                    {
+                        OrderCard orderCard = new OrderCard(order.Id, order.Date, order.TotalAmount, order.CustomerId, order.CompanyId);
+                        orderCard.Location = new Point(x, y);
+                        orderCard.Click += new EventHandler((object sender, EventArgs e) =>
+                        {
+                            var specificOrderPage = new CompanySpecificOrderPage(order, this.userId);
+                            specificOrderPage.Show();
+                            this.Hide();
+                        });
+
+                        container.Controls.Add(orderCard);
+
+                        if (x == initialX + (cardsPerRow - 1) * (cardWidth + spacingX))
+                        {
+                            x = initialX;
+                            y += cardHeight + spacingY;
+                        }
+                        else
+                            x += cardWidth + spacingX;
+                    }
+                    //orderInfoLabel.Text = $"Número de pedidos: {ordersDTO.Count}; UserId: {this.userId}. Tipo de ordersDTO: {ordersDTO.GetType}";
                 }
                 else
-                    x += 236;
+                {
+                    //orderInfoLabel.Text = $"ordersDTO está nulo: {ordersDTO is null}; UserId: {this.userId}. ";
+                }
+            }
+            catch (Exception ex)
+            {
+                //orderInfoLabel.Text = $"Erro ao obter pedidos: {ex.Message}";
+                Console.WriteLine("Eoor: " + ex.ToString());
             }
         }
+
 
         private void InitLabel()
         {
