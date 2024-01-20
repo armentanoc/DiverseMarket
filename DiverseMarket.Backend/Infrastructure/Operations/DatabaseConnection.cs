@@ -1,6 +1,7 @@
 ﻿using DiverseMarket.Backend.Infrastructure.Repositories;
 using DiverseMarket.Backend.Model;
 using DiverseMarket.Backend.Model.Companies;
+using DiverseMarket.Backend.Model.Transactions;
 using System.Data.SQLite;
 
 namespace DiverseMarket.Backend.Infrastructure.Operations
@@ -166,25 +167,103 @@ namespace DiverseMarket.Backend.Infrastructure.Operations
             "Niterói",
             "Aa12345@" //senha
             );
+
+            UserDB.RegisterCustomer
+            (
+                "João Silva",
+                "joao@silva.com",
+                "joao",
+                "987654321",
+                "12345678901",
+                "34567890",
+                "Rua XYZ",
+                "Cond. Beta, Ap. 202",
+                "45",
+                "Centro",
+                "Rio de Janeiro",
+                "Bb67890@" //senha
+            );
+
+            UserDB.RegisterCustomer
+            (
+                "Maria Oliveira",
+                "maria@oliveira.com",
+                "maria",
+                "567890123",
+                "98765432109",
+                "87654321",
+                "Avenida ABC",
+                "Cond. Alfa, Ap. 303",
+                "78",
+                "Barra",
+                "Salvador",
+                "Cc90123@" //senha
+            );
+
         }
-            private static void RegisterDefaultModerator()
-            {
-                UserDB.RegisterModerator
-                (
-                "Paula Andrezza",
-                "paula@gmail.com",
-                "paula",
-                "123456789",
-                "89403309008",
-                "53620819",
-                "Rua Senhor do Bonfim",
-                "Cond. Delta, Ap. 202",
-                "12",
-                "Santa Rita",
-                "Igarassu",
-                "Aa12345@" //senha
-                );
-            }
+        private static void RegisterDefaultModerator()
+        {
+            UserDB.RegisterModerator
+            (
+            "Paula Andrezza",
+            "paula@gmail.com",
+            "paula",
+            "123456789",
+            "89403309008",
+            "53620819",
+            "Rua Senhor do Bonfim",
+            "Cond. Delta, Ap. 202",
+            "12",
+            "Santa Rita",
+            "Igarassu",
+            "Aa12345@" //senha
+            );
+        }
+
+        //private static void InsertSampleSellingData()
+        //{
+        //    Open();
+
+        //    try
+        //    {
+        //        // Vamos criar uma instância de Product para representar um produto na venda
+        //        Product product = new Product("Nome do Produto", "Descrição do Produto", 29.99m);
+
+        //        // Vamos criar uma instância de Customer para representar o cliente que está realizando a compra
+        //        Customer customer = new Customer("Nome do Cliente", "cliente@email.com", "username", "123456789", "12345678901", "12345678", "Rua ABC", "Apto 101", "10", "Bairro", "Cidade", "SenhaDoCliente");
+
+        //        // Vamos criar uma instância de Selling para representar a venda
+        //        Selling selling = new Selling(DateTime.Now, customer);
+
+        //        // Adicionando itens à venda
+        //        selling.AddItem(product, 2); // 2 unidades do produto
+
+        //        // Vamos inserir a venda no banco de dados
+        //        InsertSelling(selling);
+
+        //        MyLogger.Log.Error("Dados de venda de exemplo inseridos com sucesso.");
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        MyLogger.Log.Error($"Erro ao inserir dados de venda de exemplo: {ex.Message}");
+        //    }
+        //    finally
+        //    {
+        //        Close();
+        //    }
+        //}
+
+        //private static void InsertSelling(Selling selling)
+        //{
+        //    // Use a lógica apropriada para inserir os dados da venda no banco de dados
+        //    // Por exemplo, você pode usar comandos SQL ou algum método de um repositório
+
+        //    // Exemplo usando um repositório fictício (ajuste conforme necessário)
+        //    SellingRepository sellingRepository = new SellingRepository();
+        //    sellingRepository.Insert(selling);
+        //}
+
+
         #endregion
 
         #region Helper Methods
