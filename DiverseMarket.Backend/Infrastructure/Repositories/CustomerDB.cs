@@ -1,5 +1,4 @@
 ﻿using DiverseMarket.Backend.Infrastructure.Operations;
-using DiverseMarket.Backend.DTOs;
 using System;
 using System.Collections.Generic;
 using System.Data.SQLite;
@@ -39,7 +38,7 @@ namespace DiverseMarket.Backend.Infrastructure.Repositories
             finally { Close(); }
         }
 
-        public static string InitializeTable()
+        internal static string InitializeTable()
         {
             return @"
                     CREATE TABLE IF NOT EXISTS Customer (
@@ -50,7 +49,7 @@ namespace DiverseMarket.Backend.Infrastructure.Repositories
                     );";
         }
 
-        public static bool RegisterCustomer(long userId, string cpf)
+        internal static bool RegisterCustomer(long userId, string cpf)
         {
             try
             {
@@ -72,42 +71,5 @@ namespace DiverseMarket.Backend.Infrastructure.Repositories
             }
             finally { Close(); }
         }
-
-        //public static CustomerDTO GetCustomerByUserId(long userId)
-        //{
-        //    try
-        //    {
-        //        Open() ;
-
-        //        string query = "SELECT * FROM Customer WHERE User_id = @userId";
-        //        using (SQLiteCommand command = new SQLiteCommand(query, _connection))
-        //        {
-        //            command.Parameters.AddWithValue("@userId", userId);
-
-        //            using (SQLiteDataReader reader = command.ExecuteReader())
-        //            {
-        //                if (reader.Read())
-        //                {
-        //                    CustomerDTO customer = new CustomerDTO
-        //                    {
-        //                        Id = Convert.ToInt64(reader["id"]),
-        //                        UserId = Convert.ToInt64(reader["User_id"]),
-        //                        CPF = Convert.ToString(reader["cpf"])
-        //                    };
-
-        //                    return customer;
-        //                }
-        //            }
-        //        }
-        //    } catch (Exception ex)
-        //    {
-        //        Console.WriteLine("An error occured: " + ex.Message);
-        //        return "";
-        //    }
-
-        //    finally { Close(); }
-
-        //    return null;
-        //}
     }
 }

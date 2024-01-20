@@ -1,5 +1,4 @@
-﻿using DiverseMarket.Backend.DTOs;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
@@ -13,9 +12,9 @@ namespace DiverseMarket.UI.Pages.Company
 {
     public partial class CompanySpecificOrderPage : Form
     {
-        public CompanySpecificOrderPage(OrderBasicInfoDTO order, long userId)
+        public CompanySpecificOrderPage(long userId)
         {
-            InitializeComponent(order, userId);
+            InitializeComponent();
         }
 
         private void Form1_Load(object sender, EventArgs e)
