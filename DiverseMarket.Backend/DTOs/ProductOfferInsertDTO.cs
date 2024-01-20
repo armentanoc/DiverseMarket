@@ -11,18 +11,18 @@ namespace DiverseMarket.Backend.DTOs
         public long CompanyUserId { get; }
         public string Name { get; }
         public string Description { get; }
-        public string Category { get; }
+        public int CategoryId { get; }
         public decimal Price { get; }
         public long Quantity { get; }
 
-        public ProductOfferInsertDTO(long companyUserId, decimal price, long quantity, string name, string category, string description)
+        public ProductOfferInsertDTO(long companyUserId, decimal price, long quantity, string name, int categoryid, string description)
         {
             CompanyUserId = companyUserId;
             Price = price;
             Quantity = quantity;
             Name = name;
             Description = description;
-            Category = category;
+            CategoryId = categoryid;
         }
     }
  }  

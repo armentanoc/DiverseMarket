@@ -66,9 +66,12 @@ namespace DiverseMarket.Backend.Infrastructure.Repositories
                     command.Parameters.AddWithValue("@Name", product.Name);
                     command.Parameters.AddWithValue("@Description", product.Description);
                     command.Parameters.AddWithValue("@ProductCategory_id", product.CategoryId);
+                    command.ExecuteNonQuery();
+                }
 
-                    int id = Convert.ToInt32(command.ExecuteScalar());
-
+                using (var selectCommand = new SQLiteCommand("SELECT last_insert_rowid();", _connection))
+                {
+                    int id = Convert.ToInt32(selectCommand.ExecuteScalar());
                     return id;
                 }
             }
@@ -82,6 +85,36 @@ namespace DiverseMarket.Backend.Infrastructure.Repositories
                 Close();
             }
         }
+
+        public static bool ProductExists(Product product)
+        {
+            try
+            {
+                Open();
+
+                using (var command = new SQLiteCommand(_connection))
+                {
+                    command.CommandText = @"SELECT COUNT(*) FROM Product WHERE name = @Name AND description = @description";
+                    command.Parameters.AddWithValue("@Name", product.Name);
+                    command.Parameters.AddWithValue("@description", product.Description);
+
+                    int count = Convert.ToInt32(command.ExecuteScalar());
+
+                    return count > 0;
+                }
+            }
+            catch (Exception ex)
+            {
+                new LogMessage(ex);
+                return false;
+            }
+            finally
+            {
+                Close();
+            }
+        }
+
+
 
         public static void RegisterDefaultProducts() => DefaultProducts.Insert();
     }

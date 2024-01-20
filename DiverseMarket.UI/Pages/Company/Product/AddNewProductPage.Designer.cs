@@ -1,4 +1,6 @@
-﻿using DiverseMarket.Backend.DTOs;
+﻿using System.Data.Entity.Core.Metadata.Edm;
+using DiverseMarket.Backend.DTOs;
+using DiverseMarket.Backend.Model.Enums;
 using DiverseMarket.Backend.Services;
 using DiverseMarket.Logger;
 using DiverseMarket.UI.Components;
@@ -95,20 +97,22 @@ namespace DiverseMarket.UI.Pages.Company
             this.Controls.Add(descriptionTextBox);
 
 
-
-            /*categoryComboBox.Font = new Font("Ubuntu", 10);
+            Array enumValues = Enum.GetValues(typeof(ProductCategory));
+            categoryComboBox.DataSource = enumValues;
+            categoryComboBox.Font = new Font("Ubuntu", 10);
             categoryComboBox.Size = new Size(572, 40);
             categoryComboBox.Location = new Point(354, descriptionTextBox.Bottom + spacing);
-            List<string> productsFromService = ProductService.GetAllProductCategories();
-            categoryComboBox.DataSource = productsFromService;
+            //List<string> productsFromService = ProductService.GetAllProductCategories();
+            // categoryComboBox.DataSource = productsFromService;
+            this.Controls.Add(categoryComboBox);
 
             quantityTextBox = new RoundedTextBox(string.Empty, 572, 40);
             quantityTextBox.Location = new Point(354, categoryComboBox.Bottom + spacing);
             quantityTextBox.TextBox.Font = new Font("Ubuntu", 10);
-            this.Controls.Add(quantityTextBox);*/
+            this.Controls.Add(quantityTextBox);
 
 
-            categoryTextBox = new RoundedTextBox(string.Empty, 572, 40);
+            /*categoryTextBox = new RoundedTextBox(string.Empty, 572, 40);
             categoryTextBox.Location = new Point(354, descriptionTextBox.Bottom + spacing);
             categoryTextBox.TextBox.Font = new Font("Ubuntu", 10);
             this.Controls.Add(categoryTextBox);
@@ -116,7 +120,7 @@ namespace DiverseMarket.UI.Pages.Company
             quantityTextBox = new RoundedTextBox(string.Empty, 572, 40);
             quantityTextBox.Location = new Point(354, categoryTextBox.Bottom + spacing);
             quantityTextBox.TextBox.Font = new Font("Ubuntu", 10);
-            this.Controls.Add(quantityTextBox);
+            this.Controls.Add(quantityTextBox);*/
 
             priceTextBox = new RoundedTextBox(string.Empty, 572, 40); ;
             priceTextBox.Location = new Point(354, quantityTextBox.Bottom + spacing);
@@ -156,8 +160,8 @@ namespace DiverseMarket.UI.Pages.Company
 
             Label categoryLabel = new Label();
             categoryLabel.Text = "Categoria";
-            //categoryLabel.Location = new Point(354, categoryComboBox.Top - spacing);
-            categoryLabel.Location = new Point(354, categoryTextBox.Top - spacing);
+            categoryLabel.Location = new Point(354, categoryComboBox.Top - spacing);
+            //categoryLabel.Location = new Point(354, categoryTextBox.Top - spacing);
             categoryLabel.ForeColor = Color.White;
             categoryLabel.Font = new Font("Ubuntu", 12);
             this.Controls.Add(categoryLabel);
@@ -226,8 +230,7 @@ namespace DiverseMarket.UI.Pages.Company
             });
             this.addNewOfferButton.Click += new EventHandler((object sender, EventArgs e) =>
             {
-                this.Hide();
-                new AddSpecificOfferPage(this._userId).Show();
+                InsertNewProductWithOffer();
             });
 
             this.Controls.Add(addNewOfferButton);
@@ -254,7 +257,7 @@ namespace DiverseMarket.UI.Pages.Company
         #endregion
 
         #region Clicks
-        private void newButton_Click(object sender, EventArgs e)
+        /*private void newButton_Click(object sender, EventArgs e)
         {
             try
             {
@@ -267,11 +270,10 @@ namespace DiverseMarket.UI.Pages.Company
                     var newName = this.nameTextBox.TextBox.Text;
                     var newDescription = this.descriptionTextBox.TextBox.Text;
                     var newPrice = decimal.Parse(cleanedPrice);
-                    var newQuantity = long.Parse(this.quantityTextBox.TextBox.Text);
-                    var newCategory = "teste";
+                    var newQuantity = long.Parse(this.quantityTextBox.TextBox.Text)
+                    // var newCategory = "teste";
+                    //var newCategory1 = this.categoryComboBox.SelectedItem;
 
-                    //var newCategory1 = this.categoryComboBox.SelectedItem.ToString();
-                    
 
                     //var newProductOffer = new ProductOfferCompleteInfoDTO(
                     //    this._userId,
@@ -298,6 +300,43 @@ namespace DiverseMarket.UI.Pages.Company
             catch (Exception ex)
             {
                 new LogMessage(ex);
+            }
+        }*/
+
+        private void InsertNewProductWithOffer()
+        {
+            try
+            {
+                string cleanedPrice = ValidationUtils.CleanMonetaryInput(this.priceTextBox.TextBox.Text);
+                var newName = this.nameTextBox.TextBox.Text;
+                var newDescription = this.descriptionTextBox.TextBox.Text;
+                var newPrice = decimal.Parse(cleanedPrice);
+                var newQuantity = long.Parse(this.quantityTextBox.TextBox.Text);
+                int selectedCategoryId = (int)this.categoryComboBox.SelectedValue;
+                ProductOfferInsertDTO productOfferInsertDTO = new ProductOfferInsertDTO(_userId, newPrice, newQuantity, newName, selectedCategoryId, newDescription);
+                if(ProductService.ProductExists(productOfferInsertDTO))
+                {
+                    MessageBoxUtils.ShowMessageBox("Falha ao inluir o produto. \n Produto já existe!", MessageBoxIcon.Error);
+                }
+                else
+                {
+                    if (ProductService.InsertNewProductWithProductOffer(productOfferInsertDTO))
+                    {
+                        MessageBoxUtils.ShowMessageBox("Produto e oferta de produto incluídas com sucesso.", MessageBoxIcon.Information);
+                        this.Hide();
+                        new HomePageCompany(_userId).Show();
+                    }
+                    else
+                    {
+                        MessageBoxUtils.ShowMessageBox("Falha ao inluir o produto. \n Por favor, tente novamente.", MessageBoxIcon.Error);
+                    }
+
+
+                }
+            }catch (Exception ex)
+            {
+                new LogMessage(ex); 
+
             }
         }
 
