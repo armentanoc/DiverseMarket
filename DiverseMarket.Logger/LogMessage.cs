@@ -23,7 +23,8 @@ namespace DiverseMarket.Logger
         #region ErrorLog
         private void ErrorLog(Exception ex)
         {
-            string log = $"Error Message: {ex.Message}" +
+            string log = $"An error occurred." +
+                $"\nMessage: {ex.Message}" +
                 $"\nStackTrace: {ex.StackTrace}";
 
             WriteInLog(log);
@@ -48,10 +49,5 @@ namespace DiverseMarket.Logger
         }
         #endregion
 
-        public static string GetCallerMethodName()
-        {
-            StackFrame frame = new StackFrame(1);
-            return frame.GetMethod().Name;
-        }
     }
 }

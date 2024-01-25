@@ -61,5 +61,10 @@ namespace DiverseMarket.Backend.Services
         {
             return ProductOfferDB.UpdateProductOffer(newProductOffer);
         }
+
+        public static bool DeleteCompanyProductOfferByCompleteInfoDTO(ProductOfferCompleteInfoDTO productOfferData)
+        {
+            return ProductOfferDB.DeleteCompanyProductOffer(productOfferData); ;
+        }
     }
 }

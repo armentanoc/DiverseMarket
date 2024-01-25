@@ -217,9 +217,10 @@ namespace DiverseMarket.UI.Pages.Company
 
             this.deleteButton = new RoundedButton("Excluir", 150, 40, Colors.CallToActionButton, 32);
             this.deleteButton.Location = new System.Drawing.Point(655, priceTextBox.Bottom + spacing);
-            this.deleteButton.MouseEnter += new EventHandler((object sender, EventArgs e) =>
+            this.deleteButton.Cursor = Cursors.Hand;
+            this.deleteButton.Click += new EventHandler((object sender, EventArgs e) =>
             {
-                this.deleteButton.Cursor = Cursors.Hand;
+                deleteButton_Click(sender, e);
             });
 
             #region Return Button
@@ -253,12 +254,7 @@ namespace DiverseMarket.UI.Pages.Company
                 {
                     var offer = _completeProductOffer;
                     var newName = this.nameTextBox.TextBox.Text;
-
-                    string cleanedPrice = new string(this.priceTextBox.TextBox.Text
-                     .Where(c => char.IsDigit(c) || c == '.' || c == ',')
-                     .ToArray())
-                     .Replace(',', '.');
-
+                    string cleanedPrice = ValidationUtils.CleanMonetaryInput(this.priceTextBox.TextBox.Text);
                     var newPrice = decimal.Parse(cleanedPrice);
                     var newQuantity = long.Parse(this.quantityTextBox.TextBox.Text);
                     var newDescription = this.descriptionTextBox.TextBox.Text;
@@ -278,11 +274,11 @@ namespace DiverseMarket.UI.Pages.Company
 
                     if (wasUpdateSuccessful)
                     {
-                         MessageBox.Show("Produto atualizado com sucesso!", "Sucesso", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                        MessageBoxUtils.ShowMessageBox("Produto atualizado com sucesso!", MessageBoxIcon.Information);
                     }
                     else
                     {
-                        MessageBox.Show("Falha ao atualizar o produto. Tente novamente.", "Erro", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        MessageBoxUtils.ShowMessageBox("Falha ao atualizar o produto. Tente novamente.", MessageBoxIcon.Error);
                     }
                 }
             }
@@ -291,6 +287,35 @@ namespace DiverseMarket.UI.Pages.Company
                 new LogMessage(ex);
             }
         }
+
+        private void deleteButton_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                if (MessageBoxUtils.ConfirmAction("Você tem certeza que deseja excluir essa oferta de produto?"))
+                {
+                    if (ProductService.DeleteCompanyProductOfferByCompleteInfoDTO(_completeProductOffer))
+                    {
+                        MessageBoxUtils.ShowMessageBox("Oferta de produto excluída com sucesso.", MessageBoxIcon.Information);
+                        this.Hide();
+                        new CompanyProductOfferPage(this._userId).Show();
+                    }
+                    else
+                    {
+                        MessageBoxUtils.ShowMessageBox("Falha em excluir a oferta de produto. \nPor favor, tente novamente.", MessageBoxIcon.Error);
+                    }
+                } else
+                {
+                    MessageBoxUtils.ShowMessageBox("Operação cancelada. O produto não será excluído", MessageBoxIcon.Information);
+                }
+            }
+            catch (Exception ex)
+            {
+                new LogMessage(ex);
+            }
+        }
+
+
         #endregion
 
         #region Validations

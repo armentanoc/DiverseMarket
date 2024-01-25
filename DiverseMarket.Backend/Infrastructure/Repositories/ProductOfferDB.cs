@@ -24,6 +24,7 @@ namespace DiverseMarket.Backend.Infrastructure.Repositories
                 ";
         }
 
+        #region GetLowestPriceByProductId
         public static double GetLowestPriceByProductId(long productId)
         {
             double price = 0;
@@ -57,7 +58,9 @@ namespace DiverseMarket.Backend.Infrastructure.Repositories
                 Close();
             }
         }
+        #endregion
 
+        #region GetAllCompanyProductOffers
         internal static List<ProductOffer> GetAllCompanyProductOffers(long userId)
         {
             List<ProductOffer> productOffers = new();
@@ -100,7 +103,9 @@ namespace DiverseMarket.Backend.Infrastructure.Repositories
                 Close();
             }
         }
+        #endregion
 
+        #region RegisterDefaultProductOffer
         internal static bool RegisterDefaultProductOffer()
         {
             try
@@ -125,7 +130,9 @@ namespace DiverseMarket.Backend.Infrastructure.Repositories
                 Close();
             }
         }
+        #endregion
 
+        #region GetAllProductOfferInformation
         internal static List<ProductOfferCompleteInfoDTO> GetAllProductOfferInformation(List<ProductOfferBasicInfoDTO> productOfferBasicInfoDTOs)
         {
             List<long> productIdList = productOfferBasicInfoDTOs
@@ -184,7 +191,9 @@ namespace DiverseMarket.Backend.Infrastructure.Repositories
                 Close();
             }
         }
+        #endregion
 
+        #region UpdateProductOffer
         internal static bool UpdateProductOffer(ProductOfferCompleteInfoDTO newProductOffer)
         {
             try
@@ -208,6 +217,32 @@ namespace DiverseMarket.Backend.Infrastructure.Repositories
             catch (Exception ex)
             {
                 new LogMessage("An error occurred in UpdateProductOffer: " + ex.Message + ex.StackTrace);
+                return false;
+            }
+            finally
+            {
+                Close();
+            }
+        }
+
+        #endregion
+
+        internal static bool DeleteCompanyProductOffer(ProductOfferCompleteInfoDTO productOffer)
+        {
+            try
+            {
+                Open();
+                using (var command = new SQLiteCommand(_connection))
+                {
+                    command.CommandText = @"DELETE FROM ProductOffer WHERE Id = @Id";
+                    command.Parameters.AddWithValue("@Id", productOffer.Id);
+                    return command.ExecuteNonQuery() > 0;
+                }
+
+            }
+            catch (Exception ex)
+            {
+                new LogMessage(ex);
                 return false;
             }
             finally
