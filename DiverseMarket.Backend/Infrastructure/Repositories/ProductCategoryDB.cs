@@ -59,7 +59,7 @@ namespace DiverseMarket.Backend.Infrastructure.Repositories
                 Close();
             }
         }
-        public static List<string> GetAllCategories()
+        internal static List<string> GetAllCategories()
         {
             try
             {

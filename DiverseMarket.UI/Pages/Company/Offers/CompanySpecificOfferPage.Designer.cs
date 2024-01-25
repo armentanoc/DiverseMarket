@@ -5,14 +5,14 @@ using DiverseMarket.UI.Components;
 using DiverseMarket.UI.Messages;
 using DiverseMarket.UI.Styles;
 using DiverseMarket.UI.Util;
+using System.Globalization;
+using System.Text;
 
 namespace DiverseMarket.UI.Pages.Company
 {
     partial class CompanySpecificOfferPage
     {
         private System.ComponentModel.IContainer components = null;
-
-        private ProductBasicInfoDTO _basicProduct;
         private ProductOfferCompleteInfoDTO _completeProductOffer;
 
         private long _userId;
@@ -28,16 +28,17 @@ namespace DiverseMarket.UI.Pages.Company
         #region RoundedTextBoxes
         private RoundedTextBox nameTextBox;
         private RoundedTextBox descriptionTextBox;
+        private RoundedTextBox categoryTextBox;
         private RoundedTextBox quantityTextBox;
         private RoundedTextBox priceTextBox;
-        private ComboBox categoryComboBox = new ComboBox();
 
         #endregion
 
         #region Buttons
         private Button homepageButton;
         private Button returnButton;
-        private Button addNewOfferButton;
+        private Button editButton;
+        private Button deleteButton;
         #endregion
 
         #region Dispose
@@ -53,8 +54,9 @@ namespace DiverseMarket.UI.Pages.Company
         #endregion
 
         #region Init Components
-        private void InitializeComponent(long userId)
+        private void InitializeComponent(ProductOfferCompleteInfoDTO completeProductOffer, long userId)
         {
+            this._completeProductOffer = completeProductOffer;
             this._userId = userId;
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(1280, 832);
@@ -81,14 +83,16 @@ namespace DiverseMarket.UI.Pages.Company
             int y = 200;
             int spacing = 50;
 
-            nameTextBox = new RoundedTextBox(string.Empty, 572, 40);
+            this.Select(false, false);
+
+            nameTextBox = new RoundedTextBox(_completeProductOffer.Name, 572, 40);
             nameTextBox.Location = new Point(354, y);
             nameTextBox.TextBox.Font = new Font("Ubuntu", 10);
             nameTextBox.TextBox.Enabled = false;
             nameTextBox.TextBox.ReadOnly = true;
             this.Controls.Add(nameTextBox);
 
-            descriptionTextBox = new RoundedTextBox(string.Empty, 572, 40);
+            descriptionTextBox = new RoundedTextBox(_completeProductOffer.Description, 572, 40);
             descriptionTextBox.Location = new Point(354, nameTextBox.Bottom + spacing);
             descriptionTextBox.TextBox.Font = new Font("Ubuntu", 10);
             descriptionTextBox.TextBox.Enabled = false;
@@ -102,29 +106,13 @@ namespace DiverseMarket.UI.Pages.Company
             categoryTextBox.TextBox.ReadOnly = true;
             this.Controls.Add(categoryTextBox);
 
-            categoryComboBox.Font = new Font("Ubuntu", 10);
-            categoryComboBox.Size = new Size(572, 100);
-            categoryComboBox.Location = new Point(354, descriptionTextBox.Bottom + spacing);
-            List<string> productsFromService = ProductService.GetAllProductCategories();
-            categoryComboBox.DataSource = productsFromService;
-            this.Controls.Add(categoryComboBox);
-
-            quantityTextBox = new RoundedTextBox(string.Empty, 572, 40);
-            quantityTextBox.Location = new Point(354, categoryComboBox.Bottom + spacing);
+            quantityTextBox = new RoundedTextBox(_completeProductOffer.Quantity.ToString(), 572, 40);
+            quantityTextBox.Location = new Point(354, categoryTextBox.Bottom + spacing);
             quantityTextBox.TextBox.Font = new Font("Ubuntu", 10);
             this.Controls.Add(quantityTextBox);
 
-            //categoryTextBox = new RoundedTextBox(string.Empty, 572, 40);
-            //categoryTextBox.Location = new Point(354, descriptionTextBox.Bottom + spacing);
-            //categoryTextBox.TextBox.Font = new Font("Ubuntu", 10);
-            //this.Controls.Add(categoryTextBox);
-
-            //quantityTextBox = new RoundedTextBox(string.Empty, 572, 40);
-            //quantityTextBox.Location = new Point(354, categoryTextBox.Bottom + spacing);
-            //quantityTextBox.TextBox.Font = new Font("Ubuntu", 10);
-            //this.Controls.Add(quantityTextBox);
-
-            priceTextBox = new RoundedTextBox(string.Empty, 572, 40); ;
+            string formattedPrice = _completeProductOffer.Price.ToString("C", CultureInfo.GetCultureInfo("pt-BR"));
+            priceTextBox = new RoundedTextBox(formattedPrice, 572, 40); ;
             priceTextBox.Location = new Point(354, quantityTextBox.Bottom + spacing);
             priceTextBox.TextBox.Font = new Font("Ubuntu", 10);
             this.Controls.Add(priceTextBox);
@@ -139,7 +127,7 @@ namespace DiverseMarket.UI.Pages.Company
             int spacing = 35;
 
             Label pageTitle = new Label();
-            pageTitle.Text = "Detalhes do produto";
+            pageTitle.Text = "Detalhes do pedido";
             pageTitle.Location = new Point(140, 67);
             pageTitle.AutoSize = true;
             pageTitle.ForeColor = Color.White;
@@ -223,27 +211,15 @@ namespace DiverseMarket.UI.Pages.Company
 
             #endregion
 
-            this.addNewOfferButton = new RoundedButton("Adicionar Oferta", 150, 57, Colors.SecondaryButton, 32);
-            this.addNewOfferButton.Location = new System.Drawing.Point(557, priceTextBox.Bottom + spacing);
-            this.addNewOfferButton.MouseEnter += new EventHandler((object sender, EventArgs e) =>
+            this.editButton = new RoundedButton("Editar", 150, 40, Colors.CallToActionButton, 32);
+            this.editButton.Location = new System.Drawing.Point(475, priceTextBox.Bottom + spacing);
+            this.editButton.Cursor = Cursors.Hand;
+            this.editButton.Click += new EventHandler((object sender, EventArgs e) =>
             {
-                this.addNewOfferButton.Cursor = Cursors.Hand;
+                editButton_Click(sender, e);
             });
-            this.addNewOfferButton.Click += new EventHandler((object sender, EventArgs e) =>
-            {
-                var newProductOfferInsertDTO = new ProductOfferInsertDTO(
-                            this._userId,
-                            decimal.Parse(this.priceTextBox.TextBox.Text),
-                            long.Parse(this.quantityTextBox.TextBox.Text),
-                            this.nameTextBox.TextBox.Text,
-                            this.categoryComboBox.SelectedItem.ToString(),
-                            this.descriptionTextBox.TextBox.Text
-                        );
 
-
-                ProductService.InsertNewProductWithProductOffer(newProductOfferInsertDTO);
-
-                bool wasUpdateSuccessful = ProductService.InsertNewProductWithProductOffer(newProductOfferInsertDTO);
+            this.Controls.Add(editButton);
 
             this.deleteButton = new RoundedButton("Excluir", 150, 40, Colors.CallToActionButton, 32);
             this.deleteButton.Location = new System.Drawing.Point(655, priceTextBox.Bottom + spacing);
@@ -251,20 +227,10 @@ namespace DiverseMarket.UI.Pages.Company
             this.deleteButton.Click += new EventHandler((object sender, EventArgs e) =>
             {
                 deleteButton_Click(sender, e);
-                if (wasUpdateSuccessful)
-                {
-                    MessageBoxUtils.ShowMessageBox("Oferta inserida com sucesso!", MessageBoxIcon.Information);
-                }
-                else
-                {
-                    MessageBoxUtils.ShowMessageBox("Falha ao inserir a oferta. Tente novamente.", MessageBoxIcon.Error);
-                }
-
             });
 
-            this.Controls.Add(addNewOfferButton);
-
             #region Return Button
+            this.Controls.Add(deleteButton);
 
             this.returnButton = new RoundedButton("Voltar", 150, 57, Colors.SecondaryButton, 32);
             this.returnButton.Location = new System.Drawing.Point(1080, 57);
@@ -286,34 +252,18 @@ namespace DiverseMarket.UI.Pages.Company
         #endregion
 
         #region Clicks
-        private void newButton_Click(object sender, EventArgs e)
+        private void editButton_Click(object sender, EventArgs e)
         {
             try
             {
                 if (AreFieldsValid())
                 {
                     var offer = _completeProductOffer;
-
-                    string cleanedPrice = ValidationUtils.CleanMonetaryInput(this.priceTextBox.TextBox.Text);
-
                     var newName = this.nameTextBox.TextBox.Text;
-                    var newDescription = this.descriptionTextBox.TextBox.Text;
+                    string cleanedPrice = ValidationUtils.CleanMonetaryInput(this.priceTextBox.TextBox.Text);
                     var newPrice = decimal.Parse(cleanedPrice);
                     var newQuantity = long.Parse(this.quantityTextBox.TextBox.Text);
-                    var newCategory = "teste";
-
-                    //var newCategory1 = this.categoryComboBox.SelectedItem.ToString();
-                    
-
-                    //var newProductOffer = new ProductOfferCompleteInfoDTO(
-                    //    this._userId,
-                    //    offer.ProductId,
-                    //    newPrice,
-                    //    newQuantity,
-                    //    newName,
-                    //    newCategory,
-                    //    newDescription
-                    //);
+                    var newDescription = this.descriptionTextBox.TextBox.Text;
 
                     var newProductOffer = new ProductOfferCompleteInfoDTO(
                         offer.Id,
@@ -326,29 +276,9 @@ namespace DiverseMarket.UI.Pages.Company
                         newDescription
                     );
 
-                    //if (wasUpdateSuccessful)
-                    //{
-                    //    MessageBoxUtils.ShowMessageBox("Produto atualizado com sucesso!", MessageBoxIcon.Information);
-                    //}
-                    //else
-                    //{
-                    //    MessageBoxUtils.ShowMessageBox("Falha ao atualizar o produto. Tente novamente.", MessageBoxIcon.Error);
-                    //}
-                }
-            }
-            catch (Exception ex)
-            {
-                new LogMessage(ex);
-            }
-        }
+                    bool wasUpdateSuccessful = ProductService.UpdateProductOfferByCompleteInfoDTO(newProductOffer);
 
-        private void deleteButton_Click(object sender, EventArgs e)
-        {
-            try
-            {
-                if (MessageBoxUtils.ConfirmAction("Você tem certeza que deseja excluir essa oferta de produto?"))
-                {
-                    if (ProductService.DeleteCompanyProductOfferByCompleteInfoDTO(_completeProductOffer))
+                    if (wasUpdateSuccessful)
                     {
                         MessageBoxUtils.ShowMessageBox("Produto atualizado com sucesso!", MessageBoxIcon.Information);
                     }
@@ -434,7 +364,7 @@ namespace DiverseMarket.UI.Pages.Company
                 MessageBox.Show("Falha ao atualizar o produto. Tente novamente.", "Erro", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 throw new ArgumentException($"CheckFields retornou falso: ({wrongFieldsStr})");
             }
-
+               
             return validInputs;
         }
         #endregion
