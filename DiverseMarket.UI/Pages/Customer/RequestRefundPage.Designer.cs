@@ -1,5 +1,8 @@
 ﻿using DiverseMarket.UI.Components;
 using DiverseMarket.UI.Styles;
+using System.ComponentModel;
+
+using DiverseMarket.Backend.Services;
 
 namespace DiverseMarket.UI.Pages.Customer
 {
@@ -8,8 +11,12 @@ namespace DiverseMarket.UI.Pages.Customer
         
         private System.ComponentModel.IContainer components = null;
 
-        private long userId;
+        private long customerId;
+        private long orderItemId;
+
         private Button homepageButton;
+
+        private Panel refundContainer;
         protected override void Dispose(bool disposing)
         {
             if (disposing && (components != null))
@@ -19,9 +26,11 @@ namespace DiverseMarket.UI.Pages.Customer
             base.Dispose(disposing);
         }
 
-        private void InitializeComponent(long userId, long orderId)
+        private void InitializeComponent(long customerId, long orderItemId)
         {
-            this.userId = userId;
+            this.customerId = customerId;
+            this.orderItemId = orderItemId;
+
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(1280, 832);
             StartPosition = FormStartPosition.CenterScreen;
@@ -34,8 +43,33 @@ namespace DiverseMarket.UI.Pages.Customer
         private void InitScreen()
         {
             InitLogo();
+            InitContainer();
             InitLabel();
+            InitRequestRefundForm();
             InitButtons();
+        }
+
+        private void InitRequestRefundForm()
+        {
+            OrderDetailsForRefundCard orderDetailsForRefundCard = new OrderDetailsForRefundCard(this.orderItemId, 
+                CompanyService.GetCompanyNameBySellingItemId(orderItemId), UserService.GetUserFullNameById(this.customerId), 
+                UserService.GetAddressByUserId(this.customerId), OrderService.GetOrderItemStatusById(this.orderItemId));
+            orderDetailsForRefundCard.Location = new Point(27, 19);
+            this.Controls.Add(orderDetailsForRefundCard);
+
+            RequestRefundProductCard productCard = new RequestRefundProductCard(ProductService.GetProductNameByOrderItemId(this.orderItemId), );
+
+        }
+
+        private void InitContainer()
+        {
+            this.refundContainer = new Panel();
+            this.refundContainer.Size = new Size(1216, 566);
+            this.refundContainer.Location = new Point(28, 155);
+            this.refundContainer.BackColor = Colors.MainBackgroundColor;
+            this.refundContainer.AutoScroll = true;
+
+            Controls.Add(this.refundContainer);
         }
 
         private void InitLabel()
@@ -75,7 +109,7 @@ namespace DiverseMarket.UI.Pages.Customer
             this.homepageButton.Click += new EventHandler((object sender, EventArgs e) =>
             {
                 this.Hide();
-                new HomePageCustomer(this.userId).Show();
+                new HomePageCustomer(this.customerId).Show();
             });
 
             this.Controls.Add(homepageButton);

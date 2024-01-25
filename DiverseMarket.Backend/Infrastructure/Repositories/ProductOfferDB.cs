@@ -1,9 +1,13 @@
-﻿using DiverseMarket.Backend.DTOs;
-using DiverseMarket.Backend.Infrastructure.Operations;
-using DiverseMarket.Backend.Model.Enums;
+﻿using DiverseMarket.Backend.Infrastructure.Operations;
 using DiverseMarket.Backend.Model.Products;
 using DiverseMarket.Logger;
+using System;
+using System.Collections.Generic;
 using System.Data.SQLite;
+using System.Diagnostics;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 
 namespace DiverseMarket.Backend.Infrastructure.Repositories
 {
@@ -12,93 +16,16 @@ namespace DiverseMarket.Backend.Infrastructure.Repositories
         public static string InitializeTable()
         {
             return @"
-                CREATE TABLE IF NOT EXISTS ProductOffer (
-                    id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
-                    Company_id INTEGER NOT NULL,
-                    Product_id INTEGER NOT NULL,
-                    price DECIMAL(10,2),
-                    quantity INTEGER,
-                    FOREIGN KEY (Company_id) REFERENCES Company(id) ON DELETE SET NULL ON UPDATE CASCADE,
-                    FOREIGN KEY (Product_id) REFERENCES Product(id) ON DELETE SET NULL ON UPDATE CASCADE
-                );
-                ";
-        }
-
-        public static double GetLowestPriceByProductId(long productId)
-        {
-            double price = 0;
-            try
-            {
-                Open();
-                using (var command = new SQLiteCommand(_connection))
-                {
-                    command.CommandText = @"SELECT MIN(price) AS lowest_price
-                                                    FROM ProductOffer
-                                                    WHERE Product_id = @ProductId;";
-                    command.Parameters.AddWithValue("@ProductId", productId);
-
-                    using (var reader = command.ExecuteReader())
-                    {
-                        if (reader.Read())
-                        {
-                            price = (double)reader[0];
-                        }
-                    }
-                }
-                return price;
-            }
-            catch (Exception ex)
-            {
-                new LogMessage("An error occurred in GetLowestPriceByProductId: " + ex.Message + ex.StackTrace);
-                return price;
-            }
-            finally
-            {
-                Close();
-            }
-        }
-
-        internal static List<ProductOffer> GetAllCompanyProductOffers(long userId)
-        {
-            List<ProductOffer> productOffers = new();
-            try
-            {
-                Open();
-                using (var command = new SQLiteCommand(_connection))
-                {
-                    command.CommandText = @"SELECT *
-                                                    FROM ProductOffer
-                                                    WHERE Company_id = @CompanyId;";
-                    command.Parameters.AddWithValue("@CompanyId", userId);
-
-                    using (var reader = command.ExecuteReader())
-                    {
-                        while (reader.Read())
-                        {
-                            ProductOffer productOffer = new ProductOffer
-                            (
-                                id: Convert.ToInt32(reader["id"]),
-                                sellerId: Convert.ToInt32(reader["Company_id"]),
-                                productId: Convert.ToInt32(reader["Product_id"]),
-                                price: Convert.ToDecimal(reader["price"]),
-                                quantity: Convert.ToInt32(reader["quantity"])
-                            );
-                            productOffers.Add(productOffer);
-                        }
-                    }
-                }
-
-                return productOffers;
-            }
-            catch (Exception ex)
-            {
-                new LogMessage("An error occurred in GetAllCompanyProductOffers: " + ex.Message + ex.StackTrace);
-                return productOffers;
-            }
-            finally
-            {
-                Close();
-            }
+            CREATE TABLE IF NOT EXISTS ProductOffer (
+                id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+                Company_id INTEGER NOT NULL,
+                Product_id INTEGER NOT NULL,
+                price DECIMAL(10,2),
+                quantity INTEGER,
+                FOREIGN KEY (Company_id) REFERENCES Company(id) ON DELETE SET NULL ON UPDATE CASCADE,
+                FOREIGN KEY (Product_id) REFERENCES Product(id) ON DELETE SET NULL ON UPDATE CASCADE
+            );
+            ";
         }
 
         internal static bool RegisterDefaultProductOffer()
@@ -125,95 +52,65 @@ namespace DiverseMarket.Backend.Infrastructure.Repositories
                 Close();
             }
         }
-
-        internal static List<ProductOfferCompleteInfoDTO> GetAllProductOfferInformation(List<ProductOfferBasicInfoDTO> productOfferBasicInfoDTOs)
+        public static double GetLowestPriceByProductId(long producId)
         {
-            List<long> productIdList = productOfferBasicInfoDTOs
-                .Select(productOffer => productOffer.ProductId)
-                .ToList();
-
-            string formattedIdList = string.Join(", ", productOfferBasicInfoDTOs.Select(productOffer => productOffer.ProductId));
-
-            List<ProductOfferCompleteInfoDTO> productOffers = new();
+            double price = 0;
             try
             {
                 Open();
-                using (var command = new SQLiteCommand(_connection))
+                string query = @"SELECT MIN(price) AS lowest_price
+                                FROM ProductOffer
+                                WHERE Product_id = @ProductId;";
+                _command = new SQLiteCommand(query, _connection);
+
+                _command.Parameters.AddWithValue("@ProductId", producId);
+
+                var reader = _command.ExecuteReader();
+
+                if (reader.Read())
                 {
-                    command.CommandText = @"SELECT *
-                                                    FROM Product
-                                                    WHERE id IN (@formattedIdList);";
-                    command.Parameters.AddWithValue("@formattedIdList", formattedIdList);
-
-                    using (var reader = command.ExecuteReader())
-                    {
-                        while (reader.Read())
-                        {
-                            long thisOfferProductId = Convert.ToInt64(reader["id"]);
-                            ProductOfferBasicInfoDTO thisOfferBasicInfo = productOfferBasicInfoDTOs.FirstOrDefault(p => p.ProductId == thisOfferProductId);
-
-                            if (thisOfferBasicInfo != null)
-                            {
-                                ProductOfferCompleteInfoDTO productOfferCompleteDTO = new ProductOfferCompleteInfoDTO
-                                (
-                                    id: thisOfferBasicInfo.Id,
-                                    companyId: thisOfferBasicInfo.CompanyId,
-                                    productId: thisOfferBasicInfo.ProductId,
-                                    price: thisOfferBasicInfo.Price,
-                                    quantity: thisOfferBasicInfo.Quantity,
-                                    name: reader["name"].ToString(),
-                                    description: reader["description"].ToString(),
-                                    category: Enum.Parse<ProductCategory>(reader["ProductCategory_id"].ToString()).ToString()
-                                );
-
-                                productOffers.Add(productOfferCompleteDTO);
-                            }
-                        }
-                    }
+                    price = (double)reader[0];
                 }
 
-                return productOffers;
+                return price;
             }
             catch (Exception ex)
             {
-                new LogMessage("GetAllProductOfferInformation: " + ex.Message + ex.StackTrace);
-                return productOffers;
+                Console.WriteLine("An error occured: " + ex.Message);
+                return price;
+
             }
-            finally
-            {
-                Close();
-            }
+            finally { Close(); }
         }
 
-        internal static bool UpdateProductOffer(ProductOfferCompleteInfoDTO newProductOffer)
+        internal static long GetProductIdByProductOfferId(long productOfferId)
         {
+            long id = 0;
             try
             {
                 Open();
-                using (var command = new SQLiteCommand(_connection))
+                string query = @"SELECT Product_id from ProductOffer
+                                WHERE id = @id;";
+                _command = new SQLiteCommand(query, _connection);
+
+                _command.Parameters.AddWithValue("@id", productOfferId);
+
+                var reader = _command.ExecuteReader();
+
+                if (reader.Read())
                 {
-                    command.CommandText = @"UPDATE ProductOffer
-                                                    SET price = @Price,
-                                                        quantity = @Quantity
-                                                    WHERE id = @Id;";
-
-                    command.Parameters.AddWithValue("@Price", newProductOffer.Price);
-                    command.Parameters.AddWithValue("@Quantity", newProductOffer.Quantity);
-                    command.Parameters.AddWithValue("@Id", newProductOffer.Id);
-
-                    return command.ExecuteNonQuery() > 0;
+                    id = (long)reader[0];
                 }
 
+                return id;
             }
             catch (Exception ex)
             {
-                new LogMessage("An error occurred in UpdateProductOffer: " + ex.Message + ex.StackTrace);
-                return false;
+                Console.WriteLine("An error occured: " + ex.Message);
+                return id;
+
             }
-            finally
-            {
-                Close();
-            }
+            finally { Close(); }
         }
     }
 }

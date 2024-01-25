@@ -11,6 +11,7 @@ namespace DiverseMarket.Backend.Model.Enums
         Preparation = 1,
         Sent = 2,
         Recieved = 3,
-        Canceled = 4
+        Canceled = 4,
+        NotRecieved = 5
     }
 }

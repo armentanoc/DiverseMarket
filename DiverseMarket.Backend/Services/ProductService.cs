@@ -1,6 +1,12 @@
 ﻿using DiverseMarket.Backend.DTOs;
 using DiverseMarket.Backend.Infrastructure.Repositories;
+using DiverseMarket.Backend.Model;
 using DiverseMarket.Backend.Model.Products;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 
 namespace DiverseMarket.Backend.Services
 {
@@ -8,7 +14,7 @@ namespace DiverseMarket.Backend.Services
     {
         public static List<ProductBasicInfoDTO> GetAllProducstBasicInfo()
         {
-            List<Model.Product> products = ProductDB.GetAllProducts();
+            List<Product> products = ProductDB.GetAllProducst();
 
             List<ProductBasicInfoDTO> productBasicInfoDTOs = new List<ProductBasicInfoDTO>();
 
@@ -24,42 +30,18 @@ namespace DiverseMarket.Backend.Services
             return productBasicInfoDTOs;
         }
 
-        public static List<ProductOfferCompleteInfoDTO> GetAllProductOfferInfo(long userId)
+        internal static string GetProductDescriptionByProductOfferId(long productOfferId)
         {
+            long productId = ProductOfferDB.GetProductIdByProductOfferId(productOfferId);
 
-            List<ProductOfferBasicInfoDTO> productOfferData =
-                GetAllProductOffersByCompanyUserId(userId);
-            //searchs ProductOffer table
-
-            return ProductOfferDB.GetAllProductOfferInformation(productOfferData);
-            //returns data with both ProductOffer and Product tables
+            return ProductDB.GetProductDescriptionById(productId);
         }
 
-        public static List<ProductOfferBasicInfoDTO> GetAllProductOffersByCompanyUserId(long userId)
+        internal static string GetProductNameByProductOfferId(long productOfferId)
         {
-            List<ProductOffer> productOffers = ProductOfferDB.GetAllCompanyProductOffers(userId);
-            
-            List<ProductOfferBasicInfoDTO> productOfferBasicInfoDTOs = new();
-            
-            foreach (var productOffer in productOffers)
-            {
-                productOfferBasicInfoDTOs.Add(
-                    new ProductOfferBasicInfoDTO(
-                        productOffer.Id,
-                        productOffer.SellerId,
-                        productOffer.ProductId,
-                        productOffer.Price,
-                        productOffer.Quantity
-                        )
-                    );
-            }
+            long productId = ProductOfferDB.GetProductIdByProductOfferId(productOfferId);
 
-            return productOfferBasicInfoDTOs;
-        }
-
-        public static bool UpdateProductOfferByCompleteInfoDTO(ProductOfferCompleteInfoDTO newProductOffer)
-        {
-            return ProductOfferDB.UpdateProductOffer(newProductOffer);
+            return ProductDB.GetProductNameById(productId);
         }
     }
 }

@@ -13,18 +13,16 @@ namespace DiverseMarket.Backend.DTOs
         public DateTime Date { get; private set; }
         public decimal TotalAmount { get; private set; }
         public long CustomerId { get; private set; }
-        public long CompanyId { get; private set; }
 
-        //public OrderStatus Status { get; private set; }
+        public OrderStatus Status { get; private set; }
 
-        public OrderBasicInfoDTO(long id, DateTime date, decimal totalAmount, long customerId, long companyId)
+        public OrderBasicInfoDTO(long id, DateTime date, OrderStatus status, decimal totalAmount, long customerId)
         {
             Id = id;
             Date = date;
             TotalAmount = totalAmount;
             CustomerId = customerId;
-            CompanyId = companyId;
-            //Status = status;
+            Status = status;
         }
 
 

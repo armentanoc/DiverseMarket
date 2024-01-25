@@ -5,24 +5,20 @@ namespace DiverseMarket.Backend.Model.Products
 
     internal class Product
     {
-        public int Id { get; private set; }
+        public long Id { get; private set; }
         public string Name { get; private set; }
         public string Description { get; private set; }
+        public string Category { get; private set; }
         public decimal AverageRating { get; private set; }
         public decimal NumberOfReviews { get; private set; }
         //implementar imagem?
 
-        internal Product(string name, string description)
+        public Product(long id, string name, string description, string category)
         {
-            Id = SetId();
+            Id = id;
             Name = name;
             Description = description;
-
-        }
-
-        private int SetId()
-        {
-            return Math.Abs(Guid.NewGuid().GetHashCode());
+            Category = category;
         }
 
         internal void AddReview(decimal review)

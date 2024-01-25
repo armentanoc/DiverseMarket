@@ -47,8 +47,8 @@ namespace DiverseMarket.UI.Components
             switch (status)
             {
                 case RefundStatus.Accepted: return Colors.ApprovedRefund;
-                case RefundStatus.Analysis: return Colors.AnalysisRefund;
-                default: return Colors.DeniedRefund;
+                case RefundStatus.Denied: return Colors.DeniedRefund;
+                default: return Colors.AnalysisRefund;
             }
         }
 
@@ -57,8 +57,8 @@ namespace DiverseMarket.UI.Components
             switch (status)
             {
                 case RefundStatus.Accepted: return "Aprovada";
-                case RefundStatus.Analysis: return "Em análise";
-                default: return "Recusada";
+                case RefundStatus.Denied: return "Recusada";
+                default: return "Em análise";
             }
         }
 
