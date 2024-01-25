@@ -257,51 +257,6 @@ namespace DiverseMarket.UI.Pages.Company
         #endregion
 
         #region Clicks
-        /*private void newButton_Click(object sender, EventArgs e)
-        {
-            try
-            {
-                if (AreFieldsValid())
-                {
-                    var offer = _completeProductOffer;
-
-                    string cleanedPrice = ValidationUtils.CleanMonetaryInput(this.priceTextBox.TextBox.Text);
-
-                    var newName = this.nameTextBox.TextBox.Text;
-                    var newDescription = this.descriptionTextBox.TextBox.Text;
-                    var newPrice = decimal.Parse(cleanedPrice);
-                    var newQuantity = long.Parse(this.quantityTextBox.TextBox.Text)
-                    // var newCategory = "teste";
-                    //var newCategory1 = this.categoryComboBox.SelectedItem;
-
-
-                    //var newProductOffer = new ProductOfferCompleteInfoDTO(
-                    //    this._userId,
-                    //    offer.ProductId,
-                    //    newPrice,
-                    //    newQuantity,
-                    //    newName,
-                    //    newCategory,
-                    //    newDescription
-                    //);
-
-                    //bool wasUpdateSuccessful = ProductService.UpdateProductOfferByCompleteInfoDTO(newProductOffer);
-
-                    //if (wasUpdateSuccessful)
-                    //{
-                    //    MessageBoxUtils.ShowMessageBox("Produto atualizado com sucesso!", MessageBoxIcon.Information);
-                    //}
-                    //else
-                    //{
-                    //    MessageBoxUtils.ShowMessageBox("Falha ao atualizar o produto. Tente novamente.", MessageBoxIcon.Error);
-                    //}
-                }
-            }
-            catch (Exception ex)
-            {
-                new LogMessage(ex);
-            }
-        }*/
 
         private void InsertNewProductWithOffer()
         {
