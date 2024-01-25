@@ -30,20 +30,23 @@ namespace DiverseMarket.Backend.Infrastructure.Operations
             }
         }
 
-        internal static bool Close()
-        {
-            try
+            internal static bool Close()
             {
-                _command?.Dispose();
-                _connection?.Dispose();
-                return true;
+                try
+                {
+                    _command?.Dispose();
+                    _connection?.Close();
+                    _connection?.Dispose();
+
+                    return true;
+                }
+                catch (SQLiteException ex)
+                {
+                    new LogMessage(ex);
+                    return false;
+                }
             }
-            catch (SQLiteException ex)
-            {
-                new LogMessage(ex);
-                return false;
-            }
-        }
+
 
         #endregion
 
@@ -135,7 +138,10 @@ namespace DiverseMarket.Backend.Infrastructure.Operations
 
         private static void InsertDefaultCompanyRelatedData()
         {
-            ProductOfferDB.RegisterDefaultProductOffer();
+            ProductCategoryDB.RegisterDefaultProductCategories();
+            ProductDB.RegisterDefaultProducts();
+            ProductOfferDB.RegisterDefaultProductOffers();
+
         }
 
         private static void RegisterDefaultUserCompany()

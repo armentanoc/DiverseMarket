@@ -2,6 +2,7 @@
 using DiverseMarket.Backend.Services;
 using DiverseMarket.Logger;
 using DiverseMarket.UI.Components;
+using DiverseMarket.UI.Messages;
 using DiverseMarket.UI.Styles;
 using DiverseMarket.UI.Util;
 using System.Globalization;
@@ -261,7 +262,7 @@ namespace DiverseMarket.UI.Pages.Company
 
                     var newProductOffer = new ProductOfferCompleteInfoDTO(
                         offer.Id,
-                        offer.CompanyId,
+                        offer.CompanyUserId,
                         offer.ProductId,
                         newPrice,
                         newQuantity,

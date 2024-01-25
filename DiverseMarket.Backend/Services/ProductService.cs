@@ -1,6 +1,7 @@
 ﻿using DiverseMarket.Backend.DTOs;
 using DiverseMarket.Backend.Infrastructure.Repositories;
 using DiverseMarket.Backend.Model.Products;
+using DiverseMarket.Logger;
 
 namespace DiverseMarket.Backend.Services
 {
@@ -29,7 +30,8 @@ namespace DiverseMarket.Backend.Services
 
             List<ProductOfferBasicInfoDTO> productOfferData =
                 GetAllProductOffersByCompanyUserId(userId);
-            //searchs ProductOffer table
+            
+            new LogMessage($"Count productOfferData: {productOfferData.Count}");
 
             return ProductOfferDB.GetAllProductOfferInformation(productOfferData);
             //returns data with both ProductOffer and Product tables

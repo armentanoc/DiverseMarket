@@ -106,7 +106,7 @@ namespace DiverseMarket.Backend.Infrastructure.Repositories
         #endregion
 
         #region RegisterDefaultProductOffer
-        internal static bool RegisterDefaultProductOffer()
+        internal static bool InsertProductOffer(ProductOfferBasicInfoDTO productOffer)
         {
             try
             {
@@ -114,20 +114,85 @@ namespace DiverseMarket.Backend.Infrastructure.Repositories
                 using (var command = new SQLiteCommand(_connection))
                 {
                     command.CommandText = @"INSERT INTO ProductOffer(Company_id, Product_id, price, quantity)
-                                                    VALUES(2, 1, 99, 5);";
+                                    VALUES (@CompanyUserId, @ProductId, @Price, @Quantity)";
+
+                    command.Parameters.AddWithValue("@CompanyUserId", productOffer.CompanyUserId);
+                    command.Parameters.AddWithValue("@ProductId", productOffer.ProductId);
+                    command.Parameters.AddWithValue("@Price", productOffer.Price);
+                    command.Parameters.AddWithValue("@Quantity", productOffer.Quantity);
 
                     return command.ExecuteNonQuery() > 0;
                 }
-
             }
             catch (Exception ex)
             {
-                new LogMessage("An error occurred in RegisterDefaultProductOffer: " + ex.Message + ex.StackTrace);
+                new LogMessage(ex);
                 return false;
             }
             finally
             {
                 Close();
+            }
+        }
+
+        public static void RegisterDefaultProductOffers()
+        {
+            try
+            {
+                ProductOfferBasicInfoDTO productOffer;
+
+                //companyId, productId, price, quantity
+
+                //roupas
+                productOffer = new ProductOfferBasicInfoDTO(2, 1, 99, 5);
+                InsertProductOffer(productOffer);
+                productOffer = new ProductOfferBasicInfoDTO(2, 2, 119, 6);
+                InsertProductOffer(productOffer);
+                productOffer = new ProductOfferBasicInfoDTO(2, 3, 69, 2);
+                InsertProductOffer(productOffer);
+
+                //tênis
+                productOffer = new ProductOfferBasicInfoDTO(2, 4, 389, 2);
+                InsertProductOffer(productOffer);
+                productOffer = new ProductOfferBasicInfoDTO(2, 5, 419, 4);
+                InsertProductOffer(productOffer);
+                productOffer = new ProductOfferBasicInfoDTO(2, 6, 299, 6);
+                InsertProductOffer(productOffer);
+
+                //eletrônicos
+                productOffer = new ProductOfferBasicInfoDTO(2, 7, 5000, 7);
+                InsertProductOffer(productOffer);
+                productOffer = new ProductOfferBasicInfoDTO(2, 8, 750, 8);
+                InsertProductOffer(productOffer);
+                productOffer = new ProductOfferBasicInfoDTO(2, 9, 120, 9);
+                InsertProductOffer(productOffer);
+
+                //livros
+                productOffer = new ProductOfferBasicInfoDTO(2, 10, 79, 1);
+                InsertProductOffer(productOffer);
+                productOffer = new ProductOfferBasicInfoDTO(2, 11, 69, 2);
+                InsertProductOffer(productOffer);
+                productOffer = new ProductOfferBasicInfoDTO(2, 12, 59, 4);
+                InsertProductOffer(productOffer);
+
+                //joias
+                productOffer = new ProductOfferBasicInfoDTO(2, 13, 89, 4);
+                InsertProductOffer(productOffer);
+                productOffer = new ProductOfferBasicInfoDTO(2, 14, 999, 5);
+                InsertProductOffer(productOffer);
+                productOffer = new ProductOfferBasicInfoDTO(2, 15, 129, 7);
+                InsertProductOffer(productOffer);
+
+                //mais joias para testar autoscroll
+                productOffer = new ProductOfferBasicInfoDTO(2, 16, 89, 4);
+                InsertProductOffer(productOffer);
+                productOffer = new ProductOfferBasicInfoDTO(2, 17, 79, 5);
+                InsertProductOffer(productOffer);
+
+            }
+            catch (Exception ex)
+            {
+                new LogMessage(ex);
             }
         }
         #endregion
@@ -139,18 +204,22 @@ namespace DiverseMarket.Backend.Infrastructure.Repositories
                 .Select(productOffer => productOffer.ProductId)
                 .ToList();
 
-            string formattedIdList = string.Join(", ", productOfferBasicInfoDTOs.Select(productOffer => productOffer.ProductId));
+            List<ProductOfferCompleteInfoDTO> productOffers = new List<ProductOfferCompleteInfoDTO>();
 
-            List<ProductOfferCompleteInfoDTO> productOffers = new();
             try
             {
                 Open();
+
+                string parameterNames = string.Join(", ", productIdList.Select((_, index) => "@productId" + index));
+
                 using (var command = new SQLiteCommand(_connection))
                 {
-                    command.CommandText = @"SELECT *
-                                                    FROM Product
-                                                    WHERE id IN (@formattedIdList);";
-                    command.Parameters.AddWithValue("@formattedIdList", formattedIdList);
+                    command.CommandText = $"SELECT * FROM Product WHERE id IN ({parameterNames})";
+
+                    for (int i = 0; i < productIdList.Count; i++)
+                    {
+                        command.Parameters.AddWithValue($"@productId{i}", productIdList[i]);
+                    }
 
                     using (var reader = command.ExecuteReader())
                     {
@@ -164,7 +233,7 @@ namespace DiverseMarket.Backend.Infrastructure.Repositories
                                 ProductOfferCompleteInfoDTO productOfferCompleteDTO = new ProductOfferCompleteInfoDTO
                                 (
                                     id: thisOfferBasicInfo.Id,
-                                    companyId: thisOfferBasicInfo.CompanyId,
+                                    companyUserId: thisOfferBasicInfo.CompanyUserId,
                                     productId: thisOfferBasicInfo.ProductId,
                                     price: thisOfferBasicInfo.Price,
                                     quantity: thisOfferBasicInfo.Quantity,
@@ -179,6 +248,7 @@ namespace DiverseMarket.Backend.Infrastructure.Repositories
                     }
                 }
 
+                new LogMessage($"Count productOfferAllInformation: {productOffers.Count}");
                 return productOffers;
             }
             catch (Exception ex)
@@ -191,6 +261,7 @@ namespace DiverseMarket.Backend.Infrastructure.Repositories
                 Close();
             }
         }
+
         #endregion
 
         #region UpdateProductOffer
