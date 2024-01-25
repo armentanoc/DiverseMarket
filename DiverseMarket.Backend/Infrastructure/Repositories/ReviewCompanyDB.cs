@@ -1,12 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using DiverseMarket.Backend.DTOs;
+using DiverseMarket.Backend.Infrastructure.Operations;
+using DiverseMarket.Logger;
+using System.Data.SQLite;
 
 namespace DiverseMarket.Backend.Infrastructure.Repositories
 {
-    internal class ReviewCompanyDB
+    internal class ReviewCompanyDB : DatabaseConnection
     {
         internal static string InitializeTable()
         {
@@ -22,5 +21,30 @@ namespace DiverseMarket.Backend.Infrastructure.Repositories
             );";
 
         }
+
+        public static void Insert(long clientId, long companyId, string review, string comment)
+        {
+            try
+            {
+                
+                using (var command = new SQLiteCommand(_connection))
+                {
+                    command.CommandText = "INSERT INTO ReviewCompany (Client_id, Company_id, review, comment) VALUES (@ClientId, @CompanyId, @Review, @Comment);";
+
+                    command.Parameters.AddWithValue("@ClientId", clientId) ;
+                    command.Parameters.AddWithValue("@CompanyId", companyId);
+                    command.Parameters.AddWithValue("@Review", review);
+                    command.Parameters.AddWithValue("@Comment", comment);
+
+                    _connection.Open();
+                    command.ExecuteNonQuery();
+                }
+            }
+            catch (Exception ex)
+            {
+                new LogMessage(ex);
+            }
+        }
     }
 }
+
