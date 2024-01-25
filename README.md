@@ -11,6 +11,7 @@ Como guardião da comunidade, aprove novas Empresas, selecione avaliações para
 
 ### Empresas 🏢
 Empresas, cadastrem-se e sejam aprovadas pelos Moderadores! Adicionem, editem e removam ofertas de produtos. Visualizem informações detalhadas sobre as vendas realizadas e ofereçam o melhor para os Clientes. 🌟
+<!--https://github-production-user-asset-6210df.s3.amazonaws.com/88147887/299323591-8598a9f0-2089-4ee4-8e1d-666bc1435d64.mp4?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=AKIAVCODYLSA53PQK4ZA%2F20240124%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Date=20240124T131506Z&X-Amz-Expires=300&X-Amz-Signature=bc3612dad9f65bdc1a63329f2d5f470de197f9f3754b71488b909164a50220b4&X-Amz-SignedHeaders=host&actor_id=88147887&key_id=0&repo_id=732195458-->
 
 ## Utilização 
 1. Clone esse repositório na sua máquina local:

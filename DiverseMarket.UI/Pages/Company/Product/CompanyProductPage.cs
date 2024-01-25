@@ -10,9 +10,9 @@ using System.Windows.Forms;
 
 namespace DiverseMarket.UI.Pages.Company
 {
-    public partial class CompanyProductOfferPage : Form
+    public partial class CompanyProductPage : Form
     {
-        public CompanyProductOfferPage(long userId)
+        public CompanyProductPage(long userId)
         {
             InitializeComponent(userId);
         }

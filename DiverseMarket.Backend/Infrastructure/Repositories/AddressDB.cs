@@ -86,7 +86,9 @@ namespace DiverseMarket.Backend.Infrastructure.Repositories
                 return null;
 
             }
-            finally { Close(); }
+            finally { 
+                Close(); 
+            }
         }
 
         internal static bool UpdateAddressByUserId(long userId, AddressDTO address)
@@ -122,7 +124,9 @@ namespace DiverseMarket.Backend.Infrastructure.Repositories
                 return false;
 
             }
-            finally { Close(); }
+            finally { 
+                Close(); 
+            }
         }
     }
 }

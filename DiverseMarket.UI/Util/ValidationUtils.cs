@@ -5,6 +5,13 @@ namespace DiverseMarket.UI.Util
 {
     internal static class ValidationUtils
     {
+        internal static string CleanMonetaryInput(string input)
+        {
+            return new string(input
+                .Where(c => char.IsDigit(c) || c == '.' || c == ',')
+                .ToArray())
+                .Replace(',', '.');
+        }
         internal static bool IsInputAValidName(string input, string? hintText, bool? allowSpaces)
         {
             bool isValid = input.Length > 1;

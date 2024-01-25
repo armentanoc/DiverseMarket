@@ -1,12 +1,13 @@
 ﻿
 using DiverseMarket.Backend.DTOs;
 using DiverseMarket.Backend.Services;
+using DiverseMarket.Logger;
 using DiverseMarket.UI.Components;
 using DiverseMarket.UI.Styles;
 
 namespace DiverseMarket.UI.Pages.Company
 {
-    partial class CompanyProductOfferPage
+    partial class CompanyOfferPage
     {
         private System.ComponentModel.IContainer components = null;
         private long _userId;
@@ -35,6 +36,7 @@ namespace DiverseMarket.UI.Pages.Company
             ClientSize = new Size(1280, 832);
             StartPosition = FormStartPosition.CenterScreen;
             Text = "DiverseMarket";
+            KeyPreview = true;
             this.BackColor = Colors.MainBackgroundColor;
             FormClosed += HomePage_FormClosed;
             InitScreen();
@@ -52,10 +54,8 @@ namespace DiverseMarket.UI.Pages.Company
         private void InitSearchBar()
         {
             searchBar = new SearchBar();
-            searchBar.Location = new Point(184, 186);
-
+            searchBar.Location = new Point(210, 162);
             searchBar.SearchButton.Click += new EventHandler(searchButton_Click);
-
             this.Controls.Add(searchBar);
         }
         private void searchButton_Click(object sender, EventArgs e)
@@ -127,22 +127,25 @@ namespace DiverseMarket.UI.Pages.Company
         {
             this.productsPanel = new Panel();
             this.productsPanel.Size = new Size(927, 603);
-            this.productsPanel.Location = new Point(178, 276);
+            this.productsPanel.Location = new Point(178, 226);
             this.productsPanel.BackColor = Colors.MainBackgroundColor;
             this.productsPanel.AutoScroll = true;
             this.Controls.Add(productsPanel);
 
-            var productOfferCompleteInfoDTOs =
-            ProductService.GetAllProductOfferInfo(_userId);
+            //VScrollBar vScrollBar = new VScrollBar();
+            //vScrollBar.Dock = DockStyle.Right;
+            //vScrollBar.Scroll += (sender, e) => { this.productsPanel.VerticalScroll.Value = vScrollBar.Value; };
+            //this.Controls.Add(vScrollBar);
+
+            var productOfferCompleteInfoDTOs = ProductService.GetAllProductOfferInfo(_userId);
             CreateOfferCards(productOfferCompleteInfoDTOs);
         }
         private void CreateOfferCards(List<ProductOfferCompleteInfoDTO> productOfferCompleteInfoDTOs)
         {
-
             int x = 8;
             int y = 17;
 
-            this.productOfferCards = new();
+            this.productOfferCards = new List<ProductOfferCard>();
 
             foreach (var completeOfferDTO in productOfferCompleteInfoDTOs)
             {
@@ -152,28 +155,39 @@ namespace DiverseMarket.UI.Pages.Company
                     category: completeOfferDTO.Category,
                     price: completeOfferDTO.Price,
                     quantity: completeOfferDTO.Quantity
-                    );
+                );
+
+                productOfferCard.Anchor = AnchorStyles.Top | AnchorStyles.Left;
+
+                if (y + productOfferCard.Height > this.productsPanel.Height)
+                {
+                    x += 235;
+                    y = 17;
+                }
 
                 productOfferCard.Location = new Point(x, y);
                 productOfferCard.Click += new EventHandler((object sender, EventArgs e) =>
                 {
-                    new CompanySpecificProductOfferPage(completeOfferDTO, this._userId).Show();
+                    new CompanySpecificOfferPage(completeOfferDTO, this._userId).Show();
                     this.Hide();
                 });
 
                 this.productOfferCards.Add(productOfferCard);
                 this.productsPanel.Controls.Add(productOfferCard);
 
-                if (x is 713)
-                {
-                    x = 8;
-                    y += 150;
-                }
-                else
-                    x += 235;
+                y += productOfferCard.Height + 10;
             }
+
+            new LogMessage($"Number of productOfferCards: {this.productOfferCards.Count}");
         }
-        //maybe revisit here with more offer cards
+
+        private int CalculateTotalHeight(List<ProductOfferCompleteInfoDTO> productOfferCompleteInfoDTOs)
+        {
+            int cardHeight = 150; 
+            int spacing = 10; 
+            int rowCount = (int)Math.Ceiling((double)productOfferCompleteInfoDTOs.Count / 3); 
+            return rowCount * (cardHeight + spacing) + spacing; 
+        }
 
         #endregion
 
@@ -181,7 +195,7 @@ namespace DiverseMarket.UI.Pages.Company
         private void InitLabel()
         {
             Label pageTitle = new Label();
-            pageTitle.Text = "Produtos";
+            pageTitle.Text = "Ofertas de Produtos";
             pageTitle.Location = new Point(140, 67);
             pageTitle.AutoSize = true;
             pageTitle.ForeColor = Color.White;
@@ -224,6 +238,7 @@ namespace DiverseMarket.UI.Pages.Company
             });
 
             this.Controls.Add(returnButton);
+
         }
 
         #endregion
@@ -241,6 +256,18 @@ namespace DiverseMarket.UI.Pages.Company
             this.Controls.Add(logo);
         }
 
+        #endregion
+
+        #region Override to Allow Search By Enter
+        protected override bool ProcessCmdKey(ref Message msg, Keys keyData)
+        {
+            if (keyData == Keys.Enter)
+            {
+                SearchBarWorks();
+                return true;
+            }
+            return base.ProcessCmdKey(ref msg, keyData);
+        }
         #endregion
 
         #region Form Closed

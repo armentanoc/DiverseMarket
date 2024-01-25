@@ -19,11 +19,23 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Compile Update="Components\CompanyProductCard.cs">
+      <SubType>Component</SubType>
+    </Compile>
     <Compile Update="Components\ProductDetailsCard.cs">
       <SubType>Component</SubType>
     </Compile>
     <Compile Update="Components\ProductOfferCard.cs">
       <SubType>Component</SubType>
+    </Compile>
+    <Compile Update="Pages\Company\Product\AddNewProductPage.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Update="Pages\Company\Product\AddSpecificProductPage.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Update="Pages\Company\Product\CompanyProductPage.cs">
+      <SubType>Form</SubType>
     </Compile>
   </ItemGroup>
 

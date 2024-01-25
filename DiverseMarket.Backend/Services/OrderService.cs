@@ -8,9 +8,8 @@ namespace DiverseMarket.Backend.Services
     public static class OrderService
     {
         public static List<OrderBasicInfoDTO> GetAllOrdersByCustomerUserId(long userId)
-        {
-
-            throw new NotImplementedException();
+        { 
+            return SellingDB.GetAllOrdersByCustomerUserId(userId);
         }
 
         public static List<OrderBasicInfoDTO> GetAllOrdersByCompanyUserId(long userId)

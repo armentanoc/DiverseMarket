@@ -2,6 +2,7 @@
 using DiverseMarket.Backend.Services;
 using DiverseMarket.Logger;
 using DiverseMarket.UI.Components;
+using DiverseMarket.UI.Messages;
 using DiverseMarket.UI.Styles;
 using DiverseMarket.UI.Util;
 using System.Globalization;
@@ -9,7 +10,7 @@ using System.Text;
 
 namespace DiverseMarket.UI.Pages.Company
 {
-    partial class CompanySpecificProductOfferPage
+    partial class CompanySpecificOfferPage
     {
         private System.ComponentModel.IContainer components = null;
         private ProductOfferCompleteInfoDTO _completeProductOffer;
@@ -87,28 +88,26 @@ namespace DiverseMarket.UI.Pages.Company
             nameTextBox = new RoundedTextBox(_completeProductOffer.Name, 572, 40);
             nameTextBox.Location = new Point(354, y);
             nameTextBox.TextBox.Font = new Font("Ubuntu", 10);
+            nameTextBox.TextBox.Enabled = false;
+            nameTextBox.TextBox.ReadOnly = true;
             this.Controls.Add(nameTextBox);
 
             descriptionTextBox = new RoundedTextBox(_completeProductOffer.Description, 572, 40);
             descriptionTextBox.Location = new Point(354, nameTextBox.Bottom + spacing);
             descriptionTextBox.TextBox.Font = new Font("Ubuntu", 10);
+            descriptionTextBox.TextBox.Enabled = false;
+            descriptionTextBox.TextBox.ReadOnly = true;
             this.Controls.Add(descriptionTextBox);
 
-            #region Category Text Box
-            //entre 354 e 926
-            //242
-            //padding 30
-            //106
-
-            //categoryTextBox = new RoundedTextBox(_completeProductOffer.Category, 342, 40);
-            //categoryTextBox.Location = new Point(354, 336);
-            //categoryTextBox.TextBox.Font = new Font("Ubuntu", 10);
-            //this.Controls.Add(categoryTextBox);
-
-            #endregion
+            categoryTextBox = new RoundedTextBox(_completeProductOffer.Category, 572, 40);
+            categoryTextBox.Location = new Point(354, descriptionTextBox.Bottom + spacing);
+            categoryTextBox.TextBox.Font = new Font("Ubuntu", 10);
+            categoryTextBox.TextBox.Enabled = false;
+            categoryTextBox.TextBox.ReadOnly = true;
+            this.Controls.Add(categoryTextBox);
 
             quantityTextBox = new RoundedTextBox(_completeProductOffer.Quantity.ToString(), 572, 40);
-            quantityTextBox.Location = new Point(354, descriptionTextBox.Bottom + spacing);
+            quantityTextBox.Location = new Point(354, categoryTextBox.Bottom + spacing);
             quantityTextBox.TextBox.Font = new Font("Ubuntu", 10);
             this.Controls.Add(quantityTextBox);
 
@@ -148,6 +147,13 @@ namespace DiverseMarket.UI.Pages.Company
             descriptionLabel.ForeColor = Color.White;
             descriptionLabel.Font = new Font("Ubuntu", 12);
             this.Controls.Add(descriptionLabel);
+
+            Label categoryLabel = new Label();
+            categoryLabel.Text = "Categoria";
+            categoryLabel.Location = new Point(354, categoryTextBox.Top - spacing);
+            categoryLabel.ForeColor = Color.White;
+            categoryLabel.Font = new Font("Ubuntu", 12);
+            this.Controls.Add(categoryLabel);
 
             Label quantityLabel = new Label();
             quantityLabel.Text = "Quantidade";
@@ -217,9 +223,10 @@ namespace DiverseMarket.UI.Pages.Company
 
             this.deleteButton = new RoundedButton("Excluir", 150, 40, Colors.CallToActionButton, 32);
             this.deleteButton.Location = new System.Drawing.Point(655, priceTextBox.Bottom + spacing);
-            this.deleteButton.MouseEnter += new EventHandler((object sender, EventArgs e) =>
+            this.deleteButton.Cursor = Cursors.Hand;
+            this.deleteButton.Click += new EventHandler((object sender, EventArgs e) =>
             {
-                this.deleteButton.Cursor = Cursors.Hand;
+                deleteButton_Click(sender, e);
             });
 
             #region Return Button
@@ -234,7 +241,7 @@ namespace DiverseMarket.UI.Pages.Company
             this.returnButton.Click += new EventHandler((object sender, EventArgs e) =>
             {
                 this.Hide();
-                new CompanyProductOfferPage(this._userId).Show();
+                new CompanyOfferPage(this._userId).Show();
             });
 
             this.Controls.Add(returnButton);
@@ -253,19 +260,14 @@ namespace DiverseMarket.UI.Pages.Company
                 {
                     var offer = _completeProductOffer;
                     var newName = this.nameTextBox.TextBox.Text;
-
-                    string cleanedPrice = new string(this.priceTextBox.TextBox.Text
-                     .Where(c => char.IsDigit(c) || c == '.' || c == ',')
-                     .ToArray())
-                     .Replace(',', '.');
-
+                    string cleanedPrice = ValidationUtils.CleanMonetaryInput(this.priceTextBox.TextBox.Text);
                     var newPrice = decimal.Parse(cleanedPrice);
                     var newQuantity = long.Parse(this.quantityTextBox.TextBox.Text);
                     var newDescription = this.descriptionTextBox.TextBox.Text;
 
                     var newProductOffer = new ProductOfferCompleteInfoDTO(
                         offer.Id,
-                        offer.CompanyId,
+                        offer.CompanyUserId,
                         offer.ProductId,
                         newPrice,
                         newQuantity,
@@ -278,11 +280,11 @@ namespace DiverseMarket.UI.Pages.Company
 
                     if (wasUpdateSuccessful)
                     {
-                         MessageBox.Show("Produto atualizado com sucesso!", "Sucesso", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                        MessageBoxUtils.ShowMessageBox("Produto atualizado com sucesso!", MessageBoxIcon.Information);
                     }
                     else
                     {
-                        MessageBox.Show("Falha ao atualizar o produto. Tente novamente.", "Erro", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        MessageBoxUtils.ShowMessageBox("Falha ao atualizar o produto. Tente novamente.", MessageBoxIcon.Error);
                     }
                 }
             }
@@ -291,6 +293,35 @@ namespace DiverseMarket.UI.Pages.Company
                 new LogMessage(ex);
             }
         }
+
+        private void deleteButton_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                if (MessageBoxUtils.ConfirmAction("Você tem certeza que deseja excluir essa oferta de produto?"))
+                {
+                    if (ProductService.DeleteCompanyProductOfferByCompleteInfoDTO(_completeProductOffer))
+                    {
+                        MessageBoxUtils.ShowMessageBox("Oferta de produto excluída com sucesso.", MessageBoxIcon.Information);
+                        this.Hide();
+                        new CompanyOfferPage(this._userId).Show();
+                    }
+                    else
+                    {
+                        MessageBoxUtils.ShowMessageBox("Falha em excluir a oferta de produto. \nPor favor, tente novamente.", MessageBoxIcon.Error);
+                    }
+                } else
+                {
+                    MessageBoxUtils.ShowMessageBox("Operação cancelada. O produto não será excluído", MessageBoxIcon.Information);
+                }
+            }
+            catch (Exception ex)
+            {
+                new LogMessage(ex);
+            }
+        }
+
+
         #endregion
 
         #region Validations

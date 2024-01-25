@@ -1,6 +1,9 @@
 ﻿using DiverseMarket.Backend.DTOs;
 using DiverseMarket.Backend.Infrastructure.Repositories;
+using DiverseMarket.Backend.Model.Enums;
+using DiverseMarket.Backend.Model;
 using DiverseMarket.Backend.Model.Products;
+using DiverseMarket.Logger;
 
 namespace DiverseMarket.Backend.Services
 {
@@ -29,7 +32,8 @@ namespace DiverseMarket.Backend.Services
 
             List<ProductOfferBasicInfoDTO> productOfferData =
                 GetAllProductOffersByCompanyUserId(userId);
-            //searchs ProductOffer table
+            
+            new LogMessage($"Count productOfferData: {productOfferData.Count}");
 
             return ProductOfferDB.GetAllProductOfferInformation(productOfferData);
             //returns data with both ProductOffer and Product tables
@@ -57,9 +61,41 @@ namespace DiverseMarket.Backend.Services
             return productOfferBasicInfoDTOs;
         }
 
+        /*public static List<string> GetAllProductCategories()
+        {
+            return ProductCategoryDB.GetAllCategories();
+        }*/
+
+       public static bool InsertNewProductWithProductOffer(ProductOfferInsertDTO productOfferInsertDTO)
+       {
+            Model.Product product = new Model.Product(productOfferInsertDTO.Name, productOfferInsertDTO.Description, productOfferInsertDTO.CategoryId);
+            int productId = ProductDB.InsertProduct(product);
+            ProductOfferBasicInfoDTO productOfferDTO = new ProductOfferBasicInfoDTO(productOfferInsertDTO.CompanyUserId, productId, productOfferInsertDTO.Price, productOfferInsertDTO.Quantity);
+            return ProductOfferDB.InsertProductOffer(productOfferDTO);
+       }
+
+        public static bool InsertNewProductOffer(ProductOfferBasicInfoDTO productOffer)
+        {
+            return ProductOfferDB.InsertProductOffer(productOffer);
+        }
+
+        public static bool ProductExists(ProductOfferInsertDTO productOfferInsertDTO) 
+        {
+            Model.Product product = new Model.Product(productOfferInsertDTO.Name, productOfferInsertDTO.Description, productOfferInsertDTO.CategoryId);
+            return ProductDB.ProductExists(product);
+        }
+       
+
         public static bool UpdateProductOfferByCompleteInfoDTO(ProductOfferCompleteInfoDTO newProductOffer)
         {
             return ProductOfferDB.UpdateProductOffer(newProductOffer);
         }
+
+        public static bool DeleteCompanyProductOfferByCompleteInfoDTO(ProductOfferCompleteInfoDTO productOfferData)
+        {
+            return ProductOfferDB.DeleteCompanyProductOffer(productOfferData); ;
+        }
+
+
     }
 }

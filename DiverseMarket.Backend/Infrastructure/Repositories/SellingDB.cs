@@ -134,5 +134,42 @@ namespace DiverseMarket.Backend.Infrastructure.Repositories
                 Close();
             }
         }
+
+        public static List<OrderBasicInfoDTO> GetAllOrdersByCustomerUserId(long userId)
+        {
+            List<OrderBasicInfoDTO> orderList = new List<OrderBasicInfoDTO>();
+
+            try
+            {
+                Open();
+                string query = "SELECT * FROM Selling WHERE User_id = @id;";
+                _command = new SQLiteCommand(query, _connection);
+                _command.Parameters.AddWithValue("@id", userId);
+                var reader = _command.ExecuteReader();
+
+                while (reader.Read())
+                {
+                    long id = (long)reader["id"];
+                    DateTime date = reader.GetDateTime(reader.GetOrdinal("date_sale"));
+                    decimal amount = reader.GetDecimal(reader.GetOrdinal("amount"));
+                    long customerId = (long)reader["Customer_id"];
+                    long companyId = (long)reader["Company_id"];
+
+                    var orderInfo = new OrderBasicInfoDTO(id, date, amount, customerId, companyId);
+                    orderList.Add(orderInfo);
+                }
+
+                return orderList;
+            }
+            catch (Exception ex)
+            {
+                new LogMessage($"An error occurred in {nameof(GetAllOrdersByCompanyUserId)} {ex.Message}");
+                return null;
+            }
+            finally
+            {
+                Close();
+            }
+        }
     }
 }
