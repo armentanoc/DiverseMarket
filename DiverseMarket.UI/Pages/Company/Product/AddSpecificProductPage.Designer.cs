@@ -217,8 +217,9 @@ namespace DiverseMarket.UI.Pages.Company
             });
             this.addNewOfferButton.Click += new EventHandler((object sender, EventArgs e) =>
             {
+                InsertNewProductOffer();
                 this.Hide();
-                new AddSpecificOfferPage(this._userId).Show();
+                new CompanyOfferPage(this._userId).Show();
             });
 
             this.Controls.Add(addNewOfferButton);
@@ -245,42 +246,37 @@ namespace DiverseMarket.UI.Pages.Company
         #endregion
 
         #region Clicks
-        private void newButton_Click(object sender, EventArgs e)
+        private void InsertNewProductOffer()
         {
             try
             {
-                if (AreFieldsValid())
+                string cleanedPrice = ValidationUtils.CleanMonetaryInput(this.priceTextBox.TextBox.Text);
+
+                var newName = this.nameTextBox.TextBox.Text;
+                var newDescription = this.descriptionTextBox.TextBox.Text;
+                var newPrice = decimal.Parse(cleanedPrice);
+                var newQuantity = long.Parse(this.quantityTextBox.TextBox.Text);
+                var newCategory = this.categoryTextBox.TextBox.Text;
+
+                _completeProductOffer = new ProductOfferCompleteInfoDTO(
+                    this._userId,
+                    _basicProduct.Id,
+                    newPrice,
+                    newQuantity,
+                    newName,
+                    newCategory,
+                    newDescription
+                );
+
+                bool wasUpdateSuccessful = ProductService.InsertNewProductOffer(this._userId, _completeProductOffer);
+
+                if (wasUpdateSuccessful)
                 {
-                    var offer = _completeProductOffer;
-
-                    string cleanedPrice = ValidationUtils.CleanMonetaryInput(this.priceTextBox.TextBox.Text);
-
-                    var newName = this.nameTextBox.TextBox.Text;
-                    var newDescription = this.descriptionTextBox.TextBox.Text;
-                    var newPrice = decimal.Parse(cleanedPrice);
-                    var newQuantity = long.Parse(this.quantityTextBox.TextBox.Text);
-                    var newCategory = "teste";
-
-                    //var newProductOffer = new ProductOfferCompleteInfoDTO(
-                    //    this._userId,
-                    //    offer.ProductId,
-                    //    newPrice,
-                    //    newQuantity,
-                    //    newName,
-                    //    newCategory,
-                    //    newDescription
-                    //);
-
-                    //bool wasUpdateSuccessful = ProductService.UpdateProductOfferByCompleteInfoDTO(newProductOffer);
-
-                    //if (wasUpdateSuccessful)
-                    //{
-                    //    MessageBoxUtils.ShowMessageBox("Produto atualizado com sucesso!", MessageBoxIcon.Information);
-                    //}
-                    //else
-                    //{
-                    //    MessageBoxUtils.ShowMessageBox("Falha ao atualizar o produto. Tente novamente.", MessageBoxIcon.Error);
-                    //}
+                    MessageBoxUtils.ShowMessageBox("Oferta de produto inserida com sucesso!", MessageBoxIcon.Information);
+                }
+                else
+                {
+                    MessageBoxUtils.ShowMessageBox("Falha em inserir oferta de produto. Tente novamente.", MessageBoxIcon.Error);
                 }
             }
             catch (Exception ex)
