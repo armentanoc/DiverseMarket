@@ -1,5 +1,7 @@
 ﻿using DiverseMarket.Backend.DTOs;
 using DiverseMarket.Backend.Infrastructure.Repositories;
+using DiverseMarket.Backend.Model;
+//using DiverseMarket.Backend.Model;
 
 namespace DiverseMarket.Backend.Services
 {
@@ -28,6 +30,24 @@ namespace DiverseMarket.Backend.Services
         public static void SetOrderItemAsRecieved(long orderId, long itemId)
         {
             throw new NotImplementedException();
+        }
+
+        public static OrderSpecificDetailsDTO GetOrderDetails(OrderBasicInfoDTO order)
+        {
+
+            if (order != null)
+            {
+                long userId = CompanyDB.GetUserIdByCompanyId(order.CompanyId);
+                Address address = AddressDB.GetAddressByUserId(userId);
+                User user = UserDB.GetUserById(userId);
+
+                OrderSpecificDetailsDTO orderDetails = new OrderSpecificDetailsDTO(order, user, address);
+
+
+                return orderDetails;
+            }
+
+            return null;
         }
     }
 }

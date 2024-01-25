@@ -22,5 +22,16 @@
             Description = description;
             Category = category;
         }
+
+        public ProductOfferCompleteInfoDTO(long companyUserId, long productId, decimal price, long quantity, string name, string category, string description)
+        {
+            CompanyUserId = companyUserId;
+            ProductId = productId;
+            Price = price;
+            Quantity = quantity;
+            Name = name;
+            Description = description;
+            Category = category;
+        }
     }
 }

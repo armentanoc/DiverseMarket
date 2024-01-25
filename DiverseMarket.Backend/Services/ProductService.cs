@@ -1,7 +1,5 @@
 ﻿using DiverseMarket.Backend.DTOs;
 using DiverseMarket.Backend.Infrastructure.Repositories;
-using DiverseMarket.Backend.Model.Enums;
-using DiverseMarket.Backend.Model;
 using DiverseMarket.Backend.Model.Products;
 using DiverseMarket.Logger;
 
@@ -74,9 +72,10 @@ namespace DiverseMarket.Backend.Services
             return ProductOfferDB.InsertProductOffer(productOfferDTO);
        }
 
-        public static bool InsertNewProductOffer(ProductOfferBasicInfoDTO productOffer)
+        public static bool InsertNewProductOffer(long companyUserId, ProductOfferCompleteInfoDTO productOffer)
         {
-            return ProductOfferDB.InsertProductOffer(productOffer);
+            ProductOfferBasicInfoDTO productOfferBasicDTO = new ProductOfferBasicInfoDTO(companyUserId, productOffer.ProductId, productOffer.Price, productOffer.Quantity);
+            return ProductOfferDB.InsertProductOffer(productOfferBasicDTO);
         }
 
         public static bool ProductExists(ProductOfferInsertDTO productOfferInsertDTO) 
@@ -85,7 +84,6 @@ namespace DiverseMarket.Backend.Services
             return ProductDB.ProductExists(product);
         }
        
-
         public static bool UpdateProductOfferByCompleteInfoDTO(ProductOfferCompleteInfoDTO newProductOffer)
         {
             return ProductOfferDB.UpdateProductOffer(newProductOffer);

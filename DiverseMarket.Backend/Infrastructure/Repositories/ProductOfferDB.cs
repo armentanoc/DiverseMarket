@@ -114,7 +114,11 @@ namespace DiverseMarket.Backend.Infrastructure.Repositories
                 using (var command = new SQLiteCommand(_connection))
                 {
                     command.CommandText = @"INSERT INTO ProductOffer(Company_id, Product_id, price, quantity)
-                                    VALUES (@CompanyUserId, @ProductId, @Price, @Quantity)";
+                                    SELECT @CompanyUserId, @ProductId, @Price, @Quantity
+                                    WHERE NOT EXISTS (
+                                        SELECT 1 FROM ProductOffer 
+                                        WHERE Product_id = @ProductId AND Company_id = @CompanyUserId
+                                    )";
 
                     command.Parameters.AddWithValue("@CompanyUserId", productOffer.CompanyUserId);
                     command.Parameters.AddWithValue("@ProductId", productOffer.ProductId);

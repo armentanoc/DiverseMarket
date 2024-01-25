@@ -51,5 +51,32 @@ namespace DiverseMarket.Backend.Infrastructure.Repositories
                 Close(); 
             }
         }
+
+        public static long GetUserIdByCompanyId(long companyId)
+        {
+            try
+            {
+                Open();
+
+                string query = "SELECT User_id FROM Company WHERE id = @companyId";
+                _command = new SQLiteCommand(query, _connection);
+
+                _command.Parameters.AddWithValue("@companyId", companyId);
+
+                object result = _command.ExecuteScalar();
+                if (result != null)
+                {
+                    return Convert.ToInt64(result);
+                }
+                
+            } catch (Exception ex)
+            {
+                Console.WriteLine("An error occured: " + ex.Message);
+            } 
+            finally { Close(); }
+            
+
+            return 0;
+        }
     }
 }

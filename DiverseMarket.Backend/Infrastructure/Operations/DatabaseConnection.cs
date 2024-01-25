@@ -2,6 +2,7 @@
 using DiverseMarket.Backend.Infrastructure.Repositories;
 using DiverseMarket.Backend.Model;
 using DiverseMarket.Backend.Model.Companies;
+using DiverseMarket.Backend.Model.Transactions;
 using System.Data.SQLite;
 using System.Transactions;
 using System.IO;
@@ -196,24 +197,24 @@ namespace DiverseMarket.Backend.Infrastructure.Operations
             "Aa12345@" //senha
             );
         }
-        private static void RegisterDefaultModerator()
-        {
-            UserDB.RegisterModerator
-            (
-            "Paula Andrezza",
-            "paula@gmail.com",
-            "paula",
-            "123456789",
-            "89403309008",
-            "53620819",
-            "Rua Senhor do Bonfim",
-            "Cond. Delta, Ap. 202",
-            "12",
-            "Santa Rita",
-            "Igarassu",
-            "Aa12345@" //senha
-            );
-        }
+            private static void RegisterDefaultModerator()
+            {
+                UserDB.RegisterModerator
+                (
+                "Paula Andrezza",
+                "paula@gmail.com",
+                "paula",
+                "123456789",
+                "89403309008",
+                "53620819",
+                "Rua Senhor do Bonfim",
+                "Cond. Delta, Ap. 202",
+                "12",
+                "Santa Rita",
+                "Igarassu",
+                "Aa12345@" //senha
+                );
+            }
         #endregion
 
         #region Helper Methods
