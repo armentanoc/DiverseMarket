@@ -1,4 +1,5 @@
-﻿using System;
+﻿using DiverseMarket.Backend.DTOs;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
@@ -10,11 +11,11 @@ using System.Windows.Forms;
 
 namespace DiverseMarket.UI.Pages.Company
 {
-    public partial class CompanyProductOfferPage : Form
+    public partial class AddSpecificProductPage : Form
     {
-        public CompanyProductOfferPage(long userId)
+        public AddSpecificProductPage(ProductBasicInfoDTO productBasicInfoDTO, long userId)
         {
-            InitializeComponent(userId);
+            InitializeComponent(productBasicInfoDTO, userId);
         }
     }
 }

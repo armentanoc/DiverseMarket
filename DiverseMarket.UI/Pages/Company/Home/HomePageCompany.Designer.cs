@@ -13,7 +13,7 @@ namespace DiverseMarket.UI.Pages.Company
 
         private long userId;
 
-        private Button homepageButton, productsButton, ordersButton, logoutButton;
+        private Button homepageButton, productOffersButton, productsButton, ordersButton, logoutButton;
 
         protected override void Dispose(bool disposing)
         {
@@ -61,21 +61,34 @@ namespace DiverseMarket.UI.Pages.Company
 
             this.Controls.Add(homepageButton);
 
-            this.productsButton = new RoundedButton("Produtos", 300, 57, Colors.SecondaryButton, 32);
-            this.productsButton.Location = new System.Drawing.Point(50, 300);
+            this.productOffersButton = new RoundedButton("Minhas Ofertas", 300, 57, Colors.SecondaryButton, 32);
+            this.productOffersButton.Location = new System.Drawing.Point(50, 300);
+            this.productOffersButton.FlatStyle = FlatStyle.Flat;
+            this.productOffersButton.FlatAppearance.BorderSize = 0;
+            this.productOffersButton.Cursor = Cursors.Hand;
+            this.productOffersButton.Click += new EventHandler((object sender, EventArgs e) =>
+            {
+                this.Hide();
+                new CompanyOfferPage(this.userId).Show();
+            });
+
+            this.Controls.Add(productOffersButton);
+
+            this.productsButton = new RoundedButton("Adicionar Oferta", 300, 57, Colors.SecondaryButton, 32);
+            this.productsButton.Location = new System.Drawing.Point(370, 300);
             this.productsButton.FlatStyle = FlatStyle.Flat;
             this.productsButton.FlatAppearance.BorderSize = 0;
             this.productsButton.Cursor = Cursors.Hand;
             this.productsButton.Click += new EventHandler((object sender, EventArgs e) =>
             {
                 this.Hide();
-                new CompanyProductOfferPage(this.userId).Show();
+                new CompanyProductPage(this.userId).Show();
             });
 
             this.Controls.Add(productsButton);
 
             this.ordersButton = new RoundedButton("Pedidos", 300, 57, Colors.SecondaryButton, 32);
-            this.ordersButton.Location = new System.Drawing.Point(370, 300);
+            this.ordersButton.Location = new System.Drawing.Point(690, 300);
             this.ordersButton.FlatStyle = FlatStyle.Flat;
             this.ordersButton.FlatAppearance.BorderSize = 0;
             this.ordersButton.Cursor = Cursors.Hand;

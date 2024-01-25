@@ -2,6 +2,7 @@
 using DiverseMarket.Backend.Model;
 using DiverseMarket.Logger;
 using System.Data.SQLite;
+using DiverseMarket.Backend.Infrastructure.Repositories.DefaultData;
 
 namespace DiverseMarket.Backend.Infrastructure.Repositories
 {
@@ -51,7 +52,7 @@ namespace DiverseMarket.Backend.Infrastructure.Repositories
                 Close();
             }
         }
-        public static bool InsertProduct(Product product)
+        public static int InsertProduct(Product product)
         {
             try
             {
@@ -65,10 +66,41 @@ namespace DiverseMarket.Backend.Infrastructure.Repositories
                     command.Parameters.AddWithValue("@Name", product.Name);
                     command.Parameters.AddWithValue("@Description", product.Description);
                     command.Parameters.AddWithValue("@ProductCategory_id", product.CategoryId);
+                    command.ExecuteNonQuery();
+                }
 
-                    int rowsAffected = command.ExecuteNonQuery();
+                using (var selectCommand = new SQLiteCommand("SELECT last_insert_rowid();", _connection))
+                {
+                    int id = Convert.ToInt32(selectCommand.ExecuteScalar());
+                    return id;
+                }
+            }
+            catch (Exception ex)
+            {
+                new LogMessage(ex);
+                return 0;
+            }
+            finally
+            {
+                Close();
+            }
+        }
 
-                    return rowsAffected > 0;
+        public static bool ProductExists(Product product)
+        {
+            try
+            {
+                Open();
+
+                using (var command = new SQLiteCommand(_connection))
+                {
+                    command.CommandText = @"SELECT COUNT(*) FROM Product WHERE name = @Name AND description = @description";
+                    command.Parameters.AddWithValue("@Name", product.Name);
+                    command.Parameters.AddWithValue("@description", product.Description);
+
+                    int count = Convert.ToInt32(command.ExecuteScalar());
+
+                    return count > 0;
                 }
             }
             catch (Exception ex)
@@ -82,51 +114,8 @@ namespace DiverseMarket.Backend.Infrastructure.Repositories
             }
         }
 
-        public static void RegisterDefaultProducts()
-        {
-            try
-            {
-                Product product;
 
-                product = new Product("Camisa Nike", "Preta", 1);
-                InsertProduct(product);
-                product = new Product("Camisa Adidas", "Azul", 1);
-                InsertProduct(product);
-                product = new Product("Camisa Oxer", "Cinza", 1);
-                InsertProduct(product);
-                product = new Product("Tênis Olympikus", "Preto", 2);
-                InsertProduct(product);
-                product = new Product("Tênis Nike", "Vermelho", 2);
-                InsertProduct(product);
-                product = new Product("Tênis Adidas", "Branco", 2);
-                InsertProduct(product);
-                product = new Product("Macbook Air", "Prata", 3);
-                InsertProduct(product);
-                product = new Product("Monitor Concórdia", "Preto e Vermelho", 3);
-                InsertProduct(product);
-                product = new Product("Mouse Logitech", "Branco", 3);
-                InsertProduct(product);
-                product = new Product("Clean Code", "Autor: Robert C. Martin", 4);
-                InsertProduct(product);
-                product = new Product("Domain-driven design", "Autor: Eric Evans", 4);
-                InsertProduct(product);
-                product = new Product("Data Science Do Zero", "Autor: Joel Grus", 4);
-                InsertProduct(product);
-                product = new Product("Colar Lua", "Prata 925", 5);
-                InsertProduct(product);
-                product = new Product("Aliança Sol", "Ouro 18K", 5);
-                InsertProduct(product);
-                product = new Product("Brinco Terra", "Prata 925", 5);
-                InsertProduct(product);
-                product = new Product("Brinco Mar", "Prata 925", 5);
-                InsertProduct(product);
-                product = new Product("Brinco Céu", "Prata 925", 5);
-                InsertProduct(product);
-            }
-            catch (Exception ex)
-            {
-                new LogMessage(ex);
-            }   
-        }
+
+        public static void RegisterDefaultProducts() => DefaultProducts.Insert();
     }
 }

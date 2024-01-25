@@ -43,16 +43,50 @@ namespace DiverseMarket.Backend.Infrastructure.Repositories
 
                         if (rowsAffected <= 0)
                         {
-                            return false; 
+                            return false;
                         }
                     }
-                    return true; 
+                    return true;
                 }
             }
             catch (Exception ex)
             {
                 new LogMessage(ex);
                 return false;
+            }
+            finally
+            {
+                Close();
+            }
+        }
+        internal static List<string> GetAllCategories()
+        {
+            try
+            {
+                Open();
+
+                using (var command = new SQLiteCommand(_connection))
+                {
+                    command.CommandText = "SELECT name FROM ProductCategory";
+
+                    using (var reader = command.ExecuteReader())
+                    {
+                        List<string> categoryNames = new List<string>();
+
+                        while (reader.Read())
+                        {
+                            string categoryName = reader["name"].ToString();
+                            categoryNames.Add(categoryName);
+                        }
+
+                        return categoryNames;
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                new LogMessage(ex);
+                return new List<string>();
             }
             finally
             {

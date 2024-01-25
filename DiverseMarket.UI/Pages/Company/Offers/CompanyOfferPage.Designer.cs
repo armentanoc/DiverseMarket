@@ -7,12 +7,12 @@ using DiverseMarket.UI.Styles;
 
 namespace DiverseMarket.UI.Pages.Company
 {
-    partial class CompanyProductOfferPage
+    partial class CompanyOfferPage
     {
         private System.ComponentModel.IContainer components = null;
         private long _userId;
 
-        private Button profileButton, homepageButton, returnButton, addNewOfferButton;
+        private Button profileButton, homepageButton, returnButton;
         private List<ProductOfferCard> productOfferCards;
         private Panel productsPanel;
         private SearchBar searchBar;
@@ -168,7 +168,7 @@ namespace DiverseMarket.UI.Pages.Company
                 productOfferCard.Location = new Point(x, y);
                 productOfferCard.Click += new EventHandler((object sender, EventArgs e) =>
                 {
-                    new CompanySpecificProductOfferPage(completeOfferDTO, this._userId).Show();
+                    new CompanySpecificOfferPage(completeOfferDTO, this._userId).Show();
                     this.Hide();
                 });
 
@@ -195,7 +195,7 @@ namespace DiverseMarket.UI.Pages.Company
         private void InitLabel()
         {
             Label pageTitle = new Label();
-            pageTitle.Text = "Produtos";
+            pageTitle.Text = "Ofertas de Produtos";
             pageTitle.Location = new Point(140, 67);
             pageTitle.AutoSize = true;
             pageTitle.ForeColor = Color.White;
@@ -239,19 +239,6 @@ namespace DiverseMarket.UI.Pages.Company
 
             this.Controls.Add(returnButton);
 
-            this.addNewOfferButton = new RoundedButton("Adicionar Oferta", 150, 57, Colors.SecondaryButton, 32);
-            this.addNewOfferButton.Location = new System.Drawing.Point(900, 57);
-            this.addNewOfferButton.MouseEnter += new EventHandler((object sender, EventArgs e) =>
-            {
-                this.addNewOfferButton.Cursor = Cursors.Hand;
-            });
-            this.addNewOfferButton.Click += new EventHandler((object sender, EventArgs e) =>
-            {
-                this.Hide();
-                new AddSpecificProductOfferPage(this._userId).Show();
-            });
-
-            this.Controls.Add(addNewOfferButton);
         }
 
         #endregion
@@ -262,7 +249,7 @@ namespace DiverseMarket.UI.Pages.Company
             this.Icon = new Icon(@"Resources\icon.ico");
 
             Logo logo = new Logo();
-            logo.Location = new Point(640, 77);
+            logo.Location = new Point(820, 77);
             logo.Width = 192;
             logo.Height = 22;
 
